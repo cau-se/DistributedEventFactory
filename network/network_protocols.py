@@ -21,18 +21,18 @@ class WebSocket(BaseNetworkProtocol):
         print(f"Server started at {url}")
         self.cluster = cluster
         split_url: List[str] = url.split(":")
-        start_server = websockets.serve(self.network_handler, split_url[0], split_url[1])
+        start_server = websockets.serve(self.handle_network, split_url[0], split_url[1])
         asyncio.get_event_loop().run_until_complete(start_server)
         try:
             asyncio.get_event_loop().run_forever()
         except KeyboardInterrupt:
             print("Event-Loop closed")
 
-    async def network_handler(self, websocket: websockets.WebSocketServerProtocol, path: str):
+    async def handle_network(self, websocket: websockets.WebSocketServerProtocol, path: str):
         print("Client Connected")
         try:
             while True:
-                await asyncio.sleep(1)
+                await asyncio.sleep(0.01)
                 await websocket.send(self.cluster.get_data())
         except websockets.exceptions.ConnectionClosedOK as e:
             print("Client Disconnected")
@@ -46,7 +46,7 @@ class ServerSentEvent(BaseNetworkProtocol):
     def run(self, url: str, cluster: Cluster):
         pass
 
-    def network_handler(self) -> SensorLog:
+    def handle_network(self) -> SensorLog:
         pass
 
 
@@ -57,5 +57,5 @@ class WebRTC(BaseNetworkProtocol):
     def run(self, data: SensorLog):
         pass
 
-    def network_handler(self) -> SensorLog:
+    def handle_network(self) -> SensorLog:
         pass

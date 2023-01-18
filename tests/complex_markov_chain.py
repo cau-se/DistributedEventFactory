@@ -1,23 +1,8 @@
-from typing import List, Callable, Any
+from typing import List
 
-from behavior_modifier.modifier_list import OutlierBehaviorModifier, NoiseBehaviorModifier, RandomizeBehaviorModifier
-from network.network_protocol_factory import NetworkProtocolFactory, BaseNetworkProtocol
-from network.network_protocols import WebSocket, WebRTC, ServerSentEvent
-from network.producer import Node, Cluster
-from sensors.sensor_collection import WifiSensor, SingleValueSensor
+from sensors.sensor_collection import SingleValueSensor, WifiSensor
 from sensors.sensors import SensorManager
-from utils.types import SensorLog, OutlierCategory
-import random as rd
-
-factory = NetworkProtocolFactory()
-factory.register_protocol('websocket', WebSocket)
-# factory.register_protocol('sse', ServerSentEvent)
-# factory.register_protocol('webrtc', WebRTC)
-
-network: BaseNetworkProtocol = factory.create_protocol('websocket')
-# network: BaseNetworkProtocol = factory.create_protocol('sse')
-# network: BaseNetworkProtocol = factory.create_protocol('webrtc')
-
+from utils.markov_chain import MarkovChain
 
 sensor_manager: SensorManager = SensorManager()
 sensor_manager.add_sensor(SingleValueSensor(["Door Open"], "DOOR_SENSOR"))
@@ -50,20 +35,6 @@ transition_matrix: List[List[float]] = [
     [0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 1.00, 0.00, 0.00]   # SELF_CHECKOUT_SENSOR
 ]
 
-nodes: List[Node] = [
-    Node(
-        i, sensors_names=sensor_names, sensor_manager=sensor_manager, transition_matrix=transition_matrix
-    ) for i in range(15)
-]
-
-nodes[0].add_behavior_modifier(OutlierBehaviorModifier(type=OutlierCategory.COLLECTIVE_OUTLIERS, frequency=0.1))
-nodes[0].add_behavior_modifier(NoiseBehaviorModifier(frequency=0.3))
-
-nodes[1].add_behavior_modifier(NoiseBehaviorModifier(frequency=0.1))
-nodes[2].add_behavior_modifier(RandomizeBehaviorModifier())
-
-node_join_function: Callable[[List[SensorLog]], SensorLog] = lambda data: rd.choice(data)
-
-cluster: Cluster = Cluster(nodes, node_join_function)
-
-network.run("localhost:8000", cluster=cluster)
+markov_chain = MarkovChain(sensor_names, transition_matrix)
+markov_chain.simulate(0, 10)
+markov_chain.visualize()

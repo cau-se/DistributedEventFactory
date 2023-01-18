@@ -134,7 +134,7 @@ def markov_chain_store_example():
             sensor_value=next(sensors[states.index(state)]),
             case_id=f"{uuid}_{i}",
             timestamp=date_now,
-            sensor_type=state,
+            sensor_name=state,
             status="valid"
         )
 

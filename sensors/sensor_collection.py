@@ -1,49 +1,48 @@
 import random
 import datetime
+from abc import ABC
 from typing import Generator, Any, List
-
 from sensors.sensors import BaseSensor
 
-
 # Physical sensor
-
 class TemperatureSensor(BaseSensor):
-    def __init__(self):
-        super().__init__("Temperature_Sensor")
+    def __init__(self,name: str = "Temperature_Sensor"):
+        super().__init__(name)
 
     def get_data(self) -> Generator[float, Any, None]:
         while True:
             temperature = random.uniform(-50, 50)
             yield temperature
 
-# Chemical sensor
 
+# Chemical sensor
 class GasSensor(BaseSensor):
-    def __init__(self):
-        super().__init__("Gas_Sensor")
+    def __init__(self,name: str = "Gas_Sensor"):
+        super().__init__(name)
 
     def get_data(self) -> Generator[float, Any, None]:
         while True:
             gas_concentration = random.uniform(0, 100)
             yield gas_concentration
 
+
 # Biological sensor
 class BioSensor(BaseSensor):
-    def __init__(self):
-        super().__init__("Bio_Sensor")
+    def __init__(self,name: str = "Bio_Sensor"):
+        super().__init__(name)
 
     def get_data(self) -> Generator[float, Any, None]:
         while True:
             organism_activity = random.uniform(0, 1)
             yield organism_activity
 
-# Optical sensor
 
+# Optical sensor
 class CameraSensor(BaseSensor):
     width: int
     height: int
-    def __init__(self, width: int, height: int):
-        super().__init__("Camera_Sensor")
+    def __init__(self, width: int, height: int,name: str = "Camera_Sensor"):
+        super().__init__(name)
         self.width = width
         self.height = height
 
@@ -57,11 +56,11 @@ class CameraSensor(BaseSensor):
                 pixels.append((r, g, b))
             yield pixels
 
-# Motion sensor
 
+# Motion sensor
 class AccelerometerSensor(BaseSensor):
-    def __init__(self):
-        super().__init__("Accelerometer_Sensor")
+    def __init__(self,name: str = "Accelerometer_Sensor"):
+        super().__init__(name)
 
     def get_data(self) ->  Generator[tuple[float, float, float], Any, None]:
         while True:
@@ -69,42 +68,45 @@ class AccelerometerSensor(BaseSensor):
             y = random.uniform(-1, 1)
             z = random.uniform(-1, 1)
             yield (x, y, z)
+
+
 # Audio sensor
 class AudioSensor(BaseSensor):
-    def __init__(self):
-        super().__init__("Audio_Sensor")
+    def __init__(self,name: str = "Audio_Sensor"):
+        super().__init__(name)
 
     def get_data(self) ->   Generator[float, Any, None]:
         while True:
             sound_level = random.uniform(0, 1)
             yield sound_level
 
-# Pressure sensor
 
+# Pressure sensor
 class PressureSensor(BaseSensor):
-    def __init__(self):
-        super().__init__("Pressure_Sensor")
+    def __init__(self,name: str = "Pressure_Sensor"):
+        super().__init__(name)
 
     def get_data(self) ->    Generator[float, Any, None]:
         while True:
             pressure = random.uniform(0, 1000)
             yield pressure
+
 
 # Proximity sensor
 class InfraredSensor(BaseSensor):
-    def __init__(self):
-        super().__init__("Infrared_Sensor")
+    def __init__(self,name: str = "Infrared_Sensor"):
+        super().__init__(name)
 
     def get_data(self) ->    Generator[float, Any, None]:
         while True:
             pressure = random.uniform(0, 1000)
             yield pressure
 
-# Wifi sensors.py
 
+# Wifi sensors.py
 class WifiSensor(BaseSensor):
-    def __init__(self):
-        super().__init__("Wifi_Sensor")
+    def __init__(self,name: str = "Wifi_Sensor"):
+        super().__init__(name)
 
     def get_data(self) -> Generator[tuple[str, int], Any, None]:
         while True:
@@ -115,9 +117,9 @@ class WifiSensor(BaseSensor):
 
 # List Sensors
 class SingleValueSensor(BaseSensor):
-    elements: List[str] 
-    def __init__(self, elements):
-        super().__init__("Wifi_Sensor")
+    elements: List[str]
+    def __init__(self,elements: List[str],name: str = "Single_Value_Sensor"):
+        super().__init__(name)
         self.elements = elements
 
     def get_data(self) ->  Generator[Any, Any, None]:

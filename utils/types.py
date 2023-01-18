@@ -11,5 +11,12 @@ class SensorLog:
     timestamp: datetime.datetime
     sensor_value: any
     case_id: str
-    sensor_type: str
+    sensor_name: str
     status: str
+    debug: str
+
+
+class OutlierCategory:
+    GLOBAL_OUTLIERS = "GLOBAL_OUTLIERS"
+    CONTEXTUAL_OUTLIERS = "CONTEXTUAL_OUTLIERS"
+    COLLECTIVE_OUTLIERS = "COLLECTIVE_OUTLIERS"

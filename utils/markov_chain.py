@@ -1,23 +1,26 @@
 import numpy as np
-
-import numpy as np
 from typing import List, Tuple
 import matplotlib.pyplot as plt
 import networkx as nx
-import io
+from numpy import ndarray
+
 
 class MarkovChain:
     states: List[str]
-    transition_matrix: List[List[float]]
+    transition_matrix: ndarray
     num_states: int
 
-    def __init__(self, transition_matrix: List[List[float]], states: List[str]):
+    def __init__(self, states: List[str], transition_matrix: List[List[float]] = None):
         """
         Initialize the MarkovChain instance.
         transition_matrix: matrix of transition probabilities, where entry (i, j) is the probability
                            of transitioning from state i to state j.
         states: list of states.
         """
+
+        if not transition_matrix:
+            transition_matrix = self.fill_transition_matrix_if_empty(len(states))
+
         self.transition_matrix = np.array(transition_matrix)
         self.states = states
         self.num_states = len(states)
@@ -94,3 +97,11 @@ class MarkovChain:
 
         nx.draw_networkx_edge_labels(di_graph, pos, edge_labels=edge_labels, label_pos=0.35, font_size=8)
         plt.show()
+
+    def fill_transition_matrix_if_empty(self, length: int) -> List[List[float]]:
+        """
+        This method creates a transition matrix of size length x length and assigns 1/length to each element.
+        :param length: dimension of the matrix
+        :return: transition matrix: List[List[float]]
+        """
+        return [[1 / length for _ in range(length)] for _ in range(length)]

@@ -1,10 +1,11 @@
-from abc import ABC
-from typing import Any, Generator
+from abc import ABC, abstractmethod
+from typing import Any, Generator, Type, List
 
 
 #
 class BaseSensor(ABC):
     name: str
+
     def __init__(self, name: str):
         """
         Initialize a sensor with a name
@@ -20,6 +21,7 @@ class BaseSensor(ABC):
         """
         return self.name
 
+    @abstractmethod
     def get_data(self) ->  Generator[Any, Any, Any]:
         pass
 
@@ -46,3 +48,6 @@ class SensorManager:
         :return: sensor with the given name, or None if it doesn't exist
         """
         return self.sensors.get(name, None)
+
+    def get_sensor_names(self) -> List[str]:
+        return [v.get_name() for _,v in self.sensors.items()]

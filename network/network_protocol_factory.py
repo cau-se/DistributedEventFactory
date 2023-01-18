@@ -1,4 +1,4 @@
-from abc import ABC
+from abc import ABC, abstractmethod
 from typing import Type, Dict
 
 from network.producer import Cluster
@@ -7,20 +7,20 @@ class BaseNetworkProtocol(ABC):
     """
     A class for handling network protocol connections.
     """
+    @abstractmethod
     def run(self, url: str, cluster: Cluster) -> None:
         """
         Send data over the connection.
         :param cluster:
         :param url: Url od the application.
         """
-        pass
 
+    @abstractmethod
     def handle_network(self) -> None:
         """
         Receive data from the connection.
         :return: The received data.
         """
-        pass
 
 
 class NetworkProtocolFactory:
