@@ -3,7 +3,7 @@ from sensors.sensor_collection import simulate_temperature_sensor, simulate_gas_
     simulate_camera_sensor, simulate_accelerometer_sensor, simulate_microphone_sensor, simulate_pressure_sensor, \
     simulate_infrared_sensor, simulate_wifi_sensor, simulate_single_value_sensor
 from utils.markov_chain import MarkovChain
-from utils.types import SensorLog
+from utils.utils_types import SensorLog
 import pandas as pd
 from uuid import uuid4
 

@@ -6,7 +6,7 @@ from network.network_protocols import WebSocket, WebRTC, ServerSentEvent
 from network.producer import Node, Cluster
 from sensors.sensor_collection import WifiSensor, SingleValueSensor
 from sensors.sensors import SensorManager
-from utils.types import SensorLog, OutlierCategory
+from utils.utils_types import SensorLog, OutlierCategory
 import random as rd
 
 factory = NetworkProtocolFactory()
@@ -52,8 +52,8 @@ transition_matrix: List[List[float]] = [
 
 nodes: List[Node] = [
     Node(
-        i, sensors_names=sensor_names, sensor_manager=sensor_manager, transition_matrix=transition_matrix
-    ) for i in range(15)
+        i, sensor_manager=sensor_manager, transition_matrix=transition_matrix
+    ) for i in range(5)
 ]
 
 nodes[0].add_behavior_modifier(OutlierBehaviorModifier(type=OutlierCategory.COLLECTIVE_OUTLIERS, frequency=0.1))

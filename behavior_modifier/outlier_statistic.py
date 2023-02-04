@@ -3,7 +3,7 @@ from typing import List
 from scipy import stats
 import numpy as np
 import random
-from utils.types import SensorLog
+from utils.utils_types import SensorLog
 
 
 class OutlierDetector:

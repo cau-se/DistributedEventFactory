@@ -77,6 +77,8 @@ class MarkovChain:
         """
         Visualize the Markov Chain
         """
+        plt.figure(figsize=(10, 10))
+
         di_graph: nx.DiGraph = nx.DiGraph()
         for i in range(self.num_states):
             di_graph.add_node(self.states[i])
@@ -84,7 +86,7 @@ class MarkovChain:
         for a, b, w in self.all_edges():
             di_graph.add_edge(a, b, weight=w)
 
-        pos: dict = nx.circular_layout(di_graph)
+        pos: dict = nx.spring_layout(di_graph)
 
         nx.draw_networkx_nodes(di_graph, pos)
         nx.draw_networkx_edges(di_graph, pos, arrowsize=15, arrowstyle='->', connectionstyle='arc3,rad=0.1')

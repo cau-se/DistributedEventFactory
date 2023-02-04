@@ -2,17 +2,15 @@ from abc import ABC, abstractmethod
 from typing import Any, Generator, Type, List
 
 
-#
-class BaseSensor(ABC):
-    name: str
 
+class BaseSensor(ABC):
     def __init__(self, name: str):
         """
         Initialize a sensor with a name
 
         :param name:  name of the sensor
         """
-        self.name = name
+        self.name: str = name
 
     def get_name(self) -> str:
         """

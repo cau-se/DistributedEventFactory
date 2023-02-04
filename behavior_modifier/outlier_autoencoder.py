@@ -2,7 +2,7 @@ from typing import List
 from keras.layers import Input, Dense
 from keras.models import Model
 import numpy as np
-from utils.types import SensorLog
+from utils.utils_types import SensorLog
 
 
 class OutlierDetectorAutoencoder:

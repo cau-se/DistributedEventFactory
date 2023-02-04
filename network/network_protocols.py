@@ -5,7 +5,7 @@ import asyncio
 from typing import List, Callable, Any
 import websockets
 from network.producer import Node, Cluster
-from utils.types import SensorLog
+from utils.utils_types import SensorLog
 import random as rd
 
 class WebSocket(BaseNetworkProtocol):
@@ -32,7 +32,7 @@ class WebSocket(BaseNetworkProtocol):
         print("Client Connected")
         try:
             while True:
-                await asyncio.sleep(0.01)
+                await asyncio.sleep(0.5)
                 await websocket.send(self.cluster.get_data())
         except websockets.exceptions.ConnectionClosedOK as e:
             print("Client Disconnected")

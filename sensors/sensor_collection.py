@@ -1,13 +1,15 @@
 import random
 import datetime
-from abc import ABC
+from abc import ABC, abstractmethod
 from typing import Generator, Any, List
 from sensors.sensors import BaseSensor
 
+
 # Physical sensor
 class TemperatureSensor(BaseSensor):
-    def __init__(self,name: str = "Temperature_Sensor"):
+    def __init__(self, name: str = "Temperature_Sensor"):
         super().__init__(name)
+
 
     def get_data(self) -> Generator[float, Any, None]:
         while True:
@@ -17,7 +19,7 @@ class TemperatureSensor(BaseSensor):
 
 # Chemical sensor
 class GasSensor(BaseSensor):
-    def __init__(self,name: str = "Gas_Sensor"):
+    def __init__(self, name: str = "Gas_Sensor"):
         super().__init__(name)
 
     def get_data(self) -> Generator[float, Any, None]:
@@ -28,7 +30,7 @@ class GasSensor(BaseSensor):
 
 # Biological sensor
 class BioSensor(BaseSensor):
-    def __init__(self,name: str = "Bio_Sensor"):
+    def __init__(self, name: str = "Bio_Sensor"):
         super().__init__(name)
 
     def get_data(self) -> Generator[float, Any, None]:
@@ -39,14 +41,13 @@ class BioSensor(BaseSensor):
 
 # Optical sensor
 class CameraSensor(BaseSensor):
-    width: int
-    height: int
-    def __init__(self, width: int, height: int,name: str = "Camera_Sensor"):
-        super().__init__(name)
-        self.width = width
-        self.height = height
 
-    def get_data(self) ->  Generator[list[tuple[int, int, int]], Any, None]:
+    def __init__(self, width: int, height: int, name: str = "Camera_Sensor"):
+        super().__init__(name)
+        self.width: int = width
+        self.height: int = height
+
+    def get_data(self) -> Generator[list[tuple[int, int, int]], Any, None]:
         while True:
             pixels = []
             for i in range(self.width * self.height):
@@ -59,10 +60,10 @@ class CameraSensor(BaseSensor):
 
 # Motion sensor
 class AccelerometerSensor(BaseSensor):
-    def __init__(self,name: str = "Accelerometer_Sensor"):
+    def __init__(self, name: str = "Accelerometer_Sensor"):
         super().__init__(name)
 
-    def get_data(self) ->  Generator[tuple[float, float, float], Any, None]:
+    def get_data(self) -> Generator[tuple[float, float, float], Any, None]:
         while True:
             x = random.uniform(-1, 1)
             y = random.uniform(-1, 1)
@@ -72,10 +73,10 @@ class AccelerometerSensor(BaseSensor):
 
 # Audio sensor
 class AudioSensor(BaseSensor):
-    def __init__(self,name: str = "Audio_Sensor"):
+    def __init__(self, name: str = "Audio_Sensor"):
         super().__init__(name)
 
-    def get_data(self) ->   Generator[float, Any, None]:
+    def get_data(self) -> Generator[float, Any, None]:
         while True:
             sound_level = random.uniform(0, 1)
             yield sound_level
@@ -83,10 +84,10 @@ class AudioSensor(BaseSensor):
 
 # Pressure sensor
 class PressureSensor(BaseSensor):
-    def __init__(self,name: str = "Pressure_Sensor"):
+    def __init__(self, name: str = "Pressure_Sensor"):
         super().__init__(name)
 
-    def get_data(self) ->    Generator[float, Any, None]:
+    def get_data(self) -> Generator[float, Any, None]:
         while True:
             pressure = random.uniform(0, 1000)
             yield pressure
@@ -94,10 +95,10 @@ class PressureSensor(BaseSensor):
 
 # Proximity sensor
 class InfraredSensor(BaseSensor):
-    def __init__(self,name: str = "Infrared_Sensor"):
+    def __init__(self, name: str = "Infrared_Sensor"):
         super().__init__(name)
 
-    def get_data(self) ->    Generator[float, Any, None]:
+    def get_data(self) -> Generator[float, Any, None]:
         while True:
             pressure = random.uniform(0, 1000)
             yield pressure
@@ -105,7 +106,7 @@ class InfraredSensor(BaseSensor):
 
 # Wifi sensors.py
 class WifiSensor(BaseSensor):
-    def __init__(self,name: str = "Wifi_Sensor"):
+    def __init__(self, name: str = "Wifi_Sensor"):
         super().__init__(name)
 
     def get_data(self) -> Generator[tuple[str, int], Any, None]:
@@ -117,11 +118,11 @@ class WifiSensor(BaseSensor):
 
 # List Sensors
 class SingleValueSensor(BaseSensor):
-    elements: List[str]
-    def __init__(self,elements: List[str],name: str = "Single_Value_Sensor"):
-        super().__init__(name)
-        self.elements = elements
 
-    def get_data(self) ->  Generator[Any, Any, None]:
+    def __init__(self, elements: List[str], name: str = "Single_Value_Sensor"):
+        super().__init__(name)
+        self.elements: List[str] = elements
+
+    def get_data(self) -> Generator[Any, Any, None]:
         while True:
             yield random.choice(self.elements)

@@ -1,6 +1,6 @@
 import asyncio
 import json
-from datetime import datetime
+from datetime import datetime, timedelta
 import random as rd
 from typing import List, Callable, Any
 from uuid import uuid4
@@ -8,7 +8,7 @@ from uuid import uuid4
 from behavior_modifier.modifier_list import BaseBehaviorModifier
 from sensors.sensors import SensorManager
 from utils.markov_chain import MarkovChain
-from utils.types import SensorLog
+from utils.utils_types import SensorLog
 
 
 class Node:
@@ -25,9 +25,10 @@ class Node:
 
     def __init__(self,
                  node_id: int,
-                 sensors_names: List[str],
                  sensor_manager: SensorManager,
-                 transition_matrix: List[List[float]] = None):
+                 transition_matrix: List[List[float]] = None,
+                 duration_matrix: List[List[float | tuple[float, float]]] = None
+                 ):
         """
         Initializes a new Node object.
         :param node_id: The id of the node
@@ -36,13 +37,18 @@ class Node:
         :param transition_matrix: initialize the markov_chain
         """
 
-        self.sensors_names: List[str] = sensors_names
+        self.sensors_names: List[str] = sensor_manager.get_sensor_names()
         self.sensor_manager: SensorManager = sensor_manager
 
         self.id: int = node_id
 
         self.data: SensorLog = None
         self.markov_chain: MarkovChain = None
+
+        if duration_matrix is None:
+            duration_matrix = [[1.0 for _ in self.sensors_names] for _ in self.sensors_names]
+
+        self.duration_matrix: List[List[float | tuple[float, float]]] = duration_matrix
 
         self.sensor_log_cache: List[SensorLog] = []
         self.behavior_modifiers_list: List[BaseBehaviorModifier] = []
@@ -51,7 +57,7 @@ class Node:
         self.STARTING_SENSOR_INDEX: int = 0
         self.CACHE_LENGTH: int = 100
 
-        self.init_markov_chain(sensors_names, transition_matrix)
+        self.init_markov_chain(self.sensors_names, transition_matrix)
         self.reset_cache_and_apply_modifiers()
 
     def init_markov_chain(self, sensors: List[str], transition_matrix: List[List[float]]):
@@ -71,30 +77,45 @@ class Node:
         These objects are appended to the sensor_log_cache property.
         :return:
         """
-        execution_list: List[str] = self.markov_chain.simulate(
+        execution_list = self.markov_chain.simulate(
             current_state=self.STARTING_SENSOR_INDEX,
-            num_steps=self.CACHE_LENGTH)
+            num_steps=self.CACHE_LENGTH
+        )
 
-        i = 0
         uuid = str(uuid4())[:8]
+        previous_state = self.STARTING_SENSOR_INDEX
+        previous_timestamp = datetime.now()
+        i = 0
         for state in execution_list:
-            date_now = datetime.now()
             if state == self.sensors_names[self.STARTING_SENSOR_INDEX]:
-                i = 0
                 uuid = str(uuid4())[:8]
+                i = 0
+                previous_state = self.STARTING_SENSOR_INDEX
+                previous_timestamp = datetime.now()
 
-            sensor_generator = self.sensor_manager.get_sensor(state).get_data()
-            sensor_log: SensorLog = SensorLog(
-                sensor_value=next(sensor_generator),
+            duration = self.duration_matrix[previous_state][self.sensors_names.index(state)]
+
+            if isinstance(duration, tuple):
+                duration = rd.uniform(duration[0], duration[1])
+            timestamp = previous_timestamp + timedelta(minutes=duration)
+
+            sensor = self.sensor_manager.get_sensor(state)
+            sensor_generator = sensor.get_data()
+            sensor_value = next(sensor_generator)
+
+            sensor_log = SensorLog(
+                sensor_value=sensor_value,
                 case_id=f"{uuid}_{i}",
-                timestamp=date_now,
+                timestamp=timestamp,
                 sensor_name=state,
                 status="valid",
-                debug=f"NODE: {self.id}"
+                generated_by=f"NODE: {self.id}"
             )
 
             self.sensor_log_cache.append(sensor_log)
-            i = i + 1
+            previous_state = self.sensors_names.index(state)
+            previous_timestamp = timestamp
+            i += 1
 
     def refresh_data(self) -> None:
         """
