@@ -41,3 +41,7 @@ class RandomizeBehaviorModifier(BaseBehaviorModifier):
         shuffle(cache_randomized)
         return cache_randomized
 
+
+class OutlierGeneratorModifier(BaseBehaviorModifier):
+    def mutate_cache(self, cache: List[SensorLog]) -> List[SensorLog]:
+        return cache

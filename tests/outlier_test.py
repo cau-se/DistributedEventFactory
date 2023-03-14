@@ -1,51 +1,65 @@
-from typing import List
-from behavior_modifier.outlier_autoencoder import OutlierDetectorAutoencoder
-from behavior_modifier.outlier_statistic import OutlierDetector
-from network.producer import Node
-from sensors.sensor_collection import WifiSensor, SingleValueSensor
-from sensors.sensors import SensorManager
+import random
+from datetime import timedelta
 
-from keras.layers import Input, Dense
-from keras.models import Model
+from typing import List
+
+from network.cluster import Node
+from sensors.sensor_collection import SingleValueSensor, WifiSensor
+from sensors.sensors import SensorManager
+from utils.utils_types import SensorLog
+
+import matplotlib.pyplot as plt
+import datetime
 import numpy as np
 
-#list of dict objects
-data = [{'a':1, 'b':2}, {'c':3, 'd':4}, {'c':4, 'd':2}, {'e':5, 'f':6}, {'g':7, 'h':8}]
 
-#convert dict objects to list of lists
-data = [list(d.values()) for d in data]
+class OutlierGeneratorModifier:
+    def __init__(self, sensor_logs: List[SensorLog]):
+        self.sensor_logs = sensor_logs
+        self.outlier_timestamp_delta_range = (-timedelta(hours=1), timedelta(hours=1))
+        self.outlier_value_range = (-10, 10)
 
-#convert dict objects to numpy array
-data = np.array(data)
+    def generate_outliers(self, outlier_prob: float = 0.05):
+        for log in self.sensor_logs:
+            if random.random() < outlier_prob:
+                # Generate outlier timestamp
+                outlier_timestamp_delta = random.uniform(*self.outlier_timestamp_delta_range)
+                outlier_timestamp = log.timestamp + outlier_timestamp_delta
 
-#shape of the data with 2 dimensions
-data = data.reshape(data.shape[0], -1)
+                # Generate outlier sensor value
+                outlier_value = random.uniform(*self.outlier_value_range)
 
-#define the autoencoder
-input_data = Input(shape=(data.shape[1],))
-encoded = Dense(2, activation='relu')(input_data)
-decoded = Dense(data.shape[1], activation='sigmoid')(encoded)
-autoencoder = Model(input_data, decoded)
-autoencoder.compile(optimizer='adam', loss='binary_crossentropy')
+                # Update log with outlier values
+                log.timestamp = outlier_timestamp
+                log.sensor_value = outlier_value
+                log.status = "OUTLIER"
 
-#train the autoencoder
-autoencoder.fit(data, data, epochs=50, batch_size=1, shuffle=True)
 
-#use the encoder to get the compact representation of the data
-encoder = Model(input_data, encoded)
-encoded_data = encoder.predict(data)
+sensor_manager: SensorManager = SensorManager()
+sensor_manager.add_sensor(SingleValueSensor(["Door Open"], "DOOR_SENSOR"))
+sensor_manager.add_sensor(WifiSensor("WIFI_SENSOR"))
+sensor_manager.add_sensor(SingleValueSensor(["PRODUCE_AISLE"], "PRODUCE_AISLE_SENSOR"))
+sensor_manager.add_sensor(SingleValueSensor(["MEAT_AISLE"], "MEAT_AISLE_SENSOR"))
+sensor_manager.add_sensor(SingleValueSensor(["BAKERY_AISLE"], "BAKERY_AISLE_SENSOR"))
+sensor_manager.add_sensor(SingleValueSensor(["DAIRY_AISLE"], "DAIRY_AISLE_SENSOR"))
+sensor_manager.add_sensor(SingleValueSensor(["FROZEN_FOOD_AISLE"], "FROZEN_FOOD_AISLE_SENSOR"))
+sensor_manager.add_sensor(SingleValueSensor(["CHECKOUT"], "CHECKOUT_SENSOR"))
+sensor_manager.add_sensor(SingleValueSensor(["CREDIT_CARD"], "CREDIT_CARD_SENSOR"))
+sensor_manager.add_sensor(SingleValueSensor(["EXIT"], "EXIT_SENSOR"))
+sensor_manager.add_sensor(SingleValueSensor(["CASH"], "CASH_SENSOR"))
+sensor_manager.add_sensor(SingleValueSensor(["SELF_CHECKOUT"], "SELF_CHECKOUT_SENSOR"))
 
-#calculate the reconstruction error for each data point
-reconstruction_error = np.mean(np.power(data - autoencoder.predict(data), 2), axis=1)
-
-#threshold for identifying outliers
-threshold = np.mean(reconstruction_error) + 2*np.std(reconstruction_error)
-
-#identify the outliers
-outliers = np.where(reconstruction_error > threshold)[0]
-
-#remove the outliers from the data
-cleaned_data = np.delete(data, outliers, axis=0)
-
-print("Outliers", outliers)
-print(cleaned_data)
+transition_matrix: List[List[float]] = [
+    [0.00, 1.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00],  # DOOR_SENSOR
+    [0.00, 0.00, 0.20, 0.20, 0.20, 0.20, 0.10, 0.00, 0.00, 0.00, 0.00, 0.10],  # WIFI_SENSOR
+    [0.00, 0.00, 0.20, 0.20, 0.20, 0.20, 0.10, 0.00, 0.00, 0.00, 0.10, 0.00],  # PRODUCE_AISLE_SENSOR
+    [0.00, 0.00, 0.20, 0.20, 0.20, 0.20, 0.10, 0.00, 0.00, 0.10, 0.00, 0.00],  # MEAT_AISLE_SENSOR
+    [0.00, 0.00, 0.20, 0.20, 0.20, 0.20, 0.10, 0.00, 0.10, 0.00, 0.00, 0.00],  # BAKERY_AISLE_SENSOR
+    [0.00, 0.00, 0.20, 0.20, 0.20, 0.20, 0.10, 0.10, 0.00, 0.00, 0.00, 0.00],  # DAIRY_AISLE_SENSOR
+    [0.00, 0.00, 0.20, 0.20, 0.20, 0.20, 0.10, 0.00, 0.00, 0.05, 0.00, 0.05],  # FROZEN_FOOD_AISLE_SENSOR
+    [0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 1.00, 0.00],  # CHECKOUT_SENSOR
+    [0.00, 0.00, 0.00, 0.00, 0.00, 0.10, 0.00, 0.00, 0.00, 0.90, 0.00, 0.00],  # CREDIT_CARD_SENSOR
+    [1.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00],  # EXIT_SENSOR
+    [0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 1.00, 0.00, 0.00],  # CASH_SENSOR
+    [0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 1.00, 0.00, 0.00]  # SELF_CHECKOUT_SENSOR
+]

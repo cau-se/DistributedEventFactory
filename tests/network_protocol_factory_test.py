@@ -1,22 +1,16 @@
 from typing import List, Callable, Any
 
 from behavior_modifier.modifier_list import OutlierBehaviorModifier, NoiseBehaviorModifier, RandomizeBehaviorModifier
+from network.markov_chain_node_data_processor import MarkovChainNodeDataProcessor
 from network.network_protocol_factory import NetworkProtocolFactory, BaseNetworkProtocol
 from network.network_protocols import WebSocket, WebRTC, ServerSentEvent
-from network.producer import Node, Cluster
+from network.cluster import Node, Cluster
 from sensors.sensor_collection import WifiSensor, SingleValueSensor
 from sensors.sensors import SensorManager
 from utils.utils_types import SensorLog, OutlierCategory
 import random as rd
 
-factory = NetworkProtocolFactory()
-factory.register_protocol('websocket', WebSocket)
-# factory.register_protocol('sse', ServerSentEvent)
-# factory.register_protocol('webrtc', WebRTC)
 
-network: BaseNetworkProtocol = factory.create_protocol('websocket')
-# network: BaseNetworkProtocol = factory.create_protocol('sse')
-# network: BaseNetworkProtocol = factory.create_protocol('webrtc')
 
 
 sensor_manager: SensorManager = SensorManager()
@@ -47,23 +41,27 @@ transition_matrix: List[List[float]] = [
     [0.00, 0.00, 0.00, 0.00, 0.00, 0.10, 0.00, 0.00, 0.00, 0.90, 0.00, 0.00],  # CREDIT_CARD_SENSOR
     [1.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00],  # EXIT_SENSOR
     [0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 1.00, 0.00, 0.00],  # CASH_SENSOR
-    [0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 1.00, 0.00, 0.00]   # SELF_CHECKOUT_SENSOR
+    [0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 1.00, 0.00, 0.00]  # SELF_CHECKOUT_SENSOR
 ]
 
-nodes: List[Node] = [
-    Node(
-        i, sensor_manager=sensor_manager, transition_matrix=transition_matrix
-    ) for i in range(5)
-]
+nodes: List[Node] = []
 
-nodes[0].add_behavior_modifier(OutlierBehaviorModifier(type=OutlierCategory.COLLECTIVE_OUTLIERS, frequency=0.1))
-nodes[0].add_behavior_modifier(NoiseBehaviorModifier(frequency=0.3))
+for i in range(5):
+    data_processor: MarkovChainNodeDataProcessor = \
+        MarkovChainNodeDataProcessor(
+            i,
+            sensor_manager=sensor_manager,
+            transition_matrix=transition_matrix
+        )
 
-nodes[1].add_behavior_modifier(NoiseBehaviorModifier(frequency=0.1))
-nodes[2].add_behavior_modifier(RandomizeBehaviorModifier())
+    nodes.append(
+        Node(i,
+             data_processor,
+             cache_length=300
+             )
+    )
 
 node_join_function: Callable[[List[SensorLog]], SensorLog] = lambda data: rd.choice(data)
 
 cluster: Cluster = Cluster(nodes, node_join_function)
-
-network.run("localhost:8000", cluster=cluster)
+cluster.start("localhost:8000", tick_speed=0.5)

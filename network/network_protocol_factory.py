@@ -1,25 +1,19 @@
 from abc import ABC, abstractmethod
-from typing import Type, Dict
+from typing import Type, Dict, Callable
 
-from network.producer import Cluster
 
 class BaseNetworkProtocol(ABC):
     """
     A class for handling network protocol connections.
     """
-    @abstractmethod
-    def run(self, url: str, cluster: Cluster) -> None:
-        """
-        Send data over the connection.
-        :param cluster:
-        :param url: Url od the application.
-        """
 
     @abstractmethod
-    def handle_network(self) -> None:
+    def run(self, url: str, data_function: Callable[[None], str], tick_sleep: float) -> None:
         """
-        Receive data from the connection.
-        :return: The received data.
+        Send data over the connection.
+        :param url: Url od the application.
+        :param data_function: this function returns the data for the network. Normally cluster.get_data()
+        :param tick_sleep: time between the network ticks
         """
 
 
@@ -54,5 +48,3 @@ class NetworkProtocolFactory:
         if protocol_class is None:
             raise ValueError(f'Invalid protocol: {protocol_name}')
         return protocol_class()
-
-

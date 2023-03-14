@@ -10,7 +10,6 @@ class TemperatureSensor(BaseSensor):
     def __init__(self, name: str = "Temperature_Sensor"):
         super().__init__(name)
 
-
     def get_data(self) -> Generator[float, Any, None]:
         while True:
             temperature = random.uniform(-50, 50)

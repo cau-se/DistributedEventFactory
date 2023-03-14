@@ -20,7 +20,7 @@ class BaseSensor(ABC):
         return self.name
 
     @abstractmethod
-    def get_data(self) ->  Generator[Any, Any, Any]:
+    def get_data(self) -> Generator[Any, Any, Any]:
         pass
 
 class SensorManager:

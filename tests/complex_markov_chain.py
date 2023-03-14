@@ -2,6 +2,7 @@ from typing import List
 
 from sensors.sensor_collection import SingleValueSensor, WifiSensor
 from sensors.sensors import SensorManager
+
 from utils.markov_chain import MarkovChain
 from utils.transition_matrix_builder import TransitionMatrixBuilder
 
@@ -97,3 +98,4 @@ print(builder.to_duration_matrix())
 
 markov_chain = MarkovChain(sensor_names, builder.to_transition_matrix())
 markov_chain.simulate(0, 10)
+markov_chain.visualize()

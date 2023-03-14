@@ -16,7 +16,7 @@ class TransitionMatrixBuilder:
         self.transition_matrix = {}
         self.duration_matrix = {}
 
-    def add_state(self, state: str, p: float, t: float | tuple[float, float] = 1.0):
+    def add_state(self, state: str, p: float, t: float | tuple[float, float] = None):
         """
          Add a new state to the transition matrix builder.
 
@@ -31,6 +31,16 @@ class TransitionMatrixBuilder:
             self.states.append(state)
             self.transition_matrix[state] = {}
             self.duration_matrix[state] = {}
+
+            # probability to stay in the state is 0 and there is no time t = 0
+            if p == 0.0 and t is None:
+                t = 0.0
+            # probability to stay in the state is not 0 and no t is give -> t is set to 1
+            elif p != 0.0 and t is None:
+                t = 1.0
+            else:
+                t = t
+
             self.to(state, p=p, t=t)
         return self
 
@@ -71,7 +81,7 @@ class TransitionMatrixBuilder:
     def to_transition_matrix(self) -> List[List[float]]:
         return self.to_matrix(self.transition_matrix)
 
-    def print_matrix(self):
+    def print_transition_matrix(self):
         """
         Print the transition matrix in a human-readable format.
         """
@@ -90,4 +100,20 @@ class TransitionMatrixBuilder:
                 print_color(f"{state:<{max_state_len}}  ", color=BgColors.FAIL, end="")
                 for j in range(n):
                     print_color(f"{matrix[i][j]:<{max_state_len}} ", color=BgColors.FAIL, end="")
+            print()
+
+    def print_duration_matrix(self):
+        """
+        Print the transition matrix in a human-readable format.
+        """
+        matrix = self.to_duration_matrix()
+        n = len(self.states)
+        # find the max length of state names
+        max_state_len = len(max(self.states, key=len))
+        print(" " * (max_state_len + 1), *self.states)
+        for i, state in enumerate(self.states):
+            # padding spaces to align the columns
+            print(f"{state:<{max_state_len}}  ", end="")
+            for j in range(n):
+                print(f"{str(matrix[i][j]):<{max_state_len}} ", end="")
             print()
