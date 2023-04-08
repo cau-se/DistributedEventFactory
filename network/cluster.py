@@ -1,7 +1,4 @@
-import asyncio
 import json
-from datetime import datetime, timedelta
-import random as rd
 from typing import List, Callable, Any, Type
 
 from network.network_protocol_factory import BaseNetworkProtocol, NetworkProtocolFactory
@@ -18,7 +15,7 @@ class Cluster:
     which takes in a list of Node objects and initializes a new Cluster object.
     """
 
-    def __init__(self, nodes: List[Node], join_function: Callable[[List[SensorLog]], SensorLog]):
+    def __init__(self, nodes: List[Node], join_function: Callable[[List[SensorLog]], SensorLog] = None):
         self.nodes: List[Node] = nodes
         self.join_function: Callable[[List[SensorLog]], SensorLog] = join_function
 
@@ -44,6 +41,12 @@ class Cluster:
         for node in self.nodes:
             node.refresh_data()
 
-        data: SensorLog = self.join_function([node.data for node in self.nodes])
-        data.timestamp = str(data.timestamp)
-        return json.dumps(data.__dict__)
+        if self.join_function is not None:
+            data: SensorLog = self.join_function([node.data for node in self.nodes])
+            data.timestamp = str(data.timestamp)
+            return json.dumps(data.__dict__)
+        else:
+            nodes_data: List[SensorLog] = [node.data for node in self.nodes]
+            for i in range(len(nodes_data)):
+                nodes_data[i].timestamp = str(nodes_data[i].timestamp)
+            return json.dumps([data.__dict__ for data in nodes_data])
