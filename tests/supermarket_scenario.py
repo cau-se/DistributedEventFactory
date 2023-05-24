@@ -1,5 +1,6 @@
 from sensors.sensor_collection import SingleValueSensor
 from sensors.sensors import SensorManager
+from utils.markov_chain import MarkovChain
 from utils.transition_matrix_builder import TransitionMatrixBuilder
 
 SUPERMARKET_SENSOR_MANAGER: SensorManager = SensorManager()
@@ -69,3 +70,8 @@ SUPERMARKET_BUILDER.add_state("Baker", p=0.0)\
 SUPERMARKET_BUILDER.add_state("Cash_registers", p=0.0)\
     .to("Entrance_and_exit", p=1, t=2)
 
+
+if __name__ == "__main__":
+    markov_chain = MarkovChain(SUPERMARKET_SENSOR_MANAGER.get_sensor_names(), SUPERMARKET_BUILDER.to_transition_matrix())
+    markov_chain.simulate(0, 10)
+    markov_chain.visualize()

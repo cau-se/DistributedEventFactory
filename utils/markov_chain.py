@@ -73,18 +73,23 @@ class MarkovChain:
                     edges.append((self.states[i], self.states[j], self.transition_matrix[i, j]))
         return edges
 
-    def visualize(self):
+    def visualize(self, states_to_visualize: List[str] = None):
         """
         Visualize the Markov Chain
+        states_to_visualize: List of states to be visualized. If None, all states will be visualized.
         """
         plt.figure(figsize=(10, 10))
 
         di_graph: nx.DiGraph = nx.DiGraph()
-        for i in range(self.num_states):
-            di_graph.add_node(self.states[i])
+        if states_to_visualize is None:
+            states_to_visualize = self.states
+
+        for state in states_to_visualize:
+            di_graph.add_node(state)
 
         for a, b, w in self.all_edges():
-            di_graph.add_edge(a, b, weight=w)
+            if a in states_to_visualize and b in states_to_visualize:
+                di_graph.add_edge(a, b, weight=w)
 
         pos: dict = nx.spring_layout(di_graph)
 

@@ -1,19 +1,71 @@
-from typing import Dict
+from typing import Dict, Callable
 from datetime import datetime, timedelta
+
+
+class Units:
+    @staticmethod
+    def millisecond(value: float):
+        return timedelta(milliseconds=value)
+
+    @staticmethod
+    def second(value: float):
+        return timedelta(seconds=value)
+
+    @staticmethod
+    def minute(value: float):
+        return timedelta(minutes=value)
+
+    @staticmethod
+    def hour(value: float):
+        return timedelta(hours=value)
+
+    @staticmethod
+    def day(value: float):
+        return timedelta(days=value)
+
+    @staticmethod
+    def week(value: float):
+        return timedelta(weeks=value)
+
+    @staticmethod
+    def month(value: float):
+        return timedelta(days=value * 30)
+
+    @staticmethod
+    def year(value: float):
+        return timedelta(days=value * 365)
+
+    @staticmethod
+    def decade(value: float):
+        return timedelta(days=value * 365 * 10)
+
+    @staticmethod
+    def century(value: float):
+        return timedelta(days=value * 365 * 100)
+
+    @staticmethod
+    def millennium(value: float):
+        return timedelta(days=value * 365 * 1000)
 
 
 class TimeManager:
     def __init__(self):
-        self.time_map: Dict[str, datetime] = {}
+        self.time_map = {}
 
-    def update_time(self, id: str, time: timedelta):
-        if id in self.time_map:
-            self.time_map[id] += time
-        else:
-            self.time_map[id] = datetime.now() + time
+    def add_time(self, id: int, time: datetime):
+        self.time_map[str(id)] = time
 
-    def get_time(self, id: str) -> timedelta:
-        if id in self.time_map:
-            return datetime.now() - self.time_map[id]
-        else:
-            raise ValueError(f"ID: {id} not in timemap")
+    def increase_time(self, id: int, value, unit: type[Callable[[float], datetime]]):
+        if str(id) not in self.time_map:
+            raise ValueError("ID not found in the time map.")
+
+        time = self.time_map[str(id)]
+        new_time = time + unit(value)
+        self.time_map[str(id)] = new_time
+
+
+manager = TimeManager()
+
+manager.add_time(1, datetime.now())
+manager.increase_time(2, 5, Units.minute)
+print(manager.time_map['id1'])

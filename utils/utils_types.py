@@ -1,5 +1,7 @@
 import datetime
 from dataclasses import dataclass
+import random as rd
+from typing import List
 
 
 @dataclass
@@ -17,9 +19,9 @@ class SensorLog:
 
 
 class OutlierCategory:
-    GLOBAL_OUTLIERS = "GLOBAL_OUTLIERS"
+    POINT_OUTLIER = "POINT_OUTLIER"
     CONTEXTUAL_OUTLIERS = "CONTEXTUAL_OUTLIERS"
-    COLLECTIVE_OUTLIERS = "COLLECTIVE_OUTLIERS"
+    SUBSEQUENCE_OUTLIERS = "SUBSEQUENCE_OUTLIERS"
 
 
 class BgColors:
@@ -39,3 +41,16 @@ def print_color(message: str, color: str, end=None) -> None:
         print(f"{color}{message}{BgColors.ENDC}", end=end)
     else:
         print(f"{color}{message}{BgColors.ENDC}")
+
+
+def fisher_yates_shuffle(lst: List[any], start=0, end=None):
+    """
+    Shuffle a portion of the given list using the Fisher-Yates algorithm.
+    If `end` is not provided, shuffle from `start` to the end of the list.
+    """
+    if end is None:
+        end = len(lst)
+    for i in range(end - 1, start, -1):
+        j = rd.randint(start, i)
+        lst[i], lst[j] = lst[j], lst[i]
+    return lst

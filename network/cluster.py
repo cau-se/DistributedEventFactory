@@ -17,9 +17,15 @@ class Cluster:
 
     def __init__(self, nodes: List[Node], join_function: Callable[[List[SensorLog]], SensorLog] = None):
         self.nodes: List[Node] = nodes
+
+        node_errors = self.validate_nodes()
+        if len(node_errors) > 0:
+            raise Exception(node_errors)
+
         self.join_function: Callable[[List[SensorLog]], SensorLog] = join_function
 
         self.network_factory = NetworkProtocolFactory()
+        # create default network protocol
         self.network_factory.register_protocol('websocket', WebSocket)
         self.network: BaseNetworkProtocol = self.network_factory.create_protocol("websocket")
 
@@ -30,6 +36,12 @@ class Cluster:
             self.network = self.network_factory.create_protocol(network_name)
 
     def start(self, url: str, tick_speed: float = 1):
+        """
+        Start the cluster on a given url
+        :param url:
+        :param tick_speed:
+        :return:
+        """
         self.network.run(url, self.get_data, tick_speed)
 
     def get_data(self) -> str:
@@ -50,3 +62,14 @@ class Cluster:
             for i in range(len(nodes_data)):
                 nodes_data[i].timestamp = str(nodes_data[i].timestamp)
             return json.dumps([data.__dict__ for data in nodes_data])
+
+    def validate_nodes(self) -> List[Exception]:
+        """
+        Check if the nodes are valid
+        :return:
+        """
+        error_list: List[Exception] = []
+        if len(self.nodes) > len(set([node.id for node in self.nodes])):
+            error_list.append(Exception("All nodes must have a unique id"))
+
+        return error_list

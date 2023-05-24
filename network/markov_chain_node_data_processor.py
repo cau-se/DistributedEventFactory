@@ -31,6 +31,8 @@ class MarkovChainNodeDataProcessor(NodeDataProcessor):
 
         self.STARTING_SENSOR_INDEX: int = 0
 
+        self.previous_time: datetime = datetime.now()
+
         self.init_markov_chain(self.sensors_names, transition_matrix)
 
     def init_markov_chain(self, sensors: List[str], transition_matrix: List[List[float]]):
@@ -57,22 +59,25 @@ class MarkovChainNodeDataProcessor(NodeDataProcessor):
 
         uuid = str(uuid4())[:8]
         previous_state = self.STARTING_SENSOR_INDEX
-        previous_timestamp = datetime.now()
-        i = 0
+
+        i: int = 0
         sensor_log_cache: List[SensorLog] = []
 
         for state in execution_list:
+
             if state == self.sensors_names[self.STARTING_SENSOR_INDEX]:
+                # New Case
                 uuid = str(uuid4())[:8]
                 i = 0
                 previous_state = self.STARTING_SENSOR_INDEX
-                previous_timestamp = datetime.now()
 
             duration = self.duration_matrix[previous_state][self.sensors_names.index(state)]
 
             if isinstance(duration, tuple):
                 duration = rd.uniform(duration[0], duration[1])
-            timestamp = previous_timestamp + timedelta(minutes=duration)
+
+            self.previous_time = self.previous_time + timedelta(minutes=duration)
+            timestamp = self.previous_time
 
             sensor = self.sensor_manager.get_sensor(state)
             sensor_generator = sensor.get_data()

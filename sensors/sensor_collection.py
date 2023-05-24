@@ -99,7 +99,7 @@ class InfraredSensor(BaseSensor):
 
     def get_data(self) -> Generator[float, Any, None]:
         while True:
-            pressure = random.uniform(0, 1000)
+            pressure = random.uniform(-273.15, 1000)
             yield pressure
 
 

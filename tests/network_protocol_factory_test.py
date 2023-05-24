@@ -11,11 +11,11 @@ nodes: List[Node] = []
 
 for i in range(5):
     data_processor: MarkovChainNodeDataProcessor = MarkovChainNodeDataProcessor(
-            5,
-            sensor_manager=SUPERMARKET_SENSOR_MANAGER,
-            transition_matrix=SUPERMARKET_BUILDER.to_transition_matrix(),
-            duration_matrix=SUPERMARKET_BUILDER.to_duration_matrix()
-        )
+        i,
+        sensor_manager=SUPERMARKET_SENSOR_MANAGER,
+        transition_matrix=SUPERMARKET_BUILDER.to_transition_matrix(),
+        duration_matrix=SUPERMARKET_BUILDER.to_duration_matrix()
+    )
 
     # data_processor= WebsocketNodeDataProcessor("ws:localhost:8001")
 
@@ -27,8 +27,9 @@ for i in range(5):
         )
 
     nodes.append(node)
+nodes[0].node_data_processor.visualize_markov_chain()
 
-# nodes[0].node_data_processor.visualize_markov_chain()
+# nodes[0].add_behavior_modifier(OutlierBehaviorModifier(OutlierCategory.GLOBAL_OUTLIERS, 0.3))
 
 
 def node_join_function(data: List[SensorLog]) -> SensorLog:

@@ -117,3 +117,27 @@ class TransitionMatrixBuilder:
             for j in range(n):
                 print(f"{str(matrix[i][j]):<{max_state_len}} ", end="")
             print()
+
+    def print_transition_matrix_latex(self, selected_states: List[str] = None):
+        """
+        Print the transition matrix in LaTeX code format and copy to clipboard for selected states only.
+
+        """
+
+        if selected_states is None:
+            selected_states = self.states
+
+        matrix = self.to_transition_matrix()
+        n = len(selected_states)
+
+        latex_code = "\\begin{tabular}{||c " + " ".join(["c"] * n) + "||}\n"
+        latex_code += "\\hline\n"
+        latex_code += " & " + " & ".join(selected_states) + "\\\\\n"
+        latex_code += "\\hline\n"
+        for i, state in enumerate(selected_states):
+            latex_code += state + " & " + " & ".join([f"{matrix[self.states.index(state)][self.states.index(j)]:.2f}" for j in selected_states]) + "\\\\\n"
+            latex_code += "\\hline\n"
+        latex_code += "\\end{tabular}"
+        latex_code = latex_code.replace("_", " ")
+        print(latex_code)
+
