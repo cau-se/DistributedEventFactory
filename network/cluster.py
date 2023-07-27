@@ -54,13 +54,14 @@ class Cluster:
             node.refresh_data()
 
         if self.join_function is not None:
-            data: SensorLog = self.join_function([node.data for node in self.nodes])
+            data: SensorLog = self.join_function([node.data for node in self.nodes if node.data])
             data.timestamp = str(data.timestamp)
             return json.dumps(data.__dict__)
         else:
-            nodes_data: List[SensorLog] = [node.data for node in self.nodes]
-            for i in range(len(nodes_data)):
-                nodes_data[i].timestamp = str(nodes_data[i].timestamp)
+            nodes_data: List[SensorLog] = [node.data for node in self.nodes if node.data]
+            for i, node_data in enumerate(nodes_data):
+                nodes_data[i].timestamp = str(node_data.timestamp)
+
             return json.dumps([data.__dict__ for data in nodes_data])
 
     def validate_nodes(self) -> List[Exception]:

@@ -1,38 +1,96 @@
-from typing import List
-
-import websocket
-
+import json
+import threading
+import simple_websocket
 from network.node_data_processor import NodeDataProcessor
 from utils.utils_types import SensorLog
-import rel
+import copy
+from typing import List
+
+
+def parse_message_to_sensor_log(m: dict) -> SensorLog:
+    return SensorLog(
+        sensor_name=m["sensor_name"],
+        timestamp=m["timestamp"],
+        sensor_value=m["sensor_value"],
+        case_id=m["case_id"],
+        status=m["status"],
+        generated_by=m["generated_by"]
+    )
 
 
 class WebsocketNodeDataProcessor(NodeDataProcessor):
     def __init__(self, url: str):
-        self.sensor_cache: List[SensorLog] = []
-        self.url = url
-        websocket.enableTrace(False)
-        ws = websocket.WebSocketApp(url,
-                                    on_open=self.on_open,
-                                    on_message=self.on_message,
-                                    on_error=self.on_error,
-                                    on_close=self.on_close)
+        super().__init__()
+        self.websocket_sensor_cache: List[SensorLog | List[SensorLog]] = []
 
-        ws.run_forever(dispatcher=rel, reconnect=5)
-        rel.signal(2, rel.abort)  # Keyboard Interrupt
-        rel.dispatch()
+        self.URL: str = url
+        self.CACHE_IS_READY: bool = False
+        self.PROCESSOR_HAS_ERROR: bool = False
+        self.PROCESSOR_CONNECTION_HAS_CLOSED: bool = False
+        self.PROCESSOR_CONNECTION_IS_OPEN: bool = False
+        self.CURRENT_CACHE_LENGTH: int = 0
 
-    def on_message(self, ws, message):
-        self.sensor_cache.append(message)
+        try:
+            self.ws = simple_websocket.Client(self.URL)
+        except ConnectionRefusedError as e:
+            self.PROCESSOR_HAS_ERROR = True
 
-    def on_error(self, ws, error):
-        print(f"ERROR IN CONNECTION: {self.url}", error)
+    def init_websocket_thread_connection(self) -> None:
+        # if self.PROCESSOR_HAS_ERROR:
+        #     return
+        try:
+            while True:
+                data: str = self.ws.receive()
+                if data:
+                    self.on_message(data)
 
-    def on_close(self, ws, close_status_code, close_msg):
-        print(f"CONNECTION CLOSED: {self.url}")
+        except (KeyboardInterrupt, EOFError, simple_websocket.ConnectionClosed):
+            self.ws.close()
+            self.on_error("KeyboardInterrupt, EOFError, simple_websocket.ConnectionClosed")
 
-    def on_open(self, ws):
-        print(f"CONNECTION CLOSED: {self.url}")
+    def init_cache_generation(self) -> None:
+        ws_run = threading.Thread(target=self.init_websocket_thread_connection)
+        ws_run.start()
 
-    def generate_cache(self, cache_length: int) -> List[SensorLog]:
-        return self.sensor_cache
+    def on_message(self, message: str):
+        message_load: dict | list[dict] = json.loads(message)
+
+        if isinstance(message_load, list):
+            temp_sensor_logs: list[SensorLog] = []
+            for m in message_load:
+                temp_sensor_logs.append(parse_message_to_sensor_log(m))
+            self.websocket_sensor_cache.append(temp_sensor_logs)
+        else:
+            self.websocket_sensor_cache.append(parse_message_to_sensor_log(message_load))
+
+        self.CURRENT_CACHE_LENGTH = len(self.websocket_sensor_cache)
+
+        if self.CURRENT_CACHE_LENGTH <= self.CACHE_LENGTH:
+            self.CACHE_IS_READY = False
+        else:
+            self.CACHE_IS_READY = True
+
+    def on_error(self, error):
+        print(f"ERROR IN CONNECTION: {self.URL}", error)
+        self.PROCESSOR_HAS_ERROR = True
+        self.PROCESSOR_CONNECTION_HAS_CLOSED = True
+
+    def on_open(self):
+        print(f"CONNECTION ESTABLISHED WITH CLUSTER: {self.URL}")
+        self.PROCESSOR_CONNECTION_IS_OPEN = True
+        self.PROCESSOR_HAS_ERROR = False
+
+    def generate_cache(self, cache_length: int) -> List[SensorLog] | None:
+        if self.CACHE_IS_READY:
+            try:
+                cache_to_use = copy.deepcopy(self.websocket_sensor_cache[:self.CACHE_LENGTH])
+                del self.websocket_sensor_cache[:self.CACHE_LENGTH]
+                return cache_to_use
+
+            except IndexError as e:
+                print(e)
+                return None
+
+        else:
+            return None
+

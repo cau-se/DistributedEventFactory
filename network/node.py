@@ -4,8 +4,7 @@ from uuid import uuid4
 import random as rd
 from behavior_modifier.modifier_list import BaseBehaviorModifier
 from network.node_data_processor import NodeDataProcessor
-from sensors.sensors import SensorManager
-from utils.markov_chain import MarkovChain
+
 from utils.utils_types import SensorLog
 
 
@@ -18,8 +17,8 @@ class Node:
                  ):
 
         self.id: int = node_id
-        self.node_data_processor = node_data_processor
-
+        self.node_data_processor: NodeDataProcessor = node_data_processor
+        self.IDLE = False
         self.data: SensorLog = None
 
         self.sensor_log_cache: List[SensorLog] = []
@@ -27,19 +26,32 @@ class Node:
 
         self.current_cache_index: int = 0
         self.CACHE_LENGTH: int = cache_length
+        self.node_data_processor.CACHE_LENGTH = self.CACHE_LENGTH
 
+        self.node_data_processor.init_cache_generation()
         self.refresh_data()
 
     def refresh_data(self) -> None:
         """
         This method updates the data property with the next sensor log in the cache.
         """
-        if self.current_cache_index == len(self.sensor_log_cache):
+
+        if self.node_data_processor.CACHE_IS_READY and self.is_more_data_needed():
             self.reset_cache_and_apply_modifiers()
 
-        current_data: SensorLog = self.sensor_log_cache[self.current_cache_index]
-        self.data = current_data
-        self.current_cache_index += 1
+            current_data: SensorLog = self.sensor_log_cache[self.current_cache_index]
+            self.data = current_data
+            self.current_cache_index += 1
+        elif not self.node_data_processor.CACHE_IS_READY and self.is_more_data_needed():
+            self.data = None
+        elif self.node_data_processor.CACHE_IS_READY and not self.is_more_data_needed():
+            current_data: SensorLog = self.sensor_log_cache[self.current_cache_index]
+            self.data = current_data
+            self.current_cache_index += 1
+        elif not self.node_data_processor.CACHE_IS_READY and not self.is_more_data_needed():
+            self.data = None
+        else:
+            print("UNEXEPTED STATE IN NODE")
 
     def add_behavior_modifier(self, modifier: BaseBehaviorModifier) -> None:
         """
@@ -57,10 +69,15 @@ class Node:
         """
         self.sensor_log_cache.clear()
         self.current_cache_index = 0
-        self.sensor_log_cache = self.node_data_processor.generate_cache(self.CACHE_LENGTH)
 
-        for modifier in self.behavior_modifiers_list:
-            self.sensor_log_cache = modifier.mutate_cache(self.sensor_log_cache)
+        if self.node_data_processor.CACHE_IS_READY:
+            self.IDLE = False
+            self.sensor_log_cache = self.node_data_processor.generate_cache(self.CACHE_LENGTH)
+
+            for modifier in self.behavior_modifiers_list:
+                self.sensor_log_cache = modifier.mutate_cache(self.sensor_log_cache)
+        else:
+            self.IDLE = True
 
     def get_filtered_sensor_cache(self, filter_func: Callable[[SensorLog], List[SensorLog]]) -> List[SensorLog]:
         """
@@ -76,6 +93,9 @@ class Node:
         """
         return list(filter(filter_func, self.sensor_log_cache))
 
+    def is_more_data_needed(self) -> bool:
+        return self.current_cache_index == len(self.sensor_log_cache)
+
     def __str__(self) -> str:
         """
         Returns a string representation of the Node object
@@ -89,3 +109,4 @@ class Node:
         :return: current position in cache
         """
         return self.current_cache_index
+

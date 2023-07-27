@@ -4,48 +4,51 @@ from datetime import datetime, timedelta
 
 class Units:
     @staticmethod
-    def millisecond(value: float):
+    def millisecond(value: float) -> timedelta:
         return timedelta(milliseconds=value)
 
     @staticmethod
-    def second(value: float):
+    def second(value: float) -> timedelta:
         return timedelta(seconds=value)
 
     @staticmethod
-    def minute(value: float):
+    def minute(value: float) -> timedelta:
         return timedelta(minutes=value)
 
     @staticmethod
-    def hour(value: float):
+    def hour(value: float) -> timedelta:
         return timedelta(hours=value)
 
     @staticmethod
-    def day(value: float):
+    def day(value: float) -> timedelta:
         return timedelta(days=value)
 
     @staticmethod
-    def week(value: float):
+    def week(value: float) -> timedelta:
         return timedelta(weeks=value)
 
     @staticmethod
-    def month(value: float):
+    def month(value: float) -> timedelta:
         return timedelta(days=value * 30)
 
     @staticmethod
-    def year(value: float):
+    def year(value: float) -> timedelta:
         return timedelta(days=value * 365)
 
     @staticmethod
-    def decade(value: float):
+    def decade(value: float) -> timedelta:
         return timedelta(days=value * 365 * 10)
 
     @staticmethod
-    def century(value: float):
+    def century(value: float) -> timedelta:
         return timedelta(days=value * 365 * 100)
 
     @staticmethod
-    def millennium(value: float):
+    def millennium(value: float) -> timedelta:
         return timedelta(days=value * 365 * 1000)
+
+    def __getitem__(self, item: str):
+        return getattr(Units, item)
 
 
 class TimeManager:
@@ -55,17 +58,18 @@ class TimeManager:
     def add_time(self, id: int, time: datetime):
         self.time_map[str(id)] = time
 
-    def increase_time(self, id: int, value, unit: type[Callable[[float], datetime]]):
-        if str(id) not in self.time_map:
-            raise ValueError("ID not found in the time map.")
+    def increase_time(self, map_id: int, value, unit: type[Callable[[float], datetime]]):
+        if str(map_id) not in self.time_map:
+            raise ValueError(f"ID {map_id} not found in the time map.")
 
-        time = self.time_map[str(id)]
+        time = self.time_map[str(map_id)]
         new_time = time + unit(value)
-        self.time_map[str(id)] = new_time
+        self.time_map[str(map_id)] = new_time
 
 
 manager = TimeManager()
 
 manager.add_time(1, datetime.now())
-manager.increase_time(2, 5, Units.minute)
-print(manager.time_map['id1'])
+manager.increase_time(1, 5, Units.minute)
+
+print(Units["test"])

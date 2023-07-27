@@ -11,12 +11,9 @@ from utils.utils_types import SensorLog
 
 class MarkovChainNodeDataProcessor(NodeDataProcessor):
 
-    def __init__(self,
-                 node_id: int,
-                 sensor_manager: SensorManager,
-                 transition_matrix: List[List[float]] = None,
-                 duration_matrix: List[List[float | tuple[float, float]]] = None,
-                 ):
+    def __init__(self, node_id: int, sensor_manager: SensorManager, transition_matrix: List[List[float]] = None,
+                 duration_matrix: List[List[float | tuple[float, float]]] = None):
+        super().__init__()
         self.node_id = node_id
 
         self.sensors_names: List[str] = sensor_manager.get_sensor_names()
@@ -32,8 +29,10 @@ class MarkovChainNodeDataProcessor(NodeDataProcessor):
         self.STARTING_SENSOR_INDEX: int = 0
 
         self.previous_time: datetime = datetime.now()
+        self.transition_matrix = transition_matrix
 
-        self.init_markov_chain(self.sensors_names, transition_matrix)
+    def init_cache_generation(self):
+        self.init_markov_chain(self.sensors_names, self.transition_matrix)
 
     def init_markov_chain(self, sensors: List[str], transition_matrix: List[List[float]]):
         """
