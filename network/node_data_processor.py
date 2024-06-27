@@ -1,7 +1,7 @@
 import abc
 from typing import List
 
-from utils.utils_types import SensorLog
+from utils.utils_types import GeneratedEvent
 
 
 class NodeDataProcessor(metaclass=abc.ABCMeta):
@@ -10,7 +10,7 @@ class NodeDataProcessor(metaclass=abc.ABCMeta):
         self.CACHE_LENGTH: int = 0
 
     @abc.abstractmethod
-    def generate_cache(self, cache_length: int) -> List[SensorLog]:
+    def generate_cache(self, cache_length: int) -> List[GeneratedEvent]:
         pass
 
     @abc.abstractmethod

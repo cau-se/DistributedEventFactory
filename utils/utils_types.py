@@ -5,11 +5,10 @@ from typing import List
 
 
 @dataclass
-class SensorLog:
+class GeneratedEvent:
     """
     A data class representing the type for a sensor log
     """
-
     timestamp: datetime.datetime
     sensor_value: any
     case_id: str

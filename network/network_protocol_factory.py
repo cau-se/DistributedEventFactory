@@ -1,5 +1,7 @@
 from abc import ABC, abstractmethod
-from typing import Type, Dict, Callable
+from typing import Type, Dict, Callable, List
+
+from utils.utils_types import GeneratedEvent
 
 
 class BaseNetworkProtocol(ABC):
@@ -8,7 +10,7 @@ class BaseNetworkProtocol(ABC):
     """
 
     @abstractmethod
-    def run(self, url: str, data_function: Callable[[None], str], tick_sleep: float) -> None:
+    def run(self, url: str, data_function: Callable[[None], List[GeneratedEvent]], tick_sleep: float) -> None:
         """
         Send data over the connection.
         :param url: Url od the application.

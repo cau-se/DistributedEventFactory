@@ -5,7 +5,7 @@ import random as rd
 from behavior_modifier.modifier_list import BaseBehaviorModifier
 from network.node_data_processor import NodeDataProcessor
 
-from utils.utils_types import SensorLog
+from utils.utils_types import GeneratedEvent
 
 
 class Node:
@@ -19,9 +19,9 @@ class Node:
         self.id: int = node_id
         self.node_data_processor: NodeDataProcessor = node_data_processor
         self.IDLE = False
-        self.data: SensorLog = None
+        self.data: GeneratedEvent = None
 
-        self.sensor_log_cache: List[SensorLog] = []
+        self.sensor_log_cache: List[GeneratedEvent] = []
         self.behavior_modifiers_list: List[BaseBehaviorModifier] = []
 
         self.current_cache_index: int = 0
@@ -39,13 +39,13 @@ class Node:
         if self.node_data_processor.CACHE_IS_READY and self.is_more_data_needed():
             self.reset_cache_and_apply_modifiers()
 
-            current_data: SensorLog = self.sensor_log_cache[self.current_cache_index]
+            current_data: GeneratedEvent = self.sensor_log_cache[self.current_cache_index]
             self.data = current_data
             self.current_cache_index += 1
         elif not self.node_data_processor.CACHE_IS_READY and self.is_more_data_needed():
             self.data = None
         elif self.node_data_processor.CACHE_IS_READY and not self.is_more_data_needed():
-            current_data: SensorLog = self.sensor_log_cache[self.current_cache_index]
+            current_data: GeneratedEvent = self.sensor_log_cache[self.current_cache_index]
             self.data = current_data
             self.current_cache_index += 1
         elif not self.node_data_processor.CACHE_IS_READY and not self.is_more_data_needed():
@@ -79,7 +79,7 @@ class Node:
         else:
             self.IDLE = True
 
-    def get_filtered_sensor_cache(self, filter_func: Callable[[SensorLog], List[SensorLog]]) -> List[SensorLog]:
+    def get_filtered_sensor_cache(self, filter_func: Callable[[GeneratedEvent], List[GeneratedEvent]]) -> List[GeneratedEvent]:
         """
         Returns a filtered list of SensorLog objects from the sensor log cache.
 
@@ -89,7 +89,7 @@ class Node:
         :type filter_func: Callable[[SensorLog], bool]
 
         :return: A list of SensorLog objects that meet the criteria of the filter function.
-        :rtype: List[SensorLog]
+        :rtype: List[GeneratedEvent]
         """
         return list(filter(filter_func, self.sensor_log_cache))
 

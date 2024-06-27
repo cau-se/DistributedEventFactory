@@ -2,12 +2,12 @@ import copy
 from abc import ABC, abstractmethod
 from typing import List
 from random import shuffle, randint, random, sample
-from utils.utils_types import SensorLog, fisher_yates_shuffle
+from utils.utils_types import GeneratedEvent, fisher_yates_shuffle
 
 
 class BaseBehaviorModifier(ABC):
     @abstractmethod
-    def mutate_cache(self, cache: List[SensorLog]) -> List[SensorLog]:
+    def mutate_cache(self, cache: List[GeneratedEvent]) -> List[GeneratedEvent]:
         """
         This method gets called if the node generate a new set
         of sensor logs (the old cache is empty),
@@ -24,10 +24,10 @@ class NoiseBehaviorModifier(BaseBehaviorModifier):
         self.frequency = frequency
         self.change_value = change_value
 
-    def mutate_cache(self, cache: List[SensorLog]) -> List[SensorLog]:
+    def mutate_cache(self, cache: List[GeneratedEvent]) -> List[GeneratedEvent]:
         return self.add_noise(cache)
 
-    def add_noise(self, lst: List[SensorLog]):
+    def add_noise(self, lst: List[GeneratedEvent]):
         """
         Adds noise to a list of SensorLog.
 
@@ -63,18 +63,18 @@ class OutlierBehaviorModifier(BaseBehaviorModifier):
         self.frequency = frequency
         self.type = type
 
-    def mutate_cache(self, cache: List[SensorLog]) -> List[SensorLog]:
+    def mutate_cache(self, cache: List[GeneratedEvent]) -> List[GeneratedEvent]:
         return cache
 
 
 class RandomizeBehaviorModifier(BaseBehaviorModifier):
 
-    def mutate_cache(self, cache: List[SensorLog]) -> List[SensorLog]:
+    def mutate_cache(self, cache: List[GeneratedEvent]) -> List[GeneratedEvent]:
         return fisher_yates_shuffle(cache, self.frequency)
 
 
 
 
 class OutlierGeneratorModifier(BaseBehaviorModifier):
-    def mutate_cache(self, cache: List[SensorLog]) -> List[SensorLog]:
+    def mutate_cache(self, cache: List[GeneratedEvent]) -> List[GeneratedEvent]:
         return cache

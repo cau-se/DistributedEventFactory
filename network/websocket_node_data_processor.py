@@ -2,13 +2,13 @@ import json
 import threading
 import simple_websocket
 from network.node_data_processor import NodeDataProcessor
-from utils.utils_types import SensorLog
+from utils.utils_types import GeneratedEvent
 import copy
 from typing import List
 
 
-def parse_message_to_sensor_log(m: dict) -> SensorLog:
-    return SensorLog(
+def parse_message_to_sensor_log(m: dict) -> GeneratedEvent:
+    return GeneratedEvent(
         sensor_name=m["sensor_name"],
         timestamp=m["timestamp"],
         sensor_value=m["sensor_value"],
@@ -21,7 +21,7 @@ def parse_message_to_sensor_log(m: dict) -> SensorLog:
 class WebsocketNodeDataProcessor(NodeDataProcessor):
     def __init__(self, url: str):
         super().__init__()
-        self.websocket_sensor_cache: List[SensorLog | List[SensorLog]] = []
+        self.websocket_sensor_cache: List[GeneratedEvent | List[GeneratedEvent]] = []
 
         self.URL: str = url
         self.CACHE_IS_READY: bool = False
@@ -56,7 +56,7 @@ class WebsocketNodeDataProcessor(NodeDataProcessor):
         message_load: dict | list[dict] = json.loads(message)
 
         if isinstance(message_load, list):
-            temp_sensor_logs: list[SensorLog] = []
+            temp_sensor_logs: list[GeneratedEvent] = []
             for m in message_load:
                 temp_sensor_logs.append(parse_message_to_sensor_log(m))
             self.websocket_sensor_cache.append(temp_sensor_logs)
@@ -80,7 +80,7 @@ class WebsocketNodeDataProcessor(NodeDataProcessor):
         self.PROCESSOR_CONNECTION_IS_OPEN = True
         self.PROCESSOR_HAS_ERROR = False
 
-    def generate_cache(self, cache_length: int) -> List[SensorLog] | None:
+    def generate_cache(self, cache_length: int) -> List[GeneratedEvent] | None:
         if self.CACHE_IS_READY:
             try:
                 cache_to_use = copy.deepcopy(self.websocket_sensor_cache[:self.CACHE_LENGTH])

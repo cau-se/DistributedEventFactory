@@ -24,11 +24,11 @@ class BaseSensor(ABC):
         pass
 
 class SensorManager:
-    sensors: dict[str, BaseSensor] = {}
     def __init__(self):
         """
         Initialize an empty sensor manager
         """
+        self.sensors: dict[str, BaseSensor] = {}
         pass
 
     def add_sensor(self, sensor: BaseSensor):
@@ -49,3 +49,6 @@ class SensorManager:
 
     def get_sensor_names(self) -> List[str]:
         return [v.get_name() for _,v in self.sensors.items()]
+
+    def get_sensors(self) -> List[BaseSensor]:
+        return [v for _,v in self.sensors.items()]

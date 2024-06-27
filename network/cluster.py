@@ -1,10 +1,15 @@
 import json
 from typing import List, Callable, Any, Type
 
+from network.event_sender import EventSender
 from network.network_protocol_factory import BaseNetworkProtocol, NetworkProtocolFactory
 from network.network_protocols import WebSocket
+from network.network_protocols import Kafka
 from network.node import Node
-from utils.utils_types import SensorLog
+from provider.data.data_provider import NodeDataProvider
+from provider.load.load_provider import GradualIncreasingLoadProvider
+from provider.sender.sender_provider import KafkaSender, PrintConsole, WebSocketSender
+from utils.utils_types import GeneratedEvent
 
 
 class Cluster:
@@ -15,19 +20,20 @@ class Cluster:
     which takes in a list of Node objects and initializes a new Cluster object.
     """
 
-    def __init__(self, nodes: List[Node], join_function: Callable[[List[SensorLog]], SensorLog] = None):
+    def __init__(self, nodes: List[Node], join_function: Callable[[List[GeneratedEvent]], GeneratedEvent] = None, protocolName='websocket'):
         self.nodes: List[Node] = nodes
 
         node_errors = self.validate_nodes()
         if len(node_errors) > 0:
             raise Exception(node_errors)
 
-        self.join_function: Callable[[List[SensorLog]], SensorLog] = join_function
+        self.join_function: Callable[[List[GeneratedEvent]], GeneratedEvent] = join_function
 
         self.network_factory = NetworkProtocolFactory()
         # create default network protocol
+        self.network_factory.register_protocol('kafka', Kafka)
         self.network_factory.register_protocol('websocket', WebSocket)
-        self.network: BaseNetworkProtocol = self.network_factory.create_protocol("websocket")
+        self.network: BaseNetworkProtocol = self.network_factory.create_protocol(protocolName)
 
     def register_network_protocol(self, network_name: str, protocol: Type[BaseNetworkProtocol], use_protocol=True):
         self.network_factory.register_protocol(network_name, protocol)
@@ -35,16 +41,26 @@ class Cluster:
         if use_protocol:
             self.network = self.network_factory.create_protocol(network_name)
 
-    def start(self, url: str, tick_speed: float = 1):
+    def start(self):
         """
         Start the cluster on a given url
         :param url:
         :param tick_speed:
         :return:
         """
-        self.network.run(url, self.get_data, tick_speed)
+        sender = EventSender()
+        sender.run(
+            sender_provider=WebSocketSender(host="localhost", port=8080),
+            data_provider=NodeDataProvider(nodes=self.nodes, join_function=self.join_function),
+            load_provider=GradualIncreasingLoadProvider(
+                tick_count_til_maximum_reached=60,
+                minimal_load=0,
+                maximal_load=100
+            )
+        )
 
-    def get_data(self) -> str:
+
+    def get_data(self) -> GeneratedEvent:
         """
         This Function gets called in every tick and returns the current data from the selected node
         :return: the stringify version of the dataclass[SensorLog]
@@ -54,15 +70,9 @@ class Cluster:
             node.refresh_data()
 
         if self.join_function is not None:
-            data: SensorLog = self.join_function([node.data for node in self.nodes if node.data])
+            data: GeneratedEvent = self.join_function([node.data for node in self.nodes if node.data])
             data.timestamp = str(data.timestamp)
-            return json.dumps(data.__dict__)
-        else:
-            nodes_data: List[SensorLog] = [node.data for node in self.nodes if node.data]
-            for i, node_data in enumerate(nodes_data):
-                nodes_data[i].timestamp = str(node_data.timestamp)
-
-            return json.dumps([data.__dict__ for data in nodes_data])
+            return data
 
     def validate_nodes(self) -> List[Exception]:
         """

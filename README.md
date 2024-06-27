@@ -102,15 +102,15 @@ nodes[2].add_behavior_modifier(
  On this example the list would be five elements, because five nodes were created. 
  If no function is specified, the list of SensorLogs is simply passed without a filter.
 
-
 ```python
-from utils.utils_types import SensorLog
+from utils.utils_types import GeneratedEvent
 from typing import List
 import random as rd
 from network.cluster import Cluster
 
-def node_join_function(data: List[SensorLog]) -> SensorLog:
-    return rd.choice(data)
+
+def node_join_function(data: List[GeneratedEvent]) -> GeneratedEvent:
+ return rd.choice(data)
 
 
 cluster: Cluster = Cluster(nodes, node_join_function)

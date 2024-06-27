@@ -2,11 +2,10 @@ from datetime import datetime, timedelta
 from typing import List
 from uuid import uuid4
 import random as rd
-from behavior_modifier.modifier_list import BaseBehaviorModifier
 from network.node_data_processor import NodeDataProcessor
 from sensors.sensors import SensorManager
 from utils.markov_chain import MarkovChain
-from utils.utils_types import SensorLog
+from utils.utils_types import GeneratedEvent
 
 
 class MarkovChainNodeDataProcessor(NodeDataProcessor):
@@ -44,7 +43,7 @@ class MarkovChainNodeDataProcessor(NodeDataProcessor):
         """
         self.markov_chain = MarkovChain(sensors, transition_matrix)
 
-    def generate_cache(self, cache_length: int) -> List[SensorLog]:
+    def generate_cache(self, cache_length: int) -> List[GeneratedEvent]:
         """
         This method uses the markov_chain object to simulate a sequence of
         sensor states and creates SensorLog objects for each state.
@@ -60,7 +59,7 @@ class MarkovChainNodeDataProcessor(NodeDataProcessor):
         previous_state = self.STARTING_SENSOR_INDEX
 
         i: int = 0
-        sensor_log_cache: List[SensorLog] = []
+        sensor_log_cache: List[GeneratedEvent] = []
 
         for state in execution_list:
 
@@ -70,7 +69,7 @@ class MarkovChainNodeDataProcessor(NodeDataProcessor):
                 i = 0
                 previous_state = self.STARTING_SENSOR_INDEX
 
-            duration = self.duration_matrix[previous_state][self.sensors_names.index(state)]
+            duration = self.duration_matrix[previous_state][self.sensors_names.index(state)].get_duration()
 
             if isinstance(duration, tuple):
                 duration = rd.uniform(duration[0], duration[1])
@@ -82,7 +81,7 @@ class MarkovChainNodeDataProcessor(NodeDataProcessor):
             sensor_generator = sensor.get_data()
             sensor_value = next(sensor_generator)
 
-            sensor_log = SensorLog(
+            sensor_log = GeneratedEvent(
                 sensor_value=sensor_value,
                 case_id=f"{uuid}_{i}",
                 timestamp=timestamp,
@@ -93,7 +92,7 @@ class MarkovChainNodeDataProcessor(NodeDataProcessor):
 
             sensor_log_cache.append(sensor_log)
             previous_state = self.sensors_names.index(state)
-            previous_timestamp = timestamp
+            self.previous_timestamp = timestamp
             i += 1
 
         return sensor_log_cache

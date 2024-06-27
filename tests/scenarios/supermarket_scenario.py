@@ -1,5 +1,6 @@
 from sensors.sensor_collection import SingleValueSensor
 from sensors.sensors import SensorManager
+from provider.transition.duration_provider import UniformDurationProvider
 from utils.markov_chain import MarkovChain
 from utils.transition_matrix_builder import TransitionMatrixBuilder
 
@@ -16,62 +17,65 @@ SUPERMARKET_SENSOR_MANAGER.add_sensor(SingleValueSensor(["Enter Beverages"], "Be
 SUPERMARKET_SENSOR_MANAGER.add_sensor(SingleValueSensor(["Enter Baker"], "Baker"))
 SUPERMARKET_SENSOR_MANAGER.add_sensor(SingleValueSensor(["Enter Cash registers"], "Cash_registers"))
 
+duration_provider = UniformDurationProvider(1,2)
 
 SUPERMARKET_BUILDER = TransitionMatrixBuilder()
 SUPERMARKET_BUILDER.add_state("Entrance_and_exit", p=0.0)\
-    .to(next_state="Sweets_snacks", p=1, t=(1, 2))
+    .to(next_state="Sweets_snacks", p=1, duration=duration_provider)
 
 SUPERMARKET_BUILDER.add_state("Sweets_snacks", p=0.0)\
-    .to(next_state="Entrance_and_exit", p=0.25, t=(1, 2))\
-    .to(next_state="Vegetables", p=0.25, t=(1, 2))\
-    .to(next_state="Meat_poultry", p=0.25, t=(1, 2))\
-    .to(next_state="Canned_dry_goods", p=0.25, t=(1, 2))\
+    .to(next_state="Entrance_and_exit", p=0.25, duration=duration_provider)\
+    .to(next_state="Vegetables", p=0.25, duration=duration_provider)\
+    .to(next_state="Meat_poultry", p=0.25, duration=duration_provider)\
+    .to(next_state="Canned_dry_goods", p=0.25, duration=duration_provider)\
 
 SUPERMARKET_BUILDER.add_state("Fruit", p=0.0)\
-    .to(next_state="Vegetables", p=0.5, t=(1, 2)) \
-    .to(next_state="Meat_poultry", p=0.5, t=(1, 2))\
+    .to(next_state="Vegetables", p=0.5, duration=duration_provider) \
+    .to(next_state="Meat_poultry", p=0.5, duration=duration_provider)\
 
 SUPERMARKET_BUILDER.add_state("Vegetables", p=0.0)\
-    .to(next_state="Fruit", p=1, t=(1, 2)) \
+    .to(next_state="Fruit", p=1, duration=duration_provider) \
 
 SUPERMARKET_BUILDER.add_state("Meat_poultry", p=0.0)\
-    .to(next_state="Canned_dry_goods", p=0.5, t=(1, 2))\
-    .to(next_state="Sweets_snacks", p=0.5, t=(1, 2))\
+    .to(next_state="Canned_dry_goods", p=0.5, duration=duration_provider)\
+    .to(next_state="Sweets_snacks", p=0.5, duration=duration_provider)\
 
 
 SUPERMARKET_BUILDER.add_state("Canned_dry_goods", p=0.0) \
-    .to(next_state="Meat_poultry", p=1/6, t=(1, 2)) \
-    .to(next_state="Sweets_snacks", p=1/6, t=(1, 2)) \
-    .to(next_state="Cash_registers", p=1/6, t=(1, 2)) \
-    .to(next_state="Beverages", p=1/6, t=(1, 2)) \
-    .to(next_state="Dairy_products_eggs", p=1/6, t=(1, 2)) \
-    .to(next_state="Frozen_food", p=1/6, t=(1, 2)) \
+    .to(next_state="Meat_poultry", p=1/6, duration=duration_provider) \
+    .to(next_state="Sweets_snacks", p=1/6, duration=duration_provider) \
+    .to(next_state="Cash_registers", p=1/6, duration=duration_provider) \
+    .to(next_state="Beverages", p=1/6, duration=duration_provider) \
+    .to(next_state="Dairy_products_eggs", p=1/6, duration=duration_provider) \
+    .to(next_state="Frozen_food", p=1/6, duration=duration_provider) \
 
 SUPERMARKET_BUILDER.add_state("Dairy_products_eggs", p=0.0)\
-    .to(next_state="Canned_dry_goods", p=0.5, t=(1, 2))\
-    .to(next_state="Sweets_snacks", p=0.5, t=(1, 2))\
+    .to(next_state="Canned_dry_goods", p=0.5, duration=duration_provider)\
+    .to(next_state="Sweets_snacks", p=0.5, duration=duration_provider)\
 
 SUPERMARKET_BUILDER.add_state("Frozen_food", p=0.0) \
-    .to(next_state="Dairy_products_eggs", p=1/3, t=(1, 2)) \
-    .to(next_state="Canned_dry_goods", p=1/3, t=(1, 2)) \
-    .to(next_state="Beverages", p=1/3, t=(1, 2)) \
+    .to(next_state="Dairy_products_eggs", p=1/3, duration=duration_provider) \
+    .to(next_state="Canned_dry_goods", p=1/3, duration=duration_provider) \
+    .to(next_state="Beverages", p=1/3, duration=duration_provider) \
 
 SUPERMARKET_BUILDER.add_state("Beverages", p=0.0)\
-    .to(next_state="Frozen_food", p=0.25, t=(1, 2))\
-    .to(next_state="Canned_dry_goods", p=0.25, t=(1, 2))\
-    .to(next_state="Cash_registers", p=0.25, t=(1, 2))\
-    .to(next_state="Baker", p=0.25, t=(1, 2))\
+    .to(next_state="Frozen_food", p=0.25, duration=duration_provider)\
+    .to(next_state="Canned_dry_goods", p=0.25, duration=duration_provider)\
+    .to(next_state="Cash_registers", p=0.25, duration=duration_provider)\
+    .to(next_state="Baker", p=0.25, duration=duration_provider)\
 
 
 SUPERMARKET_BUILDER.add_state("Baker", p=0.0)\
-    .to(next_state="Beverages", p=0.5, t=(1, 2))\
-    .to(next_state="Cash_registers", p=0.5, t=(1, 2))\
+    .to(next_state="Beverages", p=0.5, duration=duration_provider)\
+    .to(next_state="Cash_registers", p=0.5, duration=duration_provider)\
 
 SUPERMARKET_BUILDER.add_state("Cash_registers", p=0.0)\
-    .to("Entrance_and_exit", p=1, t=2)
+    .to("Entrance_and_exit", p=1, duration=duration_provider)
 
 
 if __name__ == "__main__":
     markov_chain = MarkovChain(SUPERMARKET_SENSOR_MANAGER.get_sensor_names(), SUPERMARKET_BUILDER.to_transition_matrix())
+    SUPERMARKET_BUILDER.print_transition_matrix()
+    SUPERMARKET_BUILDER.print_duration_matrix()
     markov_chain.simulate(0, 10)
     markov_chain.visualize()

@@ -3,10 +3,10 @@ from datetime import datetime, timedelta
 from typing import List
 from dataclasses import dataclass
 
-from utils.utils_types import SensorLog, OutlierCategory
+from utils.utils_types import GeneratedEvent, OutlierCategory
 
 
-def integrate_outliers(sensor_logs: List[SensorLog], outlier_type: str, percentage: float) -> List[SensorLog]:
+def integrate_outliers(sensor_logs: List[GeneratedEvent], outlier_type: str, percentage: float) -> List[GeneratedEvent]:
     """
     Integrate outliers into the SensorLog list based on the given outlier type and percentage.
     """
@@ -14,7 +14,7 @@ def integrate_outliers(sensor_logs: List[SensorLog], outlier_type: str, percenta
     case_ids: set[str] = set(log.case_id for log in sensor_logs)
 
     for case_id in case_ids:
-        case_logs: list[SensorLog] = list(filter(lambda l: l.case_id == case_id, sensor_logs))
+        case_logs: list[GeneratedEvent] = list(filter(lambda l: l.case_id == case_id, sensor_logs))
         num_outliers: int = int(len(case_logs) * percentage)
 
         if outlier_type == OutlierCategory.POINT_OUTLIER:
@@ -28,7 +28,7 @@ def integrate_outliers(sensor_logs: List[SensorLog], outlier_type: str, percenta
     return integrated_logs
 
 
-def generate_point_outliers(case_logs: List[SensorLog], num_outliers: int) -> List[SensorLog]:
+def generate_point_outliers(case_logs: List[GeneratedEvent], num_outliers: int) -> List[GeneratedEvent]:
     """
     Generate Point Outliers by randomly selecting data points and modifying their values.
     """
@@ -36,7 +36,7 @@ def generate_point_outliers(case_logs: List[SensorLog], num_outliers: int) -> Li
 
     for _ in range(num_outliers):
         log = random.choice(case_logs)
-        outlier_log = SensorLog(
+        outlier_log = GeneratedEvent(
             timestamp=log.timestamp,
             sensor_value=generate_outlier_value(log.sensor_value),
             case_id=log.case_id,
@@ -49,7 +49,7 @@ def generate_point_outliers(case_logs: List[SensorLog], num_outliers: int) -> Li
     return outlier_logs
 
 
-def generate_contextual_outliers(case_logs: List[SensorLog], num_outliers: int) -> List[SensorLog]:
+def generate_contextual_outliers(case_logs: List[GeneratedEvent], num_outliers: int) -> List[GeneratedEvent]:
     """
     Generate Contextual Outliers by modifying the values based on the surrounding data points.
     """
@@ -60,7 +60,7 @@ def generate_contextual_outliers(case_logs: List[SensorLog], num_outliers: int) 
         previous_log = case_logs[case_logs.index(log) - 1]
         next_log = case_logs[case_logs.index(log) + 1]
 
-        outlier_log = SensorLog(
+        outlier_log = GeneratedEvent(
             timestamp=log.timestamp,
             sensor_value=(previous_log.sensor_value + next_log.sensor_value) / 2,
             case_id=log.case_id,
@@ -73,7 +73,7 @@ def generate_contextual_outliers(case_logs: List[SensorLog], num_outliers: int) 
     return outlier_logs
 
 
-def generate_subsequence_outliers(case_logs: List[SensorLog], num_outliers: int) -> List[SensorLog]:
+def generate_subsequence_outliers(case_logs: List[GeneratedEvent], num_outliers: int) -> List[GeneratedEvent]:
     """
     Generate Subsequence as an Outlier by randomly selecting subsequences and modifying their values.
     """
@@ -86,7 +86,7 @@ def generate_subsequence_outliers(case_logs: List[SensorLog], num_outliers: int)
 
         outlier_subsequence = []
         for log in subsequence:
-            outlier_log = SensorLog(
+            outlier_log = GeneratedEvent(
                 timestamp=log.timestamp,
                 sensor_value=generate_outlier_value(log.sensor_value),
                 case_id=log.case_id,
