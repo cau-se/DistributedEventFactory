@@ -6,9 +6,9 @@ from network.network_protocol_factory import BaseNetworkProtocol, NetworkProtoco
 from network.network_protocols import WebSocket
 from network.network_protocols import Kafka
 from network.node import Node
-from provider.data.data_provider import NodeDataProvider
-from provider.load.load_provider import GradualIncreasingLoadProvider
-from provider.sender.sender_provider import KafkaSender, PrintConsole, WebSocketSender
+from provider.data.data_provider import NodeDataProvider, DataProvider
+from provider.load.load_provider import GradualIncreasingLoadProvider, LoadProvider
+from provider.sender.sender_provider import PrintConsole, SenderProvider
 from utils.utils_types import GeneratedEvent
 
 
@@ -19,8 +19,15 @@ class Cluster:
     returns a single SensorLog object. It also has a single method, __init__,
     which takes in a list of Node objects and initializes a new Cluster object.
     """
-
-    def __init__(self, nodes: List[Node], join_function: Callable[[List[GeneratedEvent]], GeneratedEvent] = None, protocolName='websocket'):
+    def __init__(
+            self,
+            nodes: List[Node],
+            join_function: Callable[[List[GeneratedEvent]], GeneratedEvent] = None,
+            protocolName='websocket',
+            sender_provider: SenderProvider = None,
+            data_provider: DataProvider =None,
+            load_provider: LoadProvider =None
+    ):
         self.nodes: List[Node] = nodes
 
         node_errors = self.validate_nodes()
@@ -34,6 +41,9 @@ class Cluster:
         self.network_factory.register_protocol('kafka', Kafka)
         self.network_factory.register_protocol('websocket', WebSocket)
         self.network: BaseNetworkProtocol = self.network_factory.create_protocol(protocolName)
+        self.sender_provider = sender_provider,
+        self.data_provider = data_provider,
+        self.load_provider = load_provider
 
     def register_network_protocol(self, network_name: str, protocol: Type[BaseNetworkProtocol], use_protocol=True):
         self.network_factory.register_protocol(network_name, protocol)
@@ -50,7 +60,7 @@ class Cluster:
         """
         sender = EventSender()
         sender.run(
-            sender_provider=WebSocketSender(host="localhost", port=8080),
+            sender_provider=PrintConsole(),
             data_provider=NodeDataProvider(nodes=self.nodes, join_function=self.join_function),
             load_provider=GradualIncreasingLoadProvider(
                 tick_count_til_maximum_reached=60,
