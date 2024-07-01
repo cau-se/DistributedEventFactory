@@ -1,44 +1,22 @@
-from abc import abstractmethod
-
-from dataclasses import dataclass
+import abc
+import numpy as np
 from typing import List
-
-from provider.generic.count_provider import CountProvider
-from provider.transition.duration_provider import DurationProvider
-from provider.transition.next_state_provider import NextStateProvider
-from provider.transition.transition_probability_provider import TransitionProbabilityProvider
-
-
-@dataclass
-class Transition:
-    next_state: str
-    probability: float
+from core.sensor_id import SensorId
 
 
 class TransitionProvider:
 
-    @abstractmethod
-    def get_transition(self) -> Transition:
+    @abc.abstractmethod
+    def get_next_sensor(self):
         pass
 
 
-class AbstractTransitionProvider(TransitionProvider):
-    def __init__(self, duration_provider, next_state_provider, transition_probability_provider, transition_count_provider, possible_transitions):
-        self.duration_provider: DurationProvider = duration_provider
-        self.next_state_provider: NextStateProvider = next_state_provider
-        self.transition_probability_provider: TransitionProbabilityProvider = transition_probability_provider
-        self.transition_count_provider: CountProvider = transition_count_provider
-        self.possible_transitions = possible_transitions
+class GenericTransitionProvider(TransitionProvider):
 
-    def get_transition(self) -> Transition:
-        transitions = []
-        next_states: List[str] = self.next_state_provider.get_next_states(
-            self.possible_transitions,
-            self.transition_count_provider.get(max=len(self.possible_transitions) - 1))
-        probabilities = self.transition_probability_provider.get_transition_probabilities(len(next_states))
+    def __init__(self, next_sensors, next_sensor_probabilities):
+        self.next_sensors: List[SensorId] = next_sensors
+        self.next_sensor_probabilities = next_sensor_probabilities
 
-        for next_state, probability in zip(next_states, probabilities):
-            transitions.append(Transition(next_state, probability, self.duration_provider))
-
-        # TODO here
-        return transitions[0]
+    def get_next_sensor(self) -> SensorId:
+        i = np.random.choice(len(self.next_sensors), p=np.array(self.next_sensor_probabilities))
+        return self.next_sensors[i]

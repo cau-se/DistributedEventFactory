@@ -5,7 +5,7 @@ import core.sensor
 from core.sensor import GenericSensor
 from provider.transition.duration_provider import StaticDurationProvider, GaussianDurationProvider
 from provider.transition.transition_probability_provider import DrawWithoutReplacementTransitionProvider
-from provider.transition.transition_provider_new import GenericTransitionProvider
+from provider.transition.transition_provider import GenericTransitionProvider
 from sensors.sensor_collection import SingleValueSensor
 import random
 from string import ascii_uppercase as alphabet

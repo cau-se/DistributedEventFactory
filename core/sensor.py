@@ -1,13 +1,16 @@
 from typing import List
 
-from provider.transition.transition_provider_new import TransitionProviderNew
-from core.util import SensorId
+from network.event_sender import EventSender
+from provider.sender.send_provider import Sender
+from provider.transition.duration_provider import DurationProvider
+from provider.transition.transition_provider import TransitionProvider
+from core.sensor_id import SensorId
 from utils.utils_types import GeneratedEvent
 
 
 class Sensor:
 
-    def emit_event(self, case, timestamp) -> str:
+    def emit_event(self, case, timestamp) -> GeneratedEvent:
         pass
 
     def get_sensor_transition(self) -> tuple[int, SensorId]:
@@ -24,12 +27,14 @@ class GenericSensor(Sensor):
     def __init__(
             self,
             sensor_id: SensorId,
-            transition_provider_new,
-            duration_provider
+            transition_provider: TransitionProvider,
+            duration_provider: DurationProvider,
+            sender: Sender
     ):
         self.sensor_id: SensorId = sensor_id
-        self.transition_provider_new: TransitionProviderNew = transition_provider_new
+        self.transition_provider_new: TransitionProvider = transition_provider
         self.duration_provider = duration_provider
+        self.sender = sender
         self.event_log = []
 
     def get_id(self) -> SensorId:
@@ -41,13 +46,13 @@ class GenericSensor(Sensor):
             timestamp=timestamp,
             sensor_value=event_name,
             case_id=case,
-            sensor_name=self.sensor_id.get_id(),
+            sensor_name=self.sensor_id.get_name(),
             status="Status",
             generated_by="GenBy"
         )
 
         self.event_log.append(event)
-        return event
+        self.sender.send(event)
 
     def get_sensor_transition(self):
         next_sensor = self.transition_provider_new.get_next_sensor()

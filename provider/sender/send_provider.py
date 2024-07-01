@@ -1,23 +1,18 @@
 import abc
-import asyncio
 import json
 
-import websocket
-import websockets
 from kafka import KafkaProducer
-
-from network.network_protocols import WebSocket
 from utils.utils_types import GeneratedEvent
 
 
-class SenderProvider:
+class Sender:
 
     @abc.abstractmethod
     def send(self, event: GeneratedEvent):
         pass
 
 
-class KafkaSender(SenderProvider):
+class KafkaSender(Sender):
 
     def __init__(self, bootstrap_server_url, client_id, topic):
         self.producer = KafkaProducer(
@@ -37,7 +32,22 @@ class KafkaSender(SenderProvider):
         ).add_callback(lambda record_metadata: print(record_metadata))
 
 
-class PrintConsole(SenderProvider):
-    def send(self, event: GeneratedEvent):
-        print(event)
+class PrintConsole(Sender):
 
+    def __init__(self, id):
+        self.id = id
+
+    def send(self, event: GeneratedEvent):
+        print("Sensor" + self.id + ": " + str(event))
+
+
+class SendProvider:
+
+    @abc.abstractmethod
+    def get_sender(self, id) -> Sender:
+        pass
+
+
+class PrintConsoleSendProvider(SendProvider):
+    def get_sender(self, id) -> Sender:
+        return PrintConsole(id)

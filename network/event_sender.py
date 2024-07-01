@@ -3,11 +3,11 @@ from scheduled_futures import ScheduledThreadPoolExecutor
 
 from provider.data.data_provider import DataProvider
 from provider.load.load_provider import LoadProvider
-from provider.sender.sender_provider import SenderProvider
+from provider.sender.send_provider import Sender
 
 
 class EventSender:
-    def run(self, sender_provider: SenderProvider, data_provider: DataProvider, load_provider: LoadProvider) -> None:
+    def run(self, sender_provider: Sender, data_provider: DataProvider, load_provider: LoadProvider) -> None:
         send_action = lambda: sender_provider.send(data_provider.get_data())
         with ScheduledThreadPoolExecutor() as executor:
             while True:

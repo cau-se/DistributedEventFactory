@@ -8,7 +8,7 @@ from network.network_protocols import Kafka
 from network.node import Node
 from provider.data.data_provider import NodeDataProvider, DataProvider
 from provider.load.load_provider import GradualIncreasingLoadProvider, LoadProvider
-from provider.sender.sender_provider import PrintConsole, SenderProvider
+from provider.sender.send_provider import PrintConsole, Sender
 from utils.utils_types import GeneratedEvent
 
 
@@ -24,7 +24,7 @@ class Cluster:
             nodes: List[Node],
             join_function: Callable[[List[GeneratedEvent]], GeneratedEvent] = None,
             protocolName='websocket',
-            sender_provider: SenderProvider = None,
+            sender_provider: Sender = None,
             data_provider: DataProvider =None,
             load_provider: LoadProvider =None
     ):

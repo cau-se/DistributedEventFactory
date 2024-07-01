@@ -2,7 +2,7 @@ class SensorId:
     def __init__(self, id: str):
         self.id: str = id
 
-    def get_id(self):
+    def get_name(self):
         return self.id
 
 START_SENSOR = SensorId("<start>")

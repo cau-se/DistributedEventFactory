@@ -7,7 +7,7 @@ from network.node import Node
 from provider.data.data_provider import NodeDataProvider
 from provider.generic.count_provider import StaticCountProvider, UniformCountProvider
 from provider.load.load_provider import GradualIncreasingLoadProvider
-from provider.sender.sender_provider import PrintConsole
+from provider.sender.send_provider import PrintConsole
 from provider.transition.next_state_provider import DistinctNextStateProvider
 from provider.provider_registry import ProviderRegistry
 from provider.sensor.sensor_provider import AbstractSensorProvider
