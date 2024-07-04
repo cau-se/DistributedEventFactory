@@ -1,16 +1,15 @@
 from typing import List
 
-from network.event_sender import EventSender
+from core.event import Event, GenEvent, StartEvent, EndEvent
 from provider.sender.send_provider import Sender
 from provider.transition.duration_provider import DurationProvider
 from provider.transition.transition_provider import TransitionProvider
-from core.sensor_id import SensorId
-from utils.utils_types import GeneratedEvent
+from core.sensor_id import SensorId, START_SENSOR_ID, END_SENSOR_ID
 
 
 class Sensor:
 
-    def emit_event(self, case, timestamp) -> GeneratedEvent:
+    def emit_event(self, case, timestamp):
         pass
 
     def get_sensor_transition(self) -> tuple[int, SensorId]:
@@ -23,6 +22,49 @@ class Sensor:
         pass
 
 
+class StartSensor(Sensor):
+
+    def __init__(self, transition_provider, sender):
+        self.event_log = []
+        self.transition_provider = transition_provider
+        self.sender = sender
+
+    def emit_event(self, case, timestamp):
+        event = StartEvent(case)
+        self.event_log.append(event)
+        self.sender.send(event)
+
+    def get_sensor_transition(self) -> tuple[int, SensorId]:
+        return 0, self.transition_provider.get_next_sensor()
+
+    def get_id(self) -> SensorId:
+        return START_SENSOR_ID
+
+    def get_event_log(self) -> List[str]:
+        return self.event_log
+
+
+class EndSensor(Sensor):
+
+    def __init__(self, sender):
+        self.event_log = []
+        self.sender = sender
+
+    def emit_event(self, case, timestamp):
+        event = EndEvent(case)
+        self.event_log.append(event)
+        self.sender.send(event)
+
+    def get_sensor_transition(self) -> tuple[int, SensorId]:
+        raise ValueError("There is no transition on the end sensor")
+
+    def get_id(self) -> SensorId:
+        return END_SENSOR_ID
+
+    def get_event_log(self) -> List[str]:
+        return self.event_log
+
+
 class GenericSensor(Sensor):
     def __init__(
             self,
@@ -32,7 +74,7 @@ class GenericSensor(Sensor):
             sender: Sender
     ):
         self.sensor_id: SensorId = sensor_id
-        self.transition_provider_new: TransitionProvider = transition_provider
+        self.transition_provider: TransitionProvider = transition_provider
         self.duration_provider = duration_provider
         self.sender = sender
         self.event_log = []
@@ -42,24 +84,20 @@ class GenericSensor(Sensor):
 
     def emit_event(self, case, timestamp):
         event_name = "Event " + self.sensor_id.id
-        event = GeneratedEvent(
+        event = GenEvent(
             timestamp=timestamp,
             sensor_value=event_name,
             case_id=case,
             sensor_name=self.sensor_id.get_name(),
-            status="Status",
-            generated_by="GenBy"
         )
 
         self.event_log.append(event)
         self.sender.send(event)
 
     def get_sensor_transition(self):
-        next_sensor = self.transition_provider_new.get_next_sensor()
+        next_sensor = self.transition_provider.get_next_sensor()
         duration = self.duration_provider.get_duration()
         return duration, next_sensor
 
     def get_event_log(self):
         return self.event_log
-
-

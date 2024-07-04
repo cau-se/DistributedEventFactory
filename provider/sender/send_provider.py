@@ -2,13 +2,15 @@ import abc
 import json
 
 from kafka import KafkaProducer
-from utils.utils_types import GeneratedEvent
+
+from core.event import Event
+from view.terminal import Terminal
 
 
 class Sender:
 
     @abc.abstractmethod
-    def send(self, event: GeneratedEvent):
+    def send(self, event: Event):
         pass
 
 
@@ -23,7 +25,7 @@ class KafkaSender(Sender):
         )
         self.topic = topic
 
-    def send(self, event: GeneratedEvent):
+    def send(self, event: Event):
         self.producer.send(
             self.topic,
             value=json.dumps(event.__dict__),
@@ -37,8 +39,16 @@ class PrintConsole(Sender):
     def __init__(self, id):
         self.id = id
 
-    def send(self, event: GeneratedEvent):
+    def send(self, event: Event):
         print("Sensor" + self.id + ": " + str(event))
+
+
+class TerminalGui(Sender):
+    def __init__(self, terminal):
+        self.terminal: Terminal = terminal
+
+    def send(self, event: Event):
+        self.terminal.print(event)
 
 
 class SendProvider:
@@ -51,3 +61,8 @@ class SendProvider:
 class PrintConsoleSendProvider(SendProvider):
     def get_sender(self, id) -> Sender:
         return PrintConsole(id)
+
+
+class TerminalGuiSendProvider(SendProvider):
+    def get_sender(self, id) -> Sender:
+        return TerminalGui(Terminal(title=id))
