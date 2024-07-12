@@ -1,3 +1,5 @@
+import abc
+from abc import ABC
 from typing import List
 
 from core.event import Event, GenEvent, StartEvent, EndEvent
@@ -7,24 +9,28 @@ from provider.transition.transition_provider import TransitionProvider
 from core.sensor_id import SensorId, START_SENSOR_ID, END_SENSOR_ID
 
 
-class Sensor:
+class Sensor(ABC):
 
-    def emit_event(self, case, timestamp):
+    @abc.abstractmethod
+    def emit_event(self, case, timestamp) -> None:
         pass
 
+    @abc.abstractmethod
     def get_sensor_transition(self) -> tuple[int, SensorId]:
         pass
 
+    @abc.abstractmethod
     def get_id(self) -> SensorId:
         pass
 
+    @abc.abstractmethod
     def get_event_log(self) -> List[str]:
         pass
 
 
 class StartSensor(Sensor):
 
-    def __init__(self, transition_provider, sender):
+    def __init__(self, transition_provider: TransitionProvider, sender):
         self.event_log = []
         self.transition_provider = transition_provider
         self.sender = sender

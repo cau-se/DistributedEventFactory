@@ -1,12 +1,12 @@
-import abc
+from abc import ABC, abstractmethod
 import numpy as np
 from typing import List
 from core.sensor_id import SensorId
 
 
-class TransitionProvider:
+class TransitionProvider(ABC):
 
-    @abc.abstractmethod
+    @abstractmethod
     def get_next_sensor(self):
         pass
 

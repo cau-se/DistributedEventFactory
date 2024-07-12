@@ -1,15 +1,12 @@
 import time
 
 from scheduled_futures import ScheduledThreadPoolExecutor
-from process_simulator import ProcessSimulator
-from provider.data.case_provider import CaseIdProvider, IncreasingCaseIdProvider
-from provider.generic.count_provider import CountProvider, StaticCountProvider
-from provider.load.load_provider import LoadProvider, GradualIncreasingLoadProvider
-from provider.sender.send_provider import PrintConsoleSendProvider, TerminalGuiSendProvider
-from provider.sensor.sensor_topology import SensorTopologyProvider, GenericSensorTopologyProvider
-from provider.transition.duration_provider import GaussianDurationProvider
-from provider.transition.next_state_provider import DistinctNextStateProvider
-from provider.transition.transition_probability_provider import DrawWithoutReplacementTransitionProvider
+from simulation.process_simulator import ProcessSimulator
+from provider.data.case_provider import CaseIdProvider
+from provider.generic.count_provider import CountProvider
+from provider.load.load_provider import LoadProvider
+from provider.sensor.sensor_topology import SensorTopologyProvider
+
 
 class Simulation:
 
@@ -27,24 +24,12 @@ class Simulation:
             case_id_provider=self.case_id_provider,
         )
 
+        # Make Event Loop interchangable because it does not show the Errors
         with ScheduledThreadPoolExecutor() as executor:
             while True:
-                scheduler = executor.schedule(process_simulator.simulate, period=1/self.load_provider.get_load_value())
+                scheduler = executor.schedule(
+                    process_simulator.simulate,
+                    period=1 / self.load_provider.get_load_value()
+                )
                 time.sleep(1)
                 scheduler.cancel()
-
-
-if __name__ == '__main__':
-    simulation = Simulation(
-        number_of_sensors_provider=StaticCountProvider(5),
-        sensor_topology_provider=GenericSensorTopologyProvider(
-            next_state_provider=DistinctNextStateProvider(),
-            transition_probability_provider=DrawWithoutReplacementTransitionProvider(),
-            transition_count_provider=StaticCountProvider(count=3),
-            duration_provider=GaussianDurationProvider(mu=10, sigma=1),
-            send_provider=TerminalGuiSendProvider()
-        ),
-        case_id_provider=IncreasingCaseIdProvider(),
-        load_provider=GradualIncreasingLoadProvider(10, 3, 10)
-    )
-    simulation.start()

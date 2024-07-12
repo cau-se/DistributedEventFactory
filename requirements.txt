@@ -5,3 +5,4 @@ websockets~=10.4
 rel==0.4.9
 websocket-client==1.6.1
 kafka-python==2.0.2
+scheduled-futures==1.1.0

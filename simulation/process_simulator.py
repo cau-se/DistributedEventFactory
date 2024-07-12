@@ -2,7 +2,6 @@ import random
 from datetime import datetime, timedelta
 from typing import List
 
-from core.event import Event
 from core.sensor import Sensor
 from core.sensor_id import END_SENSOR_ID, START_SENSOR_ID
 from provider.data.case_provider import CaseIdProvider

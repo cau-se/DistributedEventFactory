@@ -32,13 +32,14 @@ class EndEvent(Event):
 
 class GenEvent(Event):
     def __init__(self, timestamp, sensor_value, case_id, sensor_name):
-        self.timestamp: datetime.datetime = timestamp
+        # TODO here, bitte eine Lösung für den Timestamp finden
+        #self.timestamp = timestamp
         self.sensor_value: any = sensor_value
         self.case_id: str = case_id
         self.sensor_name: str = sensor_name
 
     def get_case(self):
-        return self.get_case()
+        return self.case_id
 
     def __str__(self):
         return str(self.__dict__)

@@ -1,10 +1,11 @@
 import abc
+from abc import ABC
 from typing import List
 
 from core.sensor import Sensor, GenericSensor, StartSensor, EndSensor
 from core.sensor_id import SensorId, START_SENSOR_ID, END_SENSOR_ID
 from provider.sender.send_provider import Sender, SendProvider
-from provider.transition.duration_provider import DurationProvider
+from provider.transition.duration_provider import DurationProvider, StaticDurationProvider, UniformDurationProvider
 from provider.transition.next_state_provider import NextStateProvider
 from provider.transition.transition_probability_provider import TransitionProbabilityProvider
 from provider.transition.transition_provider import GenericTransitionProvider
@@ -69,3 +70,53 @@ class GenericSensorTopologyProvider(SensorTopologyProvider):
             if sensor_id.get_name() != START_SENSOR_ID.get_name():
                 valid_sensor_ids.append(sensor_id)
         return valid_sensor_ids
+
+
+class ConcreteSensorTopologyProvider(SensorTopologyProvider, ABC):
+
+    def __init__(self, sender):
+        self.sender = sender
+
+    def get_sensors(self, number_of_sensors) -> List[Sensor]:
+        all_sensors = [SensorId("1"), SensorId("2"), SensorId("3"), END_SENSOR_ID]
+
+        return [
+            StartSensor(
+                transition_provider=
+                GenericTransitionProvider(
+                    next_sensors=all_sensors,
+                    next_sensor_probabilities=[0.3, 0.4, 0.3, 0]
+                ),
+                sender=self.sender.get_sender(id="start")
+            ),
+            GenericSensor(
+                sensor_id=SensorId("1"),
+                transition_provider=GenericTransitionProvider(
+                    next_sensors=all_sensors,
+                    next_sensor_probabilities=[0, 0.5, 0.5, 0]
+                ),
+                duration_provider=UniformDurationProvider(3, 7),
+                sender=self.sender.get_sender(id="1")
+            ),
+            GenericSensor(
+                sensor_id=SensorId("2"),
+                transition_provider=GenericTransitionProvider(
+                    next_sensors=all_sensors,
+                    next_sensor_probabilities=[0.3, 0.7, 0, 0]
+                ),
+                duration_provider=UniformDurationProvider(1, 10),
+                sender=self.sender.get_sender(id="2")
+            ),
+            GenericSensor(
+                sensor_id=SensorId("3"),
+                transition_provider=GenericTransitionProvider(
+                    next_sensors=all_sensors,
+                    next_sensor_probabilities=[0.5, 0, 0, 0.5]
+                ),
+                duration_provider=StaticDurationProvider(1),
+                sender=self.sender.get_sender(id="3")
+            ),
+            EndSensor(
+                sender=self.sender.get_sender(id="end")
+            )
+        ]

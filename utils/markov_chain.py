@@ -6,10 +6,6 @@ from numpy import ndarray
 
 
 class MarkovChain:
-    states: List[str]
-    transition_matrix: ndarray
-    num_states: int
-
     def __init__(self, states: List[str], transition_matrix: List[List[float]] = None):
         """
         Initialize the MarkovChain instance.
@@ -21,9 +17,9 @@ class MarkovChain:
         if not transition_matrix:
             transition_matrix = self.fill_transition_matrix_if_empty(len(states))
 
-        self.transition_matrix = np.array(transition_matrix)
-        self.states = states
-        self.num_states = len(states)
+        self.transition_matrix: ndarray = np.array(transition_matrix)
+        self.states: List[str] = states
+        self.num_states: int = len(states)
 
     def next_state(self, current_state: int) -> int:
         """
