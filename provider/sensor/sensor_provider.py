@@ -1,8 +1,8 @@
 import sys
 from abc import abstractmethod
 
-import core.sensor
 from core.sensor import GenericSensor
+from provider.activity.activity_emission_provider import UniformActivityEmissionProvider
 from provider.transition.duration_provider import StaticDurationProvider, GaussianDurationProvider
 from provider.transition.transition_probability_provider import DrawWithoutReplacementTransitionProvider
 from provider.transition.transition_provider import GenericTransitionProvider
@@ -81,8 +81,8 @@ class NewSensorProvider(SensorProvider):
         for sensor_name in self.sensor_names:
             sensors.append(
                 GenericSensor(
-                    sensor_name,
-                    GenericTransitionProvider(
+                    sensor_id=sensor_name,
+                    transition_provider=GenericTransitionProvider(
                         next_sensors=sensor_name,
                         next_sensor_probabilities=
                         DrawWithoutReplacementTransitionProvider()
@@ -90,7 +90,13 @@ class NewSensorProvider(SensorProvider):
                             len(self.sensor_names)
                         )
                     ),
-                    GaussianDurationProvider(mu=10, sigma=2)
+                    duration_provider=GaussianDurationProvider(
+                        mu=10,
+                        sigma=2
+                    ),
+                    activity_emission_provider=UniformActivityEmissionProvider(
+                        potential_activities=[sensor_name]
+                    )
                 )
             )
         return sensors

@@ -3,6 +3,7 @@ from abc import ABC
 from typing import List
 
 from core.event import Event, GenEvent, StartEvent, EndEvent
+from provider.activity.activity_emission_provider import ActivityEmissionProvider
 from provider.sender.send_provider import Sender
 from provider.transition.duration_provider import DurationProvider
 from provider.transition.transition_provider import TransitionProvider
@@ -77,22 +78,25 @@ class GenericSensor(Sensor):
             sensor_id: SensorId,
             transition_provider: TransitionProvider,
             duration_provider: DurationProvider,
-            sender: Sender
+            sender: Sender,
+            activity_emission_provider: ActivityEmissionProvider
     ):
         self.sensor_id: SensorId = sensor_id
         self.transition_provider: TransitionProvider = transition_provider
         self.duration_provider = duration_provider
         self.sender = sender
         self.event_log = []
+        self.event_emission_provider = activity_emission_provider
 
     def get_id(self) -> SensorId:
         return self.sensor_id
 
     def emit_event(self, case, timestamp):
-        event_name = "Event " + self.sensor_id.id
+        activity_name = self.event_emission_provider.emit_activity(payload=0)
+
         event = GenEvent(
             timestamp=timestamp,
-            sensor_value=event_name,
+            sensor_value=activity_name,
             case_id=case,
             sensor_name=self.sensor_id.get_name(),
         )

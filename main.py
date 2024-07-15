@@ -1,5 +1,8 @@
 import os
 
+from provider.activity.activity_emission_provider import UniformActivityEmissionProvider, \
+    UniformActivityEmissionProviderFactory
+from provider.activity.activity_generation_provider import DistinctActivityGenerationProvider
 from provider.data.case_provider import IncreasingCaseIdProvider
 from provider.generic.count_provider import StaticCountProvider
 from provider.load.load_provider import GradualIncreasingLoadProvider
@@ -22,7 +25,8 @@ if __name__ == '__main__':
             transition_probability_provider=DrawWithoutReplacementTransitionProvider(),
             transition_count_provider=StaticCountProvider(count=3),
             duration_provider=GaussianDurationProvider(mu=10, sigma=1),
-            send_provider=KafkaSendProvider()
+            send_provider=PrintConsoleSendProvider(), #KafkaSendProvider()
+            activity_emission_provider=UniformActivityEmissionProviderFactory()
         ),
         case_id_provider=IncreasingCaseIdProvider(),
         load_provider=GradualIncreasingLoadProvider(10, 3, 10)

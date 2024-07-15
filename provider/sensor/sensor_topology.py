@@ -4,7 +4,9 @@ from typing import List
 
 from core.sensor import Sensor, GenericSensor, StartSensor, EndSensor
 from core.sensor_id import SensorId, START_SENSOR_ID, END_SENSOR_ID
-from provider.sender.send_provider import Sender, SendProvider
+from provider.activity.activity_emission_provider import ActivityEmissionProviderFactory
+from provider.activity.activity_generation_provider import DistinctActivityGenerationProvider
+from provider.sender.send_provider import  SendProvider
 from provider.transition.duration_provider import DurationProvider, StaticDurationProvider, UniformDurationProvider
 from provider.transition.next_state_provider import NextStateProvider
 from provider.transition.transition_probability_provider import TransitionProbabilityProvider
@@ -19,13 +21,21 @@ class SensorTopologyProvider:
 
 class GenericSensorTopologyProvider(SensorTopologyProvider):
 
-    def __init__(self, next_state_provider, transition_probability_provider, transition_count_provider,
-                 duration_provider, send_provider):
+    def __init__(
+            self,
+            next_state_provider,
+            transition_probability_provider,
+            transition_count_provider,
+            duration_provider,
+            send_provider,
+            activity_emission_provider
+    ):
         self.next_state_provider: NextStateProvider = next_state_provider
         self.transition_probability_provider: TransitionProbabilityProvider = transition_probability_provider
         self.transition_count_provider = transition_count_provider
         self.duration_provider: DurationProvider = duration_provider
         self.send_provider: SendProvider = send_provider
+        self.activity_emission_provider: ActivityEmissionProviderFactory = activity_emission_provider
 
     def get_sensors(self, number_of_sensors):
         sensor_ids: List[SensorId] = []
@@ -35,6 +45,7 @@ class GenericSensorTopologyProvider(SensorTopologyProvider):
         sensor_ids.append(END_SENSOR_ID)
 
         sensors: List[Sensor] = []
+        activity_generation_provider = DistinctActivityGenerationProvider()
         for sensor_id in sensor_ids:
             number_of_next_states = self.transition_count_provider.get()
             sensor_ids_for_transition = self._get_sensor_ids_without_start(sensor_ids)
@@ -57,8 +68,11 @@ class GenericSensorTopologyProvider(SensorTopologyProvider):
                     sensor_id=sensor_id,
                     transition_provider=transition_provider,
                     duration_provider=self.duration_provider,
-                    sender=sender)
-
+                    sender=sender,
+                    activity_emission_provider=self.activity_emission_provider.get_activity_provider(
+                        potential_activities=activity_generation_provider.get_activities(5)
+                    )
+                )
             sensors.append(new_sensor)
 
         return sensors
