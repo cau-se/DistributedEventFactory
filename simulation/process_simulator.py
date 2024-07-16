@@ -26,12 +26,13 @@ class ProcessSimulator:
             current_sensor.emit_event(token.case, token.last_timestamp)
             self.tokens.remove(token)
         else:
-            duration, next_sensor = current_sensor.get_sensor_transition()
+            duration, next_sensor_index = current_sensor.get_sensor_transition()
             token.add_to_last_timestamp(duration=duration)
             last_timestamp = token.last_timestamp
             current_sensor.emit_event(token.case, last_timestamp)
             self.last_time = last_timestamp
-            token.set_sensor(next_sensor)
+            # exclusion of start sensor
+            token.set_sensor(self.sensors[next_sensor_index + 1].get_id())
 
     def _get_sensor_with_id(self, sensor_id) -> Sensor:
         for sensor in self.sensors:

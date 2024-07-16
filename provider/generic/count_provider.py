@@ -9,6 +9,7 @@ class CountProvider:
     def get(self, max=sys.maxsize):
         pass
 
+
 class StaticCountProvider(CountProvider):
     def __init__(self, count):
         self.count = count
@@ -18,6 +19,7 @@ class StaticCountProvider(CountProvider):
             return max
         else:
             return self.count
+
 
 class UniformCountProvider(CountProvider):
     def __init__(self, count):

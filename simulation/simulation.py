@@ -24,12 +24,14 @@ class Simulation:
             case_id_provider=self.case_id_provider,
         )
 
+        while True:
+            process_simulator.simulate()
         # Make Event Loop interchangable because it does not show the Errors
-        with ScheduledThreadPoolExecutor() as executor:
-            while True:
-                scheduler = executor.schedule(
-                    process_simulator.simulate,
-                    period=1 / self.load_provider.get_load_value()
-                )
-                time.sleep(1)
-                scheduler.cancel()
+        #with ScheduledThreadPoolExecutor() as executor:
+        #    while True:
+        #        scheduler = executor.schedule(
+        #            process_simulator.simulate,
+        #            period=1 / self.load_provider.get_load_value()
+        #        )
+        #        time.sleep(1)
+        #        scheduler.cancel()

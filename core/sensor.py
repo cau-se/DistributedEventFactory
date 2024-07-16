@@ -17,7 +17,7 @@ class Sensor(ABC):
         pass
 
     @abc.abstractmethod
-    def get_sensor_transition(self) -> tuple[int, SensorId]:
+    def get_sensor_transition(self) -> tuple[int, int]:
         pass
 
     @abc.abstractmethod
@@ -41,7 +41,7 @@ class StartSensor(Sensor):
         self.event_log.append(event)
         self.sender.send(event)
 
-    def get_sensor_transition(self) -> tuple[int, SensorId]:
+    def get_sensor_transition(self) -> tuple[int, int]:
         return 0, self.transition_provider.get_next_sensor()
 
     def get_id(self) -> SensorId:

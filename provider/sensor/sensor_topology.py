@@ -5,12 +5,10 @@ from typing import List
 from core.sensor import Sensor, GenericSensor, StartSensor, EndSensor
 from core.sensor_id import SensorId, START_SENSOR_ID, END_SENSOR_ID
 from provider.activity.activity_emission_provider import ActivityEmissionProviderFactory
-from provider.activity.activity_generation_provider import DistinctActivityGenerationProvider
-from provider.sender.send_provider import  SendProvider
+from provider.activity.activity_generation_provider import ActivityGenerationProvider
+from provider.sender.send_provider import SendProvider
 from provider.transition.duration_provider import DurationProvider, StaticDurationProvider, UniformDurationProvider
-from provider.transition.next_state_provider import NextStateProvider
-from provider.transition.transition_probability_provider import TransitionProbabilityProvider
-from provider.transition.transition_provider import GenericTransitionProvider
+from provider.transition.transition_provider import GenericTransitionProvider, TransitionProvider
 
 
 class SensorTopologyProvider:
@@ -23,57 +21,36 @@ class GenericSensorTopologyProvider(SensorTopologyProvider):
 
     def __init__(
             self,
-            next_state_provider,
-            transition_probability_provider,
-            transition_count_provider,
+            transition_provider,
             duration_provider,
             send_provider,
+            activity_generation_provider,
             activity_emission_provider
     ):
-        self.next_state_provider: NextStateProvider = next_state_provider
-        self.transition_probability_provider: TransitionProbabilityProvider = transition_probability_provider
-        self.transition_count_provider = transition_count_provider
+        self.transition_provider: TransitionProvider = transition_provider
         self.duration_provider: DurationProvider = duration_provider
         self.send_provider: SendProvider = send_provider
+        self.activity_generation_provider: ActivityGenerationProvider = activity_generation_provider
         self.activity_emission_provider: ActivityEmissionProviderFactory = activity_emission_provider
 
     def get_sensors(self, number_of_sensors):
-        sensor_ids: List[SensorId] = []
-        for i in range(number_of_sensors):
-            sensor_ids.append(SensorId(str(i)))
-        sensor_ids.append(START_SENSOR_ID)
-        sensor_ids.append(END_SENSOR_ID)
-
         sensors: List[Sensor] = []
-        activity_generation_provider = DistinctActivityGenerationProvider()
-        for sensor_id in sensor_ids:
-            number_of_next_states = self.transition_count_provider.get()
-            sensor_ids_for_transition = self._get_sensor_ids_without_start(sensor_ids)
-            transition_provider = GenericTransitionProvider(
-                next_sensors=self.next_state_provider.get_next_states(
-                    sensor_ids_for_transition,
-                    number_of_next_states=number_of_next_states
-                ),
-                next_sensor_probabilities=self.transition_probability_provider.get_transition_probabilities(
-                    number_of_next_states)
-            )
-            sender = self.send_provider.get_sender(sensor_id.get_name())
 
-            if sensor_id == START_SENSOR_ID:
-                new_sensor = StartSensor(transition_provider=transition_provider, sender=sender)
-            elif sensor_id == END_SENSOR_ID:
-                new_sensor = EndSensor(sender=sender)
-            else:
-                new_sensor = GenericSensor(
+        sensors.append(StartSensor(transition_provider=self.transition_provider, sender=self.send_provider.get_sender(START_SENSOR_ID.get_name())))
+        for i in range(number_of_sensors):
+            sensor_id = SensorId(str(i))
+            sensors.append(
+                GenericSensor(
                     sensor_id=sensor_id,
-                    transition_provider=transition_provider,
+                    transition_provider=self.transition_provider,
                     duration_provider=self.duration_provider,
-                    sender=sender,
+                    sender=self.send_provider.get_sender(sensor_id.get_name()),
                     activity_emission_provider=self.activity_emission_provider.get_activity_provider(
-                        potential_activities=activity_generation_provider.get_activities(5)
+                        potential_activities=self.activity_generation_provider.get_activities()
                     )
                 )
-            sensors.append(new_sensor)
+            )
+        sensors.append(EndSensor(sender=self.send_provider.get_sender(END_SENSOR_ID.get_name())))
 
         return sensors
 
