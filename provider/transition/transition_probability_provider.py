@@ -1,7 +1,6 @@
+import abc
 from abc import abstractmethod
 import random
-
-from provider.transition.next_state_provider import NextStateProvider
 
 
 class TransitionProbabilityProvider:
@@ -24,10 +23,23 @@ class DrawWithoutReplacementTransitionProvider(TransitionProbabilityProvider):
         for i in range(len(transition_indices) - 1):
             random_value = round(random.random() * remaining_prob, 2)
             remaining_prob -= random_value
-            # TODO here: Das hat zur Folge, dass die Transitionen geordnet sind, hier müsste konsequenterweise ein zufälliger Index genommen werden,
-            # Das Verhalten darf aber auch auf einer höhren Ebene umgesetzt werden
             random_numbers[transition_indices[i]] = random_value
 
         if remaining_prob > 0:
             random_numbers[transition_indices[len(transition_indices) - 1]] = round(remaining_prob, 2)
         return random_numbers
+
+
+class TransitionProbabilityProviderFactory(abc.ABC):
+
+    @abc.abstractmethod
+    def get(self, number_of_sensors):
+        pass
+
+class DrawWithoutReplacementTransitionProbabilityProviderFactory(TransitionProbabilityProviderFactory):
+
+    def __init__(self, transition_indices_provider):
+        self.transition_indices_provider = transition_indices_provider
+
+    def get(self, number_of_sensors):
+        return DrawWithoutReplacementTransitionProvider(number_of_sensors, self.transition_indices_provider)

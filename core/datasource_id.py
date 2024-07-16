@@ -1,6 +1,6 @@
-class SensorId:
-    def __init__(self, id: str):
-        self.id: str = id
+class DataSourceId:
+    def __init__(self, data_source_id: str):
+        self.id: str = data_source_id
 
     def __eq__(self, other):
         return hasattr(other, "id") and self.id == other.id
@@ -12,6 +12,5 @@ class SensorId:
         return self.id
 
 
-START_SENSOR_ID = SensorId("<start>")
-END_SENSOR_ID = SensorId("<end>")
-CONTROL_SENSOR_ID = SensorId("<control>")
+START_SENSOR_ID = DataSourceId("<start>")
+END_SENSOR_ID = DataSourceId("<end>")

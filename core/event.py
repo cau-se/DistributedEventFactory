@@ -1,15 +1,24 @@
-import abc
-import datetime
+from abc import abstractmethod, ABC
 
 
-class Event:
-    @abc.abstractmethod
-    def get_case(self):
+class CaseId:
+    def __init__(self, case_id: str):
+        self.case_id = case_id
+
+
+class Activity:
+    def __init__(self, activity: str):
+        self.activity = activity
+
+
+class AbstractEvent(ABC):
+    @abstractmethod
+    def get_case(self) -> CaseId:
         pass
 
 
-class StartEvent(Event):
-    def __init__(self, case_id):
+class StartEvent(AbstractEvent):
+    def __init__(self, case_id: CaseId):
         self.case_id = case_id
 
     def get_case(self):
@@ -19,9 +28,9 @@ class StartEvent(Event):
         return f"<Start of case {self.case_id}>"
 
 
-class EndEvent(Event):
+class EndEvent(AbstractEvent):
 
-    def __init__(self, case_id):
+    def __init__(self, case_id: CaseId):
         self.case_id = case_id
 
     def get_case(self):
@@ -30,12 +39,12 @@ class EndEvent(Event):
     def __str__(self):
         return f"<End of case {self.case_id}>"
 
-class GenEvent(Event):
-    def __init__(self, timestamp, sensor_value, case_id, sensor_name):
-        # TODO here, bitte eine Lösung für den Timestamp finden
-        #self.timestamp = timestamp
+
+class Event(AbstractEvent):
+    def __init__(self, timestamp, sensor_value, case_id: CaseId, sensor_name):
+        self.timestamp = timestamp
         self.sensor_value: any = sensor_value
-        self.case_id: str = case_id
+        self.case_id: CaseId = case_id
         self.sensor_name: str = sensor_name
 
     def get_case(self):

@@ -1,4 +1,4 @@
-from core.event import Event
+from core.event import AbstractEvent
 from provider.sender.send_provider import SendProvider, Sender
 from view.terminal import Terminal
 
@@ -12,5 +12,5 @@ class TerminalGui(Sender):
     def __init__(self, terminal):
         self.terminal: Terminal = terminal
 
-    def send(self, event: Event):
+    def send(self, event: AbstractEvent):
         self.terminal.print(event)

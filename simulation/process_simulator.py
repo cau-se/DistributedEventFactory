@@ -2,15 +2,15 @@ import random
 from datetime import datetime, timedelta
 from typing import List
 
-from core.sensor import Sensor
-from core.sensor_id import END_SENSOR_ID, START_SENSOR_ID
+from core.datasource import DataSource
+from core.datasource_id import END_SENSOR_ID, START_SENSOR_ID
 from provider.data.case_provider import CaseIdProvider
 
 
 class ProcessSimulator:
     def __init__(self, sensors, case_id_provider: CaseIdProvider):
         self.tokens: List[Token] = []
-        self.sensors: List[Sensor] = sensors
+        self.sensors: List[DataSource] = sensors
         self.case_id_provider = case_id_provider
         self.last_time = datetime.now()
 
@@ -34,7 +34,7 @@ class ProcessSimulator:
             # exclusion of start sensor
             token.set_sensor(self.sensors[next_sensor_index + 1].get_id())
 
-    def _get_sensor_with_id(self, sensor_id) -> Sensor:
+    def _get_sensor_with_id(self, sensor_id) -> DataSource:
         for sensor in self.sensors:
             if sensor.get_id() == sensor_id:
                 return sensor

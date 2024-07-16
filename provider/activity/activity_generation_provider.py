@@ -2,7 +2,7 @@ import abc
 from string import ascii_uppercase as alphabet
 from typing import List, Dict
 
-from core.sensor_id import SensorId
+from core.datasource_id import DataSourceId
 from provider.generic.count_provider import CountProvider
 
 
