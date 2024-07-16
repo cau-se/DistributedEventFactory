@@ -1,16 +1,23 @@
 import time
 
 from scheduled_futures import ScheduledThreadPoolExecutor
+
 from simulation.process_simulator import ProcessSimulator
 from provider.data.case_provider import CaseIdProvider
 from provider.generic.count_provider import CountProvider
 from provider.load.load_provider import LoadProvider
-from provider.sensor.sensor_topology import SensorTopologyProvider
+from provider.datasource.sensor_topology import SensorTopologyProvider
 
 
 class Simulation:
 
-    def __init__(self, number_of_sensors_provider, sensor_topology_provider, case_id_provider, load_provider):
+    def __init__(
+            self,
+            number_of_sensors_provider,
+            sensor_topology_provider,
+            case_id_provider,
+            load_provider
+    ):
         self.number_of_sensors_provider: CountProvider = number_of_sensors_provider
         self.sensor_topology_provider: SensorTopologyProvider = sensor_topology_provider
         self.case_id_provider: CaseIdProvider = case_id_provider

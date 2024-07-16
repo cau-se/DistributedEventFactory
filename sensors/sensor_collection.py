@@ -5,7 +5,7 @@ from typing import Generator, Any, List
 from sensors.sensors import BaseSensor
 
 
-# Physical sensor
+# Physical datasource
 class TemperatureSensor(BaseSensor):
     def __init__(self, name: str = "Temperature_Sensor"):
         super().__init__(name)
@@ -16,7 +16,7 @@ class TemperatureSensor(BaseSensor):
             yield temperature
 
 
-# Chemical sensor
+# Chemical datasource
 class GasSensor(BaseSensor):
     def __init__(self, name: str = "Gas_Sensor"):
         super().__init__(name)
@@ -27,7 +27,7 @@ class GasSensor(BaseSensor):
             yield gas_concentration
 
 
-# Biological sensor
+# Biological datasource
 class BioSensor(BaseSensor):
     def __init__(self, name: str = "Bio_Sensor"):
         super().__init__(name)
@@ -38,7 +38,7 @@ class BioSensor(BaseSensor):
             yield organism_activity
 
 
-# Optical sensor
+# Optical datasource
 class CameraSensor(BaseSensor):
 
     def __init__(self, width: int, height: int, name: str = "Camera_Sensor"):
@@ -57,7 +57,7 @@ class CameraSensor(BaseSensor):
             yield pixels
 
 
-# Motion sensor
+# Motion datasource
 class AccelerometerSensor(BaseSensor):
     def __init__(self, name: str = "Accelerometer_Sensor"):
         super().__init__(name)
@@ -70,7 +70,7 @@ class AccelerometerSensor(BaseSensor):
             yield x, y, z
 
 
-# Audio sensor
+# Audio datasource
 class AudioSensor(BaseSensor):
     def __init__(self, name: str = "Audio_Sensor"):
         super().__init__(name)
@@ -81,7 +81,7 @@ class AudioSensor(BaseSensor):
             yield sound_level
 
 
-# Pressure sensor
+# Pressure datasource
 class PressureSensor(BaseSensor):
     def __init__(self, name: str = "Pressure_Sensor"):
         super().__init__(name)
@@ -92,7 +92,7 @@ class PressureSensor(BaseSensor):
             yield pressure
 
 
-# Proximity sensor
+# Proximity datasource
 class InfraredSensor(BaseSensor):
     def __init__(self, name: str = "Infrared_Sensor"):
         super().__init__(name)

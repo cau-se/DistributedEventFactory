@@ -6,16 +6,16 @@ from typing import Any, Generator, Type, List
 class BaseSensor(ABC):
     def __init__(self, name: str):
         """
-        Initialize a sensor with a name
+        Initialize a datasource with a name
 
-        :param name:  name of the sensor
+        :param name:  name of the datasource
         """
         self.name: str = name
 
     def get_name(self) -> str:
         """
-        Get the name of the sensor
-        :return: name of the sensor
+        Get the name of the datasource
+        :return: name of the datasource
         """
         return self.name
 
@@ -26,24 +26,24 @@ class BaseSensor(ABC):
 class SensorManager:
     def __init__(self):
         """
-        Initialize an empty sensor manager
+        Initialize an empty datasource manager
         """
         self.sensors: dict[str, BaseSensor] = {}
         pass
 
     def add_sensor(self, sensor: BaseSensor):
         """
-        Add a sensor to the manager
-        :param sensor: sensor to add
+        Add a datasource to the manager
+        :param sensor: datasource to add
         """
         self.sensors[sensor.get_name()] = sensor
 
     def get_sensor(self, name: str) -> BaseSensor:
         """
-        Get a sensor by name
+        Get a datasource by name
 
-        :param name: name of the sensor to retrieve
-        :return: sensor with the given name, or None if it doesn't exist
+        :param name: name of the datasource to retrieve
+        :return: datasource with the given name, or None if it doesn't exist
         """
         return self.sensors.get(name, None)
 

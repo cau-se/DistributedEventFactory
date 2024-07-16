@@ -4,6 +4,7 @@ from typing import List
 from core.datasource import DataSource, GenericDataSource, StartDataSource, EndDataSource
 from core.datasource_id import DataSourceId, START_SENSOR_ID, END_SENSOR_ID
 from provider.activity.activity_emission_provider import ActivityEmissionProviderFactory
+from provider.datasource.datasource_id_provider import DataSourceIdProvider
 from provider.sender.send_provider import SendProvider
 from provider.transition.duration_provider import DurationProvider
 from provider.transition.transition_provider import TransitionProviderFactory
@@ -19,11 +20,13 @@ class GenericSensorTopologyProvider(SensorTopologyProvider):
 
     def __init__(
             self,
+            data_source_id_provider,
             transition_provider_factory,
             duration_provider,
             send_provider,
             activity_emission_provider
     ):
+        self.data_source_id_provider: DataSourceIdProvider = data_source_id_provider
         self.transition_provider_factory: TransitionProviderFactory = transition_provider_factory
         self.duration_provider: DurationProvider = duration_provider
         self.send_provider: SendProvider = send_provider
@@ -32,9 +35,9 @@ class GenericSensorTopologyProvider(SensorTopologyProvider):
     def get_sensors(self, number_of_sensors):
         transition_provider = self.transition_provider_factory.get(number_of_sensors + 1)
         sensors: List[DataSource] = []
-        sensors.append(StartDataSource(transition_provider=transition_provider, sender=self.send_provider.get_sender(START_SENSOR_ID.get_name())))
+        sensors.append(StartDataSource(transition_provider=transition_provider,sender=self.send_provider.get_sender(START_SENSOR_ID.get_name())))
         for i in range(number_of_sensors):
-            sensor_id = DataSourceId(str(i))
+            sensor_id = self.data_source_id_provider.get_id()
             sensors.append(
                 GenericDataSource(
                     sensor_id=sensor_id,

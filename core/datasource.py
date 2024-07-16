@@ -62,7 +62,7 @@ class EndDataSource(DataSource):
         self.sender.send(event)
 
     def get_sensor_transition(self) -> tuple[int, int]:
-        raise ValueError("There is no transition on the end sensor")
+        raise ValueError("There is no transition on the end datasource")
 
     def get_id(self) -> DataSourceId:
         return END_SENSOR_ID

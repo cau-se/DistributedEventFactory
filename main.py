@@ -5,10 +5,12 @@ from provider.activity.activity_emission_provider import UniformActivityEmission
 from provider.activity.activity_generation_provider import DistinctActivityGenerationProvider, \
     ListBasedActivityGenerationProvider
 from provider.data.case_provider import IncreasingCaseIdProvider
+from provider.datasource.datasource_id_provider import ListBasedSourceIdProvider
 from provider.generic.count_provider import StaticCountProvider
 from provider.load.load_provider import GradualIncreasingLoadProvider
 from provider.sender.send_provider import PrintConsoleSendProvider, KafkaSendProvider
-from provider.sensor.sensor_topology import GenericSensorTopologyProvider
+from provider.datasource.sensor_topology import GenericSensorTopologyProvider
+from provider.sender.terminal_sink import TerminalGuiSendProvider
 from provider.transition.duration_provider import GaussianDurationProvider
 from provider.transition.next_state_provider import DistinctNextStateProvider
 from provider.transition.transition_probability_provider import DrawWithoutReplacementTransitionProvider, \
@@ -22,53 +24,62 @@ if __name__ == '__main__':
 
     simulation = Simulation(
         number_of_sensors_provider=
-            StaticCountProvider(10),
+        StaticCountProvider(9),
         case_id_provider=
-            IncreasingCaseIdProvider(),
+        IncreasingCaseIdProvider(),
         load_provider=
-            GradualIncreasingLoadProvider(10, 3, 10),
+        GradualIncreasingLoadProvider(
+            tick_count_til_maximum_reached=10,
+            minimal_load=3,
+            maximal_load=10
+        ),
         sensor_topology_provider=
-            GenericSensorTopologyProvider(
-                transition_provider_factory=
-                    UniformTransitionProviderFactory(
-                        next_sensor_probabilities_provider_factory=
-                            DrawWithoutReplacementTransitionProbabilityProviderFactory(
-                                transition_indices_provider=
-                                    DistinctNextStateProvider(
-                                        number_of_next_state_provider=StaticCountProvider(count=3)
-                                    )
-                            )
-                    ),
-                duration_provider=
-                    GaussianDurationProvider(
-                        mu=10,
-                        sigma=1
-                    ),
-                send_provider=
-                    PrintConsoleSendProvider(),
-                    # KafkaSendProvider()
-                activity_emission_provider=
-                    UniformActivityEmissionProviderFactory(
-                        potential_activities_provider=
-                            ListBasedActivityGenerationProvider(
-                                sensor_id_activity_map=[
-                                    ["1", "2", "3"],
-                                    ["4", "5", "6"],
-                                    ["7", "8", "9"],
-                                    ["10", "11", "12"],
-                                    ["13", "14", "15"],
-                                    ["13", "14", "15"],
-                                    ["16", "17", "18"],
-                                    ["19"],
-                                    ["20", "21"],
-                                    ["25"],
-                                    ["26", "27", "28"],
-                                ]
-                            )
-                            #DistinctActivityGenerationProvider(
-                            #   number_of_activities_provider=StaticCountProvider(5)
-                            #)
+        GenericSensorTopologyProvider(
+            data_source_id_provider=
+            ListBasedSourceIdProvider(
+                ["Manfred", "Julia", "Frank", "Ursula", "Peter", "Inge", "Klaus", "Fritz", "Jochen"]
+            ),
+            transition_provider_factory=
+            UniformTransitionProviderFactory(
+                next_sensor_probabilities_provider_factory=
+                DrawWithoutReplacementTransitionProbabilityProviderFactory(
+                    transition_indices_provider=
+                    DistinctNextStateProvider(
+                        number_of_next_state_provider=StaticCountProvider(count=3)
                     )
+                )
+            ),
+            duration_provider=
+            GaussianDurationProvider(
+                mu=10,
+                sigma=1
+            ),
+            send_provider=
+            PrintConsoleSendProvider(),
+            #KafkaSendProvider(),
+            #TerminalGuiSendProvider(),
+            activity_emission_provider=
+            UniformActivityEmissionProviderFactory(
+                potential_activities_provider=
+                ListBasedActivityGenerationProvider(
+                    sensor_id_activity_map=[
+                        ["1", "2", "3"],
+                        ["4", "5", "6"],
+                        ["7", "8", "9"],
+                        ["10", "11", "12"],
+                        ["13", "14", "15"],
+                        ["13", "14", "15"],
+                        ["16", "17", "18"],
+                        ["19"],
+                        ["20", "21"],
+                        ["25"],
+                        ["26", "27", "28"],
+                    ]
+                )
+                #DistinctActivityGenerationProvider(
+                #   number_of_activities_provider=StaticCountProvider(5)
+                #)
             )
+        )
     )
     simulation.start()
