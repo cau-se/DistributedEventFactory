@@ -13,13 +13,13 @@ from provider.datasource.sensor_topology import GenericSensorTopologyProvider
 from provider.sender.terminal_sink import TerminalGuiSendProvider
 from provider.transition.duration_provider import GaussianDurationProvider
 from provider.transition.next_state_provider import DistinctNextStateProvider
-from provider.transition.transition_provider_factory import ProbabilityDistributionGenerator
+from provider.transition.transition_probability_provider import \
+    DrawWithoutReplacementTransitionProbabilityProviderFactory
+from provider.transition.transition_provider_factory import MatrixBasedTransitionProvider, RandomTransitionProvider, \
+    RandomTransitionMatrixProvider
 from simulation.simulation import Simulation
 
 if __name__ == '__main__':
-    bootstrap_server = "kube1-1:30376"  # os.environ["BOOTSTRAP_SERVER"]
-    topic = 'topic'  # os.environ["TOPIC"]
-
     simulation = Simulation(
         number_of_sensors_provider=
         StaticCountProvider(4),
@@ -35,21 +35,22 @@ if __name__ == '__main__':
         GenericSensorTopologyProvider(
             data_source_id_provider=
             ListBasedSourceIdProvider(
-                ["Manfred", "Julia", "Frank", "Ursula", "Peter", "Inge", "Klaus", "Fritz", "Jochen"]
+                ["Manfred", "Jil", "Frank", "Ursula", "Peter", "Inge", "Klaus", "Fritz", "Jochen"]
             ),
             transition_provider_factory=
-            #DrawWithoutReplacementTransitionProbabilityProviderFactory(
-            #    transition_indices_provider=
+            #RandomTransitionProvider(
+            #RandomTransitionMatrixProvider(
+            #    transition_indices=
             #    DistinctNextStateProvider(
             #        number_of_next_state_provider=StaticCountProvider(count=3)
             #    )
-            #)
-            ProbabilityDistributionGenerator(
+            #)),
+            MatrixBasedTransitionProvider(
                 matrix=[
                      #m   #j   #f   #u   #e
                     [0.5, 0.5, 0.0, 0.0], #START
                     [0.5, 0.5, 0.0, 0.0], #Manfred
-                    [0.0, 0.5, 0.5, 0.0], #Julia
+                    [0.0, 0.5, 0.5, 0.0], #Jil
                     [0.0, 0.0, 0.5, 0.5], #Frank
                     [0.0, 0.0, 0.0, 0.5], #Ursula
                 ]

@@ -38,7 +38,7 @@ class PrintConsole(Sender):
         self.id = id
 
     def send(self, event: AbstractEvent) -> None:
-        print("Sensor" + self.id + ": " + str(event))
+        print("Sensor " + self.id + ": " + str(event))
 
 
 class SendProvider:
