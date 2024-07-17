@@ -8,6 +8,7 @@ from provider.datasource.datasource_id_provider import DataSourceIdProvider
 from provider.sender.send_provider import SendProvider
 from provider.transition.duration_provider import DurationProvider
 from provider.transition.transition_provider import TransitionProviderFactory
+from provider.transition.transition_provider_factory import ProbabilityDistributionGenerator
 
 
 class SensorTopologyProvider:
@@ -27,21 +28,20 @@ class GenericSensorTopologyProvider(SensorTopologyProvider):
             activity_emission_provider
     ):
         self.data_source_id_provider: DataSourceIdProvider = data_source_id_provider
-        self.transition_provider_factory: TransitionProviderFactory = transition_provider_factory
+        self.transition_provider: ProbabilityDistributionGenerator = transition_provider_factory
         self.duration_provider: DurationProvider = duration_provider
         self.send_provider: SendProvider = send_provider
         self.activity_emission_provider: ActivityEmissionProviderFactory = activity_emission_provider
 
     def get_sensors(self, number_of_sensors):
-        transition_provider = self.transition_provider_factory.get(number_of_sensors + 1)
         sensors: List[DataSource] = []
-        sensors.append(StartDataSource(transition_provider=transition_provider,sender=self.send_provider.get_sender(START_SENSOR_ID.get_name())))
+        sensors.append(StartDataSource(transition_provider=self.transition_provider.get().get(number_of_sensors + 1), sender=self.send_provider.get_sender(START_SENSOR_ID.get_name())))
         for i in range(number_of_sensors):
             sensor_id = self.data_source_id_provider.get_id()
             sensors.append(
                 GenericDataSource(
                     sensor_id=sensor_id,
-                    transition_provider=transition_provider,
+                    transition_provider=self.transition_provider.get().get(number_of_sensors + 1),
                     duration_provider=self.duration_provider,
                     sender=self.send_provider.get_sender(sensor_id.get_name()),
                     activity_emission_provider=self.activity_emission_provider.get_activity_provider()

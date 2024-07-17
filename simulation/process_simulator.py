@@ -31,7 +31,6 @@ class ProcessSimulator:
             last_timestamp = token.last_timestamp
             current_sensor.emit_event(token.case, last_timestamp)
             self.last_time = last_timestamp
-            # exclusion of start datasource
             token.set_sensor(self.sensors[next_sensor_index + 1].get_id())
 
     def _get_sensor_with_id(self, sensor_id) -> DataSource:

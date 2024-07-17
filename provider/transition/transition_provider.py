@@ -1,8 +1,8 @@
-import abc
 from abc import ABC, abstractmethod
+from typing import List
+
 import numpy as np
 from provider.transition.transition_probability_provider import TransitionProbabilityProviderFactory
-
 
 class TransitionProvider(ABC):
 
@@ -11,31 +11,21 @@ class TransitionProvider(ABC):
         pass
 
 
-class UniformTransitionProvider(TransitionProvider):
-
-    def __init__(self, number_of_sensors, next_sensor_probabilities_provider_factory: TransitionProbabilityProviderFactory):
-        self.number_of_sensors = number_of_sensors
-        self.next_sensor_probabilities_provider_factory = next_sensor_probabilities_provider_factory
-
-    def get_next_sensor(self) -> int:
-        next_sensor_probabilities = self.next_sensor_probabilities_provider_factory.get(self.number_of_sensors).get_transition_probabilities()
-        return np.random.choice(len(next_sensor_probabilities), p=np.array(next_sensor_probabilities))
 
 
-class TransitionProviderFactory():
+class TransitionProviderFactory:
 
-    @abc.abstractmethod
+    @abstractmethod
     def get(self, number_of_sensors):
         pass
 
 
 class UniformTransitionProviderFactory(TransitionProviderFactory):
 
-    def __init__(self, next_sensor_probabilities_provider_factory):
+    def __init__(self, next_sensor_probabilities_provider_factory: TransitionProbabilityProviderFactory):
         self.next_sensor_probabilities_provider_factory = next_sensor_probabilities_provider_factory
 
     def get(self, number_of_sensors):
         return UniformTransitionProvider(
-            number_of_sensors=number_of_sensors,
-            next_sensor_probabilities_provider_factory=self.next_sensor_probabilities_provider_factory
+            next_sensor_probabilities=self.next_sensor_probabilities_provider_factory.get(number_of_sensors).get_transition_probabilities()
         )

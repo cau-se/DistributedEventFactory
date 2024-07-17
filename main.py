@@ -13,9 +13,7 @@ from provider.datasource.sensor_topology import GenericSensorTopologyProvider
 from provider.sender.terminal_sink import TerminalGuiSendProvider
 from provider.transition.duration_provider import GaussianDurationProvider
 from provider.transition.next_state_provider import DistinctNextStateProvider
-from provider.transition.transition_probability_provider import DrawWithoutReplacementTransitionProvider, \
-    DrawWithoutReplacementTransitionProbabilityProviderFactory
-from provider.transition.transition_provider import UniformTransitionProvider, UniformTransitionProviderFactory
+from provider.transition.transition_provider_factory import ProbabilityDistributionGenerator
 from simulation.simulation import Simulation
 
 if __name__ == '__main__':
@@ -24,7 +22,7 @@ if __name__ == '__main__':
 
     simulation = Simulation(
         number_of_sensors_provider=
-        StaticCountProvider(9),
+        StaticCountProvider(4),
         case_id_provider=
         IncreasingCaseIdProvider(),
         load_provider=
@@ -40,14 +38,21 @@ if __name__ == '__main__':
                 ["Manfred", "Julia", "Frank", "Ursula", "Peter", "Inge", "Klaus", "Fritz", "Jochen"]
             ),
             transition_provider_factory=
-            UniformTransitionProviderFactory(
-                next_sensor_probabilities_provider_factory=
-                DrawWithoutReplacementTransitionProbabilityProviderFactory(
-                    transition_indices_provider=
-                    DistinctNextStateProvider(
-                        number_of_next_state_provider=StaticCountProvider(count=3)
-                    )
-                )
+            #DrawWithoutReplacementTransitionProbabilityProviderFactory(
+            #    transition_indices_provider=
+            #    DistinctNextStateProvider(
+            #        number_of_next_state_provider=StaticCountProvider(count=3)
+            #    )
+            #)
+            ProbabilityDistributionGenerator(
+                matrix=[
+                     #m   #j   #f   #u   #e
+                    [0.5, 0.5, 0.0, 0.0], #START
+                    [0.5, 0.5, 0.0, 0.0], #Manfred
+                    [0.0, 0.5, 0.5, 0.0], #Julia
+                    [0.0, 0.0, 0.5, 0.5], #Frank
+                    [0.0, 0.0, 0.0, 0.5], #Ursula
+                ]
             ),
             duration_provider=
             GaussianDurationProvider(

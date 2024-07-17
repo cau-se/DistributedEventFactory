@@ -7,6 +7,7 @@ from provider.sender.send_provider import Sender
 from provider.transition.duration_provider import DurationProvider
 from provider.transition.transition_provider import TransitionProvider
 from core.datasource_id import DataSourceId, START_SENSOR_ID, END_SENSOR_ID
+from provider.transition.transition_provider_factory import ProbabilityDistributionGenerator, SensorSelector
 
 
 class DataSource(ABC):
@@ -30,7 +31,7 @@ class DataSource(ABC):
 
 class StartDataSource(DataSource):
 
-    def __init__(self, transition_provider: TransitionProvider, sender):
+    def __init__(self, transition_provider: SensorSelector, sender):
         self.event_log = []
         self.transition_provider = transition_provider
         self.sender = sender
@@ -75,13 +76,13 @@ class GenericDataSource(DataSource):
     def __init__(
             self,
             sensor_id: DataSourceId,
-            transition_provider: TransitionProvider,
+            transition_provider: SensorSelector,
             duration_provider: DurationProvider,
             sender: Sender,
             activity_emission_provider: ActivityEmissionProvider
     ):
         self.sensor_id: DataSourceId = sensor_id
-        self.transition_provider: TransitionProvider = transition_provider
+        self.transition_provider: SensorSelector = transition_provider
         self.duration_provider = duration_provider
         self.sender = sender
         self.event_log: List[AbstractEvent] = []
