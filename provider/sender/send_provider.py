@@ -3,6 +3,7 @@ import json
 
 from kafka import KafkaProducer
 from core.event import AbstractEvent
+from view.terminal import Terminal
 
 
 class Sender:
@@ -10,6 +11,22 @@ class Sender:
     @abc.abstractmethod
     def send(self, event: AbstractEvent) -> None:
         pass
+
+class SendProvider:
+
+    @abc.abstractmethod
+    def get_sender(self, id) -> Sender:
+        pass
+
+
+class SinkProviderRegistry:
+
+    def get(self, type: str) -> SendProvider:
+        registry = dict()
+        registry["kafka"] = KafkaSendProvider()
+        registry["ui"] = TerminalGuiSendProvider()
+        registry["console"] = PrintConsoleSendProvider()
+        return registry[type]
 
 
 class KafkaSender(Sender):
@@ -41,23 +58,27 @@ class PrintConsole(Sender):
         print("Sensor " + self.id + ": " + str(event))
 
 
-class SendProvider:
-
-    @abc.abstractmethod
-    def get_sender(self, id) -> Sender:
-        pass
 
 
 class PrintConsoleSendProvider(SendProvider):
     def get_sender(self, id) -> Sender:
         return PrintConsole(id)
 
+
 class KafkaSendProvider(SendProvider):
     def get_sender(self, id) -> Sender:
-
-
         return KafkaSender(bootstrap_server_url="",
-                client_id=f"{id}",
-                topic="topic")
+                           client_id=f"{id}",
+                           topic="topic")
+
+class TerminalGuiSendProvider(SendProvider):
+    def get_sender(self, id) -> Sender:
+        return TerminalGui(Terminal(title=id))
 
 
+class TerminalGui(Sender):
+    def __init__(self, terminal):
+        self.terminal: Terminal = terminal
+
+    def send(self, event: AbstractEvent):
+        self.terminal.print(event)

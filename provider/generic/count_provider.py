@@ -1,34 +1,33 @@
 import random
-import sys
 from abc import abstractmethod
 
 
 class CountProvider:
-
     @abstractmethod
-    def get(self, max=sys.maxsize):
+    def get(self):
         pass
+
+
+class CountProviderRegistry:
+    def get(self, type: str, args) -> CountProvider:
+        registry = dict()
+        registry["static"] = lambda config: StaticCountProvider(config["count"])
+        registry["uniform"] = lambda config: UniformCountProvider(config["min"], config["max"])
+        return registry[type](args)
 
 
 class StaticCountProvider(CountProvider):
     def __init__(self, count):
         self.count = count
 
-    def get(self, max=sys.maxsize):
-        if self.count > max:
-            return max
-        else:
-            return self.count
+    def get(self):
+        return self.count
 
 
 class UniformCountProvider(CountProvider):
-    def __init__(self, count):
-        self.count = count
+    def __init__(self, minimal_value, maximal_value):
+        self.minimal_value = minimal_value
+        self.maximal_value = maximal_value
 
-    def get(self, max=sys.maxsize):
-        if self.count > max:
-            return int(random.uniform(1, max))
-        else:
-            return int(int(random.uniform(1, self.count)))
-
-
+    def get(self):
+        return int(int(random.uniform(self.minimal_value, self.maximal_value)))

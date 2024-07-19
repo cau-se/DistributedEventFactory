@@ -1,0 +1,55 @@
+numberOfSensors:
+  type: static
+  args:
+    count: 4
+caseId: increasing
+loadProfile:
+  type: gradual
+  args:
+    tickCount: 100
+    minimalLoad: 100
+    maximalLoad: 500
+sensorTopology:
+  type: classic
+  args:
+    dataSources:
+      type: list
+      args:
+        ids:
+          - "Sensor 1"
+          - "Sensor 2"
+          - "Sensor 3"
+          - "Sensor 4"
+    sink:
+      type: console
+    duration:
+      type: static
+      args:
+        duration: 10
+    transitions:
+      type: generateMatrix
+      args:
+        strategy:
+          type: random
+          args:
+            numberOfTransitions:
+              type: static
+              args:
+                count: 2
+    activities:
+      type: uniform
+      args:
+        type: distinct
+        args:
+          count:
+            type: static
+            args:
+              count: 4
+
+      #type: matrix
+      #args:
+      #  - [0.5, 0.5, 0.0, 0.0]
+      #  - [0.5, 0.5, 0.0, 0.0]
+      #  - [0.0, 0.5, 0.5, 0.0]
+      #  - [0.0, 0.0, 0.5, 0.5]
+      #  - [0.0, 0.0, 0.0, 0.5]

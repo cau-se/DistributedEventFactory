@@ -34,3 +34,17 @@ class UniformActivityEmissionProvider(ActivityEmissionProvider):
 
     def emit_activity(self, payload: int) -> Activity:
         return self.potential_activities[int(random.uniform(0, len(self.potential_activities)) - 1)]
+
+
+#class ActivityEmissionProviderRegistry:
+#
+#    def __init__(self):
+#        self.activityEmissionProviderRegistry = ActivityEmissionProviderRegistry()
+#
+#    def get(self, type: str, args) -> UniformActivityEmissionProviderFactory:
+#        registry = dict()
+#        registry["uniform"] = lambda config: UniformActivityEmissionProviderFactory(
+#            potential_activities_provider=self.activityEmissionProviderRegistry.get()
+#        )
+#        return registry[type](args)
+#

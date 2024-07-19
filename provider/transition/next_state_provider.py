@@ -3,7 +3,7 @@ import random
 from typing import List
 
 
-class NextStateProvider:
+class ProbabilityDistributionProvider:
 
     @abstractmethod
     def get_next_states(self, number_of_data_sources) -> List[int]:
@@ -21,7 +21,7 @@ def get_random_distinct(max_length, count) -> List[int]:
     return random_elements
 
 
-class DistinctNextStateProvider(NextStateProvider):
+class DistinctProbabilityDistributionProvider(ProbabilityDistributionProvider):
     def __init__(self, number_of_next_state_provider):
         self.number_of_next_state_provider = number_of_next_state_provider
 
@@ -30,7 +30,7 @@ class DistinctNextStateProvider(NextStateProvider):
         return get_random_distinct(possible_next_state, number_of_next_state)
 
 
-class NonLoopNextStateProvider(NextStateProvider):
+class NonLoopProbabilityDistributionProvider(ProbabilityDistributionProvider):
 
     def get_next_states(self, possible_next_state) -> List[str]:
         raise NotImplementedError

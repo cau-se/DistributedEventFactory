@@ -11,9 +11,9 @@ class DurationProvider:
 
 class UniformDurationProvider(DurationProvider):
 
-    def __init__(self, lower_border, upper_border):
-        self.lower_border = lower_border
-        self.upper_border = upper_border
+    def __init__(self, lower_bound, upper_bound):
+        self.lower_border = lower_bound
+        self.upper_border = upper_bound
 
     def get_duration(self):
         return random.uniform(self.lower_border, self.upper_border)
@@ -35,3 +35,10 @@ class GaussianDurationProvider(DurationProvider):
     def get_duration(self):
         return random.gauss(mu=self.mu, sigma=self.sigma)
 
+class DurationProviderRegistry(DurationProvider):
+    def get(self, type: str, args) -> DurationProvider:
+        registry = dict()
+        registry["static"] = lambda config: StaticDurationProvider(config["duration"])
+        registry["uniform"] = lambda config: UniformDurationProvider(config["lower_bound"], config["upper_bound"])
+        registry["gaussian"] = lambda config: GaussianDurationProvider(config["mu"], config["sigma"])
+        return registry[type](args)
