@@ -9,11 +9,11 @@ class CountProvider:
 
 
 class CountProviderRegistry:
-    def get(self, type: str, args) -> CountProvider:
+    def get(self, config) -> CountProvider:
         registry = dict()
         registry["static"] = lambda config: StaticCountProvider(config["count"])
         registry["uniform"] = lambda config: UniformCountProvider(config["min"], config["max"])
-        return registry[type](args)
+        return registry[config["type"]](config)
 
 
 class StaticCountProvider(CountProvider):

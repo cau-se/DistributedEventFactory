@@ -45,7 +45,7 @@ class RandomTransitionMatrixProviderRegistry:
                 DistinctProbabilityDistributionProvider(
                     number_of_next_state_provider=
                     self.number_of_next_sensors_provider_registry.get(
-                        type=config["numberOfTransitions"]["type"], args=config["numberOfTransitions"]["args"]
+                        config["numberOfTransitions"]
                     )
                 )
             )

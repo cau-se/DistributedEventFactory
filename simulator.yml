@@ -1,31 +1,27 @@
 numberOfSensors:
   type: static
-  args:
-    count: 4
+  count: 4
 caseId: increasing
 loadProfile:
   type: gradual
-  args:
-    tickCount: 100
-    minimalLoad: 100
-    maximalLoad: 500
+  tickCount: 100
+  minimalLoad: 100
+  maximalLoad: 500
 sensorTopology:
   type: classic
   args:
     dataSources:
       type: list
-      args:
-        ids:
-          - "Sensor 1"
-          - "Sensor 2"
-          - "Sensor 3"
-          - "Sensor 4"
+      ids:
+        - "Sensor 1"
+        - "Sensor 2"
+        - "Sensor 3"
+        - "Sensor 4"
     sink:
       type: console
     duration:
       type: static
-      args:
-        duration: 10
+      duration: 10
     transitions:
       type: generateMatrix
       args:
@@ -34,31 +30,27 @@ sensorTopology:
           args:
             numberOfTransitions:
               type: static
-              args:
-                count: 2
+              count: 2
     activities:
-      type: uniform
-      args:
-        type: list
-        args:
-          values:
-            - ["Manfred" ]
-            - ["4", "5", "6"]
-            - ["7", "8", "9"]
-            - ["10", "11", "12"]
-            - ["13", "14", "15"]
-            - ["13", "14", "15"]
-            - ["16", "17", "18"]
-            - ["19"]
-            - ["20", "21"]
-            - ["25"]
-            - ["26", "27", "28"]
-        #type: distinct
-        #args:
-        #  count:
-        #    type: static
-        #    args:
-        #      count: 4
+      selection: uniform
+      from:
+        #type: list
+        #values:
+        #  - ["Manfred"]
+        #  - ["4", "5", "6"]
+        #  - ["7", "8", "9"]
+        #  - ["10", "11", "12"]
+        #  - ["13", "14", "15"]
+        #  - ["13", "14", "15"]
+        #  - ["16", "17", "18"]
+        #  - ["19"]
+        #  - ["20", "21"]
+        #  - ["25"]
+        #  - ["26", "27", "28"]
+        type: distinct
+        count:
+          type: static
+          count: 4
 
       #type: matrix
       #args:

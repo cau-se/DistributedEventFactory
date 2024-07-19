@@ -38,11 +38,11 @@ class UniformActivityEmissionProvider(ActivityEmissionProvider):
 
 
 class ActivityEmissionProviderRegistry:
-    def get(self, type: str, args) -> UniformActivityEmissionProviderFactory:
+    def get(self, config) -> UniformActivityEmissionProviderFactory:
         registry = dict()
         registry["uniform"] = lambda config: (
                 UniformActivityEmissionProviderFactory(
-                    potential_activities_provider=ActivityGenerationProviderRegistry().get(config["type"], config["args"])
+                    potential_activities_provider=ActivityGenerationProviderRegistry().get(config["from"])
                 )
             )
-        return registry[type](args)
+        return registry[config["selection"]](config)

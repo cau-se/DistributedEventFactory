@@ -21,12 +21,12 @@ class SendProvider:
 
 class SinkProviderRegistry:
 
-    def get(self, type: str) -> SendProvider:
+    def get(self, config) -> SendProvider:
         registry = dict()
         registry["kafka"] = KafkaSendProvider()
         registry["ui"] = TerminalGuiSendProvider()
         registry["console"] = PrintConsoleSendProvider()
-        return registry[type]
+        return registry[config["type"]]
 
 
 class KafkaSender(Sender):

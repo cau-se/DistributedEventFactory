@@ -8,12 +8,14 @@ class DataSourceIdProvider(ABC):
     def get_id(self) -> DataSourceId:
         pass
 
+
 class DataSourceIdProviderRegistry():
-    def get(self, type: str, args) -> DataSourceIdProvider:
+
+    def get(self, config) -> DataSourceIdProvider:
         registry = dict()
         registry["list"] = lambda config: ListBasedSourceIdProvider(config["ids"])
-        #registry["gradual"] = lambda config: DataSourceIdProvider(config["tickCount"], config["minimalLoad"], config["maximalLoad"])
-        return registry[type](args)
+        return registry[config["type"]](config)
+
 
 class NumberDataSourceIdProvider(DataSourceIdProvider):
 

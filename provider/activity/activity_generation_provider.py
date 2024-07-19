@@ -48,9 +48,9 @@ class ActivityGenerationProviderRegistry:
     def __init__(self):
         self.count_provider_registry = CountProviderRegistry()
 
-    def get(self, type: str, args) -> ActivityGenerationProvider:
+    def get(self, config) -> ActivityGenerationProvider:
         registry = dict()
         registry["distinct"] = lambda config: DistinctActivityGenerationProvider(
-            number_of_activities_provider=self.count_provider_registry.get(config["count"]["type"], config["count"]["args"]))
+            number_of_activities_provider=self.count_provider_registry.get(config["count"]))
         registry["list"] = lambda config: ListBasedActivityGenerationProvider(sensor_id_activity_map=config["values"])
-        return registry[type](args)
+        return registry[config["type"]](config)

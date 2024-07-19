@@ -36,9 +36,9 @@ class GaussianDurationProvider(DurationProvider):
         return random.gauss(mu=self.mu, sigma=self.sigma)
 
 class DurationProviderRegistry(DurationProvider):
-    def get(self, type: str, args) -> DurationProvider:
+    def get(self, config) -> DurationProvider:
         registry = dict()
         registry["static"] = lambda config: StaticDurationProvider(config["duration"])
         registry["uniform"] = lambda config: UniformDurationProvider(config["lower_bound"], config["upper_bound"])
         registry["gaussian"] = lambda config: GaussianDurationProvider(config["mu"], config["sigma"])
-        return registry[type](args)
+        return registry[config["type"]](config)
