@@ -4,7 +4,7 @@ from typing import List
 from core.datasource import DataSource, GenericDataSource, StartDataSource, EndDataSource
 from core.datasource_id import START_SENSOR_ID, END_SENSOR_ID
 from provider.activity.activity_emission_provider import ActivityEmissionProviderFactory, \
-    UniformActivityEmissionProviderFactory
+    UniformActivityEmissionProviderFactory, ActivityEmissionProviderRegistry
 
 from provider.activity.activity_generation_provider import DistinctActivityGenerationProvider
 from provider.datasource.datasource_id_provider import DataSourceIdProvider, DataSourceIdProviderRegistry
@@ -22,24 +22,19 @@ class SensorTopologyProvider:
 
 class SensorTopologyProviderRegistry:
 
-    def __init__(self):
-        self.dataSourceIdProviderRegistry = DataSourceIdProviderRegistry()
-        self.sinkProviderRegistry = SinkProviderRegistry()
-        self.transitionProviderRegistry = TransitionProviderRegistry()
-        self.durationProviderRegistry = DurationProviderRegistry()
-
     def get(self, type: str, args) -> SensorTopologyProvider:
         registry = dict()
         registry["classic"] = lambda config: GenericSensorTopologyProvider(
-            data_source_id_provider=self.dataSourceIdProviderRegistry.get(config["dataSources"]["type"],
+            data_source_id_provider=DataSourceIdProviderRegistry().get(config["dataSources"]["type"],
                                                                           config["dataSources"]["args"]),
-            transition_provider_factory=self.transitionProviderRegistry.get(config["transitions"]["type"],
+            transition_provider_factory=TransitionProviderRegistry().get(config["transitions"]["type"],
                                                                             config["transitions"]["args"]),
-            duration_provider=self.durationProviderRegistry.get(config["duration"]["type"], config["duration"]["args"]),
-            send_provider=self.sinkProviderRegistry.get(config["sink"]["type"]),
-            activity_emission_provider=
-            UniformActivityEmissionProviderFactory(
-                potential_activities_provider=
+            duration_provider=DurationProviderRegistry().get(config["duration"]["type"], config["duration"]["args"]),
+            send_provider=SinkProviderRegistry().get(config["sink"]["type"]),
+            activity_emission_provider=ActivityEmissionProviderRegistry().get(config["activities"]["type"], config["activities"]["args"])
+            #UniformActivityEmissionProviderFactory(
+
+                #potential_activities_provider=
                 # ListBasedActivityGenerationProvider(
                 #    sensor_id_activity_map=[
                 #        ["1", "2", "3"],
@@ -55,11 +50,10 @@ class SensorTopologyProviderRegistry:
                 #        ["26", "27", "28"],
                 #    ]
                 # )
-                DistinctActivityGenerationProvider(
-                    number_of_activities_provider=StaticCountProvider(5)
-                )
+                #DistinctActivityGenerationProvider(
+                #    number_of_activities_provider=StaticCountProvider(5)
+                #)
             )
-        )
         return registry[type](args)
 
 

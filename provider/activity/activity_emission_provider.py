@@ -3,7 +3,8 @@ import random
 from typing import List
 
 from core.event import Activity
-from provider.activity.activity_generation_provider import ActivityGenerationProvider
+from provider.activity.activity_generation_provider import ActivityGenerationProvider, \
+    ActivityGenerationProviderRegistry
 
 
 class ActivityEmissionProvider(ABC):
@@ -36,15 +37,12 @@ class UniformActivityEmissionProvider(ActivityEmissionProvider):
         return self.potential_activities[int(random.uniform(0, len(self.potential_activities)) - 1)]
 
 
-#class ActivityEmissionProviderRegistry:
-#
-#    def __init__(self):
-#        self.activityEmissionProviderRegistry = ActivityEmissionProviderRegistry()
-#
-#    def get(self, type: str, args) -> UniformActivityEmissionProviderFactory:
-#        registry = dict()
-#        registry["uniform"] = lambda config: UniformActivityEmissionProviderFactory(
-#            potential_activities_provider=self.activityEmissionProviderRegistry.get()
-#        )
-#        return registry[type](args)
-#
+class ActivityEmissionProviderRegistry:
+    def get(self, type: str, args) -> UniformActivityEmissionProviderFactory:
+        registry = dict()
+        registry["uniform"] = lambda config: (
+                UniformActivityEmissionProviderFactory(
+                    potential_activities_provider=ActivityGenerationProviderRegistry().get(config["type"], config["args"])
+                )
+            )
+        return registry[type](args)
