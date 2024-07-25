@@ -10,7 +10,7 @@ providers["numberOfSensors"] = lambda config: CountProviderRegistry().get(config
 providers["caseId"] = lambda config: CaseIdProviderRegistry().get(config)
 providers["duration"] = lambda config: DurationProviderRegistry().get(config)
 providers["loadProfile"] = lambda config: LoadProviderRegistry().get(config)
-providers["sensorTopology"] = lambda config: SensorTopologyProviderRegistry().get(config["type"], config["args"])
+providers["sensorTopology"] = lambda config: SensorTopologyProviderRegistry().get(config)
 
 class ProviderRegistry:
 

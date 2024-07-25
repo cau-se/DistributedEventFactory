@@ -20,9 +20,12 @@ class TransitionProviderRegistry:
         registry["matrix"] = lambda config: MatrixBasedTransitionProvider(config["matrix"])
         registry["generateMatrix"] = lambda config: (
             GenerativeTransitionProvider(provider=
-                self.randomTransitionMatrixProviderRegistry.get(config["strategy"]["type"],
-                                                                config["strategy"]["args"])
-                                         ))
+                self.randomTransitionMatrixProviderRegistry.get(
+                    config["strategy"]["type"],
+                    config["strategy"]["args"]
+                )
+            )
+        )
         return registry[type](args)
 
 

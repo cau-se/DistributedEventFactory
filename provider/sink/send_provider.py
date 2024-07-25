@@ -6,30 +6,30 @@ from core.event import AbstractEvent
 from view.terminal import Terminal
 
 
-class Sender:
+class Sink:
 
     @abc.abstractmethod
     def send(self, event: AbstractEvent) -> None:
         pass
 
-class SendProvider:
+class SinkProvider:
 
     @abc.abstractmethod
-    def get_sender(self, id) -> Sender:
+    def get_sender(self, id) -> Sink:
         pass
 
 
 class SinkProviderRegistry:
 
-    def get(self, config) -> SendProvider:
+    def get(self, config) -> SinkProvider:
         registry = dict()
-        registry["kafka"] = KafkaSendProvider()
-        registry["ui"] = TerminalGuiSendProvider()
-        registry["console"] = PrintConsoleSendProvider()
-        return registry[config["type"]]
+        registry["kafka"] = KafkaSinkProvider()
+        registry["ui"] = TerminalGuiSinkProvider()
+        registry["console"] = PrintConsoleSinkProvider()
+        return registry[config]
 
 
-class KafkaSender(Sender):
+class KafkaSink(Sink):
 
     def __init__(self, bootstrap_server_url, client_id, topic):
         self.producer = KafkaProducer(
@@ -49,7 +49,7 @@ class KafkaSender(Sender):
         ).add_callback(lambda record_metadata: print(record_metadata))
 
 
-class PrintConsole(Sender):
+class PrintConsole(Sink):
 
     def __init__(self, id):
         self.id = id
@@ -60,23 +60,23 @@ class PrintConsole(Sender):
 
 
 
-class PrintConsoleSendProvider(SendProvider):
-    def get_sender(self, id) -> Sender:
+class PrintConsoleSinkProvider(SinkProvider):
+    def get_sender(self, id) -> Sink:
         return PrintConsole(id)
 
 
-class KafkaSendProvider(SendProvider):
-    def get_sender(self, id) -> Sender:
-        return KafkaSender(bootstrap_server_url="",
-                           client_id=f"{id}",
-                           topic="topic")
+class KafkaSinkProvider(SinkProvider):
+    def get_sender(self, id) -> Sink:
+        return KafkaSink(bootstrap_server_url="",
+                         client_id=f"{id}",
+                         topic="topic")
 
-class TerminalGuiSendProvider(SendProvider):
-    def get_sender(self, id) -> Sender:
+class TerminalGuiSinkProvider(SinkProvider):
+    def get_sender(self, id) -> Sink:
         return TerminalGui(Terminal(title=id))
 
 
-class TerminalGui(Sender):
+class TerminalGui(Sink):
     def __init__(self, terminal):
         self.terminal: Terminal = terminal
 

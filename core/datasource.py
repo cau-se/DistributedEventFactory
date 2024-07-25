@@ -3,7 +3,7 @@ from typing import List
 
 from core.event import Event, StartEvent, EndEvent, AbstractEvent
 from provider.activity.activity_emission_provider import ActivityEmissionProvider
-from provider.sender.send_provider import Sender
+from provider.sink.send_provider import Sink
 from provider.transition.duration_provider import DurationProvider
 from core.datasource_id import DataSourceId, START_SENSOR_ID, END_SENSOR_ID
 from provider.transition.transition_provider_factory import NextSensorProvider
@@ -77,7 +77,7 @@ class GenericDataSource(DataSource):
             sensor_id: DataSourceId,
             transition_provider: NextSensorProvider,
             duration_provider: DurationProvider,
-            sender: Sender,
+            sender: Sink,
             activity_emission_provider: ActivityEmissionProvider
     ):
         self.sensor_id: DataSourceId = sensor_id
