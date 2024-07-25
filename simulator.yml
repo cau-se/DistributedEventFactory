@@ -14,25 +14,25 @@ sensorTopology:
       duration:
         type: static
         duration: 10
-      transition: [0.5, 0.5]
+      transition: [0.5, 0.3, 0.2]
       activities:
-        selection: uniform
+        selection: ordered
         from:
           type: list
           values:
-            - ["Manfred"]
+            - ["Manfred", "Thomas"]
     - name: "Sensor 2"
       sink: console
       duration:
         type: static
         duration: 10
-      transition: [0.5, 0.5]
+      transition: [0.5, 0.3, 0.2]
       activities:
-        selection: uniform
+        selection: ordered
         from:
           type: list
           values:
-            - [ "Frank" ]
+            - [ "Frank", "Volker" ]
       #activities:
       #  - "A"
       #    0.5

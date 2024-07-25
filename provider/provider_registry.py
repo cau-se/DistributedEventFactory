@@ -1,9 +1,8 @@
 from provider.data.case_provider import CaseIdProviderRegistry
-from provider.datasource.datasource_id_provider import DataSourceIdProviderRegistry
 from provider.datasource.sensor_topology_registry import SensorTopologyProviderRegistry
-from provider.generic.count_provider import CountProviderRegistry
-from provider.load.load_provider import LoadProviderRegistry
-from provider.transition.duration_provider import DurationProviderRegistry
+from provider.generic.count_provider_registry import CountProviderRegistry
+from provider.load.load_provider_registry import LoadProviderRegistry
+from provider.transition.duration.duration_registry import DurationProviderRegistry
 
 providers = dict()
 providers["numberOfSensors"] = lambda config: CountProviderRegistry().get(config)

@@ -2,10 +2,10 @@ from abc import abstractmethod, ABC
 from typing import List
 
 from core.event import Event, StartEvent, EndEvent, AbstractEvent
-from provider.activity.activity_emission_provider import ActivityEmissionProvider
-from provider.sink.send_provider import Sink
-from provider.transition.duration_provider import DurationProvider
-from core.datasource_id import DataSourceId, START_SENSOR_ID, END_SENSOR_ID
+from provider.activity.selection.activity_selection_provider import ActivitySelectionProvider
+from provider.sink.sink_provider import Sink
+from provider.transition.duration.duration_provider import DurationProvider
+from core.datasource_id import DataSourceId, START_SENSOR_ID, END_DATA_SOURCE_ID
 from provider.transition.transition_provider_factory import NextSensorProvider
 
 
@@ -65,7 +65,7 @@ class EndDataSource(DataSource):
         raise ValueError("There is no transition on the end datasource")
 
     def get_id(self) -> DataSourceId:
-        return END_SENSOR_ID
+        return END_DATA_SOURCE_ID
 
     def get_event_log(self) -> List[AbstractEvent]:
         return self.event_log
@@ -78,7 +78,7 @@ class GenericDataSource(DataSource):
             transition_provider: NextSensorProvider,
             duration_provider: DurationProvider,
             sender: Sink,
-            activity_emission_provider: ActivityEmissionProvider
+            activity_emission_provider: ActivitySelectionProvider
     ):
         self.sensor_id: DataSourceId = sensor_id
         self.transition_provider: NextSensorProvider = transition_provider

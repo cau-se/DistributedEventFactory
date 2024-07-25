@@ -13,10 +13,10 @@ class Simulation:
 
     def __init__(
             self,
-            number_of_sensors_provider,
-            sensor_topology_provider,
-            case_id_provider,
-            load_provider
+            number_of_sensors_provider: CountProvider,
+            sensor_topology_provider: SensorTopologyProvider,
+            case_id_provider: CaseIdProvider,
+            load_provider: LoadProvider
     ):
         self.number_of_sensors_provider: CountProvider = number_of_sensors_provider
         self.sensor_topology_provider: SensorTopologyProvider = sensor_topology_provider
@@ -27,18 +27,18 @@ class Simulation:
         number_of_sensors = self.number_of_sensors_provider.get()
         sensors = self.sensor_topology_provider.get_sensor_topology(number_of_sensors)
         process_simulator = ProcessSimulator(
-            sensors=sensors,
+            data_sources=sensors,
             case_id_provider=self.case_id_provider,
         )
 
-        while True:
-            process_simulator.simulate()
+        #while True:
+        #    process_simulator.simulate()
         # Make Event Loop interchangable because it does not show the Errors
-        #with ScheduledThreadPoolExecutor() as executor:
-        #    while True:
-        #        scheduler = executor.schedule(
-        #            process_simulator.simulate,
-        #            period=1 / self.load_provider.get_load_value()
-        #        )
-        #        time.sleep(1)
-        #        scheduler.cancel()
+        with ScheduledThreadPoolExecutor() as executor:
+            while True:
+                scheduler = executor.schedule(
+                    process_simulator.simulate,
+                    period=1 / self.load_provider.get_load_value()
+                )
+                time.sleep(1)
+                scheduler.cancel()

@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
 import random
 
-from provider.generic.count_provider import CountProviderRegistry
+from provider.generic.count_provider_registry import CountProviderRegistry
 from provider.transition.next_sensor_provider import NextSensorProvider, NextSensorChooseProvider
 from provider.transition.next_state_provider import DistinctProbabilityDistributionProvider
 

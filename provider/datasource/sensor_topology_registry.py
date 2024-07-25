@@ -1,15 +1,12 @@
 from typing import List
 
 from core.datasource import DataSource, GenericDataSource
-from provider.activity.activity_emission_provider import ActivityEmissionProviderRegistry
+from provider.activity.selection.activity_selection_provider_registry import ActivitySelectionProviderRegistry
 from provider.datasource.data_source_registry import DataSourceRegistry
-from provider.datasource.datasource_id_provider import DataSourceIdProviderRegistry
-from provider.datasource.sensor_topology import SensorTopologyProvider, GenericSensorTopologyProvider, \
-    ConcreteSensorTopologyProvider
-from provider.sink.send_provider import SinkProviderRegistry
-from provider.transition.duration_provider import DurationProviderRegistry
+from provider.datasource.sensor_topology import SensorTopologyProvider, ConcreteSensorTopologyProvider
+from provider.sink.sink_provider_registry import SinkProviderRegistry
+from provider.transition.duration.duration_registry import DurationProviderRegistry
 from provider.transition.next_sensor_provider import NextSensorProvider
-from provider.transition.transition_provider_factory import TransitionProviderRegistry
 
 
 class DataSourceConverter:
@@ -28,7 +25,7 @@ class DataSourceConverter:
                             .get(config=definition.duration)
                         ),
                     transition_provider=NextSensorProvider(definition.transition),
-                    activity_emission_provider=ActivityEmissionProviderRegistry()
+                    activity_emission_provider=ActivitySelectionProviderRegistry()
                         .get(config=definition.activities)
                     .get_activity_provider(),
                     sender=SinkProviderRegistry().get(config=definition.sink).get_sender(sensor_id),

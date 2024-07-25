@@ -2,7 +2,8 @@ import abc
 from string import ascii_uppercase as alphabet
 from typing import List
 
-from provider.generic.count_provider import CountProvider, CountProviderRegistry
+from provider.generic.count_provider import CountProvider
+from provider.generic.count_provider_registry import CountProviderRegistry
 
 
 class ActivityGenerationProvider(abc.ABC):
@@ -44,13 +45,3 @@ class ListBasedActivityGenerationProvider(ActivityGenerationProvider):
         return activities
 
 
-class ActivityGenerationProviderRegistry:
-    def __init__(self):
-        self.count_provider_registry = CountProviderRegistry()
-
-    def get(self, config) -> ActivityGenerationProvider:
-        registry = dict()
-        registry["distinct"] = lambda config: DistinctActivityGenerationProvider(
-            number_of_activities_provider=self.count_provider_registry.get(config["count"]))
-        registry["list"] = lambda config: ListBasedActivityGenerationProvider(sensor_id_activity_map=config["values"])
-        return registry[config["type"]](config)

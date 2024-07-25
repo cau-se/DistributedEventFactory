@@ -1,6 +1,6 @@
 from typing import List
 
-from provider.transition.duration_provider import DurationProvider, StaticDurationProvider
+from provider.transition.duration.duration_provider import DurationProvider, StaticDurationProvider
 from utils.utils_types import BgColors, print_color
 
 

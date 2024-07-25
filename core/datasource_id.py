@@ -13,4 +13,4 @@ class DataSourceId:
 
 
 START_SENSOR_ID = DataSourceId("<start>")
-END_SENSOR_ID = DataSourceId("<end>")
+END_DATA_SOURCE_ID = DataSourceId("<end>")

@@ -8,14 +8,6 @@ class CountProvider:
         pass
 
 
-class CountProviderRegistry:
-    def get(self, config) -> CountProvider:
-        registry = dict()
-        registry["static"] = lambda config: StaticCountProvider(config["count"])
-        registry["uniform"] = lambda config: UniformCountProvider(config["min"], config["max"])
-        return registry[config["type"]](config)
-
-
 class StaticCountProvider(CountProvider):
     def __init__(self, count):
         self.count = count

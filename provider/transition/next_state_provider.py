@@ -28,9 +28,3 @@ class DistinctProbabilityDistributionProvider(ProbabilityDistributionProvider):
     def get_next_states(self, possible_next_state) -> List[int]:
         number_of_next_state = self.number_of_next_state_provider.get()
         return get_random_distinct(possible_next_state, number_of_next_state)
-
-
-class NonLoopProbabilityDistributionProvider(ProbabilityDistributionProvider):
-
-    def get_next_states(self, possible_next_state) -> List[str]:
-        raise NotImplementedError

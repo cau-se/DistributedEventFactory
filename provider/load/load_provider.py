@@ -8,14 +8,6 @@ class LoadProvider:
         pass
 
 
-class LoadProviderRegistry:
-    def get(self, config) -> LoadProvider:
-        registry = dict()
-        registry["constant"] = lambda config: ConstantLoadProvider(config["intensity"])
-        registry["gradual"] = lambda config: GradualIncreasingLoadProvider(config["tickCount"], config["minimalLoad"], config["maximalLoad"])
-        return registry[config["type"]](config)
-
-
 class ConstantLoadProvider(LoadProvider):
 
     def __init__(self, intensity):
