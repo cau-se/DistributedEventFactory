@@ -12,13 +12,13 @@ from provider.transition.next_sensor_provider import NextSensorProvider
 from provider.transition.transition_provider_factory import MatrixBasedTransitionProvider
 
 
-class SensorTopologyProvider:
+class DataSourceTopologyProvider:
     @abstractmethod
     def get_sensor_topology(self, number_of_sensors) -> List[DataSource]:
         pass
 
 
-class GenericSensorTopologyProvider(SensorTopologyProvider):
+class GenericDataSourceTopologyProvider(DataSourceTopologyProvider):
     def __init__(
             self,
             data_source_provider,
@@ -39,14 +39,14 @@ class GenericSensorTopologyProvider(SensorTopologyProvider):
         return sensors
 
 
-class ConcreteSensorTopologyProvider(SensorTopologyProvider):
+class ConcreteDataSourceTopologyProvider(DataSourceTopologyProvider):
     def __init__(self, data_source_list: List[DataSource]):
         self.data_source_list = data_source_list
 
     def get_sensor_topology(self, number_of_sensors):
         sensors = []
         transitions = [0.0] * number_of_sensors
-        transitions[1] = 1.0
+        transitions[0] = 1.0
         sensors.append(StartDataSource(transition_provider=NextSensorProvider(transitions),
                                        sender=PrintConsoleSinkProvider().get_sender(START_SENSOR_ID.get_name())))
         for data_source in self.data_source_list:
@@ -54,7 +54,6 @@ class ConcreteSensorTopologyProvider(SensorTopologyProvider):
 
         sensors.append(EndDataSource(sender=PrintConsoleSinkProvider().get_sender(END_DATA_SOURCE_ID.get_name())))
         return sensors
-
 
 
 class DataSourceProvider(ABC):
@@ -83,10 +82,9 @@ class GenericDataSourceProvider(DataSourceProvider):
         sensor_id = self.data_source_id_provider.get_id()
 
         return GenericDataSource(
-                sensor_id=sensor_id,
-                transition_provider=self.transition_provider.get(number_of_sensors + 1),
-                duration_provider=self.duration_provider,
-                sender=self.send_provider.get_sender(sensor_id.get_name()),
-                activity_emission_provider=self.activity_emission_provider.get_activity_provider()
-            )
-
+            sensor_id=sensor_id,
+            transition_provider=self.transition_provider.get(number_of_sensors + 1),
+            duration_provider=self.duration_provider,
+            sender=self.send_provider.get_sender(sensor_id.get_name()),
+            activity_emission_provider=self.activity_emission_provider.get_activity_provider()
+        )

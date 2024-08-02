@@ -8,7 +8,7 @@ class SinkProviderRegistry:
 
     def get(self, config) -> SinkProvider:
         registry = dict()
-        registry["kafka"] = KafkaSinkProvider()
-        registry["ui"] = TerminalGuiSinkProvider()
-        registry["console"] = PrintConsoleSinkProvider()
-        return registry[config]
+        registry["kafka"] = lambda config: KafkaSinkProvider(bootstrap_server=config["bootstrapServer"], topic=config["topic"])
+        registry["ui"] = lambda config: TerminalGuiSinkProvider()
+        registry["console"] = lambda config: PrintConsoleSinkProvider()
+        return registry[config["type"]](config)

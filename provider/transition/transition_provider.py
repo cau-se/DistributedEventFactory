@@ -1,7 +1,4 @@
 from abc import ABC, abstractmethod
-from typing import List
-
-import numpy as np
 from provider.transition.transition_probability_provider import TransitionProbabilityProviderFactory
 
 class TransitionProvider(ABC):
@@ -9,8 +6,6 @@ class TransitionProvider(ABC):
     @abstractmethod
     def get_next_sensor(self) -> int:
         pass
-
-
 
 
 class TransitionProviderFactory:

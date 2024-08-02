@@ -3,7 +3,7 @@ from typing import List
 from core.datasource import DataSource, GenericDataSource
 from provider.activity.selection.activity_selection_provider_registry import ActivitySelectionProviderRegistry
 from provider.datasource.data_source_registry import DataSourceRegistry
-from provider.datasource.sensor_topology import SensorTopologyProvider, ConcreteSensorTopologyProvider
+from provider.datasource.sensor_topology import DataSourceTopologyProvider, ConcreteDataSourceTopologyProvider
 from provider.sink.sink_provider_registry import SinkProviderRegistry
 from provider.transition.duration.duration_registry import DurationProviderRegistry
 from provider.transition.next_sensor_provider import NextSensorProvider
@@ -35,9 +35,9 @@ class DataSourceConverter:
         return data_sources
 
 
-class SensorTopologyProviderRegistry:
+class DataSourceProviderRegistry:
 
-    def get(self, config) -> SensorTopologyProvider:
+    def get(self, config) -> DataSourceTopologyProvider:
         registry = dict()
         #registry["classic"] = lambda config: GenericSensorTopologyProvider(
         #    data_source_id_provider=DataSourceIdProviderRegistry().get(config["dataSources"]),
@@ -47,8 +47,8 @@ class SensorTopologyProviderRegistry:
         #    send_provider=SinkProviderRegistry().get(config["sink"]),
         #    activity_emission_provider=ActivityEmissionProviderRegistry().get(config["activities"]))
 
-        registry["concrete"] = lambda config: ConcreteSensorTopologyProvider(
-            data_source_list=DataSourceRegistry().get(data_source_definitions=config["sensors"])
+        registry["concrete"] = lambda config: ConcreteDataSourceTopologyProvider(
+            data_source_list=DataSourceRegistry().get(data_source_definitions=config["dataSources"])
         )
         return registry["concrete"](config)
 

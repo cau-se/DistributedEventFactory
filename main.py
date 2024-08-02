@@ -8,9 +8,9 @@ if __name__ == '__main__':
     registry = ProviderRegistry(configuration)
 
     simulation = Simulation(
-        number_of_sensors_provider=registry.get("numberOfSensors"),
+        number_of_data_sources_provider=registry.get("numberOfDataSources"),
         case_id_provider=registry.get("caseId"),
         load_provider=registry.get("loadProfile"),
-        sensor_topology_provider=registry.get("sensorTopology"),
+        data_source_topology_provider=registry.get("dataSourceTopology"),
     )
     simulation.start()

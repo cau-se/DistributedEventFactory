@@ -11,8 +11,8 @@ class NextSensorProvider:
 
 
 class NextSensorChooseProvider:
-    def __init__(self, number_of_sensors):
-        self.number_of_sensors = number_of_sensors
+    def __init__(self, number_of_data_sources):
+        self.number_of_sensors = number_of_data_sources
 
     def get(self, probability_distribution) -> NextSensorProvider:
         distribution = probability_distribution[0:self.number_of_sensors - 1]

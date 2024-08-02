@@ -11,8 +11,6 @@ class TransitionProbabilityProvider:
         pass
 
 
-
-
 class MatrixBasedTransitionProvider(TransitionProbabilityProvider):
 
     def __init__(self, transition_matrix: List[List[float]]):
@@ -26,7 +24,7 @@ class MatrixBasedTransitionProvider(TransitionProbabilityProvider):
 class TransitionProbabilityProviderFactory(abc.ABC):
 
     @abc.abstractmethod
-    def get(self, number_of_sensors):
+    def get(self, number_of_data_sources):
         pass
 
 
@@ -35,5 +33,5 @@ class DrawWithoutReplacementTransitionProbabilityProviderFactory(TransitionProba
     def __init__(self, transition_indices_provider):
         self.transition_indices_provider = transition_indices_provider
 
-    def get(self, number_of_sensors):
-        return DrawWithoutReplacementTransitionProvider(number_of_sensors, self.transition_indices_provider)
+    def get(self, number_of_data_sources):
+        return DrawWithoutReplacementTransitionProvider(number_of_data_sources, self.transition_indices_provider)

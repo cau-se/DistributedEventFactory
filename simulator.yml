@@ -1,4 +1,4 @@
-numberOfSensors:
+numberOfDataSources:
   type: static
   count: 2
 caseId: increasing
@@ -7,32 +7,42 @@ loadProfile:
   tickCount: 100
   minimalLoad: 1
   maximalLoad: 5
-sensorTopology:
-  sensors:
+dataSourceTopology:
+  dataSources:
     - name: "Sensor 1"
-      sink: console
+      labels:
+        sensorGroupId: "warehouse"
+        location:
+      sink:
+        type: kafka
+        bootstrapServer: "kube1-1:30376"
+        topic: "process"
       duration:
-        type: static
-        duration: 10
+        type: uniform
+        lowerBound: -2
+        upperBound: 4
       transition: [0.5, 0.3, 0.2]
       activities:
-        selection: ordered
+        selection: uniform
         from:
           type: list
           values:
             - ["Manfred", "Thomas"]
     - name: "Sensor 2"
-      sink: console
+      sink:
+        type: kafka
+        bootstrapServer: "kube1-1:30376"
+        topic: "process2"
       duration:
         type: static
-        duration: 10
-      transition: [0.5, 0.3, 0.2]
+        duration: 1
+      transition: [0.0, 0.8, 0.2]
       activities:
         selection: ordered
         from:
           type: list
           values:
-            - [ "Frank", "Volker" ]
+            - [ "Manfred", "Thomas" ]
       #activities:
       #  - "A"
       #    0.5
