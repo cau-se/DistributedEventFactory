@@ -44,16 +44,18 @@ class ConcreteDataSourceTopologyProvider(DataSourceTopologyProvider):
         self.data_source_list = data_source_list
 
     def get_sensor_topology(self, number_of_sensors):
-        sensors = []
+        data_sources = []
         transitions = [0.0] * number_of_sensors
         transitions[0] = 1.0
-        sensors.append(StartDataSource(transition_provider=NextSensorProvider(transitions),
-                                       sender=PrintConsoleSinkProvider().get_sender(START_SENSOR_ID.get_name())))
+        data_sources.append(
+            StartDataSource(
+                transition_provider=NextSensorProvider(transitions),
+                sender=PrintConsoleSinkProvider().get_sender(START_SENSOR_ID.get_name())))
         for data_source in self.data_source_list:
-            sensors.append(data_source)
+            data_sources.append(data_source)
 
-        sensors.append(EndDataSource(sender=PrintConsoleSinkProvider().get_sender(END_DATA_SOURCE_ID.get_name())))
-        return sensors
+        data_sources.append(EndDataSource(sender=PrintConsoleSinkProvider().get_sender(END_DATA_SOURCE_ID.get_name())))
+        return data_sources
 
 
 class DataSourceProvider(ABC):
@@ -80,11 +82,11 @@ class GenericDataSourceProvider(DataSourceProvider):
 
     def get_data_source(self, number_of_sensors):
         sensor_id = self.data_source_id_provider.get_id()
-
         return GenericDataSource(
+            sender=self.send_provider.get_sender(sensor_id.get_name()),
             sensor_id=sensor_id,
             transition_provider=self.transition_provider.get(number_of_sensors + 1),
             duration_provider=self.duration_provider,
-            sender=self.send_provider.get_sender(sensor_id.get_name()),
             activity_emission_provider=self.activity_emission_provider.get_activity_provider()
         )
+

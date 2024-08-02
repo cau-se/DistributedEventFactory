@@ -3,6 +3,7 @@ from typing import List
 
 from core.event import Event, StartEvent, EndEvent, AbstractEvent
 from provider.activity.selection.activity_selection_provider import ActivitySelectionProvider
+from provider.event.event_provider import EventProvider
 from provider.sink.sink_provider import Sink
 from provider.transition.duration.duration_provider import DurationProvider
 from core.datasource_id import DataSourceId, START_SENSOR_ID, END_DATA_SOURCE_ID
@@ -75,37 +76,31 @@ class GenericDataSource(DataSource):
     def __init__(
             self,
             sensor_id: DataSourceId,
-            transition_provider: NextSensorProvider,
-            duration_provider: DurationProvider,
+            event_provider: EventProvider,
             sender: Sink,
-            activity_emission_provider: ActivitySelectionProvider
     ):
         self.sensor_id: DataSourceId = sensor_id
-        self.transition_provider: NextSensorProvider = transition_provider
-        self.duration_provider = duration_provider
         self.sender = sender
+        self.event_provider = event_provider
         self.event_log: List[AbstractEvent] = []
-        self.event_emission_provider = activity_emission_provider
 
     def get_id(self) -> DataSourceId:
         return self.sensor_id
 
     def emit_event(self, case, timestamp) -> None:
-        activity_name = self.event_emission_provider.emit_activity(payload=0)
-
+        activity_name = self.event_provider.get_activity()
         event = Event(
             timestamp=timestamp.strftime("%Y-%m-%d %H:%M:%S"),
             sensor_value=activity_name,
             case_id=case,
             sensor_name=self.sensor_id.get_name(),
         )
-
         self.event_log.append(event)
         self.sender.send(event)
 
     def get_sensor_transition(self) -> tuple[int, int]:
-        next_sensor = self.transition_provider.get_next_sensor()
-        duration = self.duration_provider.get_duration()
+        next_sensor = self.event_provider.get_next_sensor()
+        duration = self.event_provider.get_duration()
         return duration, next_sensor
 
     def get_event_log(self) -> List[AbstractEvent]:
