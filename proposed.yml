@@ -2,50 +2,64 @@ numberOfDataSources:
   type: static
   count: 2
 caseId: increasing
-loadProfile:
-  type: gradual
-  tickCount: 100
-  minimalLoad: 1
-  maximalLoad: 5
+eventLoop:
+  type: load
+  loadProfile:
+    type: gradual
+    tickCount: 100
+    minimalLoad: 1
+    maximalLoad: 5
 dataSourceTopology:
   dataSources:
-    - name: "Sensor 1"
-      labels:
-        sensorGroupId: "warehouse"
-        location:
+    - name: "Sensor 0"
       sink:
-        type: kafka
-        bootstrapServer: "kube1-1:30376"
-        topic: "process"
-      duration:
-        type: uniform
-        lowerBound: -2
-        upperBound: 4
-      transition: [0.5, 0.3, 0.2]
-      activities:
+        type: console
+      eventGeneration:
+        type: "classic"
         selection: uniform
         from:
-          type: list
-          values:
-            - ["Manfred", "Thomas"]
-    - name: "Sensor 2"
+          events:
+            - duration:
+                type: static
+                duration: 1
+              transition:
+                type: next_sensor
+                index: 1
+              activities:
+                selection: uniform
+                from:
+                  type: list
+                  values:
+                    - [ "Hugo", "Jonas" ]
+    - name: "Sensor 1"
       sink:
-        type: kafka
-        bootstrapServer: "kube1-1:30376"
-        topic: "process2"
+        type: console
       eventGeneration:
-        events:
-          - name: "Manfred"
-            duration:
-              type: static
-              duration: 1
-            transition:
-              type: next_sensor
-              name: "Sensor1"
-        transition: [0.0, 0.8, 0.2]
-        activities:
-          selection: ordered
-          from:
-            type: list
-            values:
-              - [ "Manfred", "Thomas" ]
+        type: "classic"
+        selection: uniform
+        from:
+          events:
+            - duration:
+                type: static
+                duration: 1
+              transition:
+                type: next_sensor
+                index: 1
+              activities:
+                selection: uniform
+                from:
+                  type: list
+                  values:
+                    - [ "Manfred", "Thomas" ]
+            - duration:
+                type: static
+                duration: 1
+              transition:
+                type: next_sensor
+                index: 2
+              activities:
+                selection: uniform
+                from:
+                  type: list
+                  values:
+                    - [ "Hanna", "Hanno" ]

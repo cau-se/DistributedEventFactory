@@ -3,7 +3,6 @@ from string import ascii_uppercase as alphabet
 from typing import List
 
 from provider.generic.count_provider import CountProvider
-from provider.generic.count_provider_registry import CountProviderRegistry
 
 
 class ActivityGenerationProvider(abc.ABC):

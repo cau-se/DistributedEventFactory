@@ -2,7 +2,7 @@ from abc import ABC, abstractmethod
 import random
 
 from provider.generic.count_provider_registry import CountProviderRegistry
-from provider.transition.next_sensor_provider import NextSensorProvider, NextSensorChooseProvider
+from provider.transition.nextsensor.next_sensor_provider import NextSensorProvider, NextSensorChooseProvider
 from provider.transition.next_state_provider import DistinctProbabilityDistributionProvider
 
 
@@ -41,7 +41,6 @@ class RandomTransitionMatrixProviderRegistry:
         registry["random"] = lambda config: (
             RandomTransitionMatrixCreationStrategy(
                 probability_distribution=
-                # TODO here: dafür brauchen wir ne registry
                 DistinctProbabilityDistributionProvider(
                     number_of_next_state_provider=
                     self.number_of_next_sensors_provider_registry.get(

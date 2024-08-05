@@ -1,6 +1,4 @@
 import random
-import datetime
-from abc import ABC, abstractmethod
 from typing import Generator, Any, List
 from sensors.sensors import BaseSensor
 

@@ -3,13 +3,16 @@ from provider.datasource.sensor_topology_registry import DataSourceProviderRegis
 from provider.generic.count_provider_registry import CountProviderRegistry
 from provider.load.load_provider_registry import LoadProviderRegistry
 from provider.transition.duration.duration_registry import DurationProviderRegistry
+from simulation.event_loop_registry import EventLoopRegistry
 
 providers = dict()
 providers["numberOfDataSources"] = lambda config: CountProviderRegistry().get(config)
 providers["caseId"] = lambda config: CaseIdProviderRegistry().get(config)
 providers["duration"] = lambda config: DurationProviderRegistry().get(config)
+providers["eventLoop"] = lambda config: EventLoopRegistry().get(config)
 providers["loadProfile"] = lambda config: LoadProviderRegistry().get(config)
 providers["dataSourceTopology"] = lambda config: DataSourceProviderRegistry().get(config)
+
 
 class ProviderRegistry:
 

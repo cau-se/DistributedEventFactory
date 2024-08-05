@@ -2,6 +2,7 @@ from provider.activity.generation.activity_generation_provider import ActivityGe
     DistinctActivityGenerationProvider, ListBasedActivityGenerationProvider
 from provider.generic.count_provider_registry import CountProviderRegistry
 
+
 class ActivityGenerationProviderRegistry:
     def __init__(self):
         self.count_provider_registry = CountProviderRegistry()

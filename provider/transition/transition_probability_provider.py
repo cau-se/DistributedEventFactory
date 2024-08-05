@@ -1,6 +1,5 @@
 import abc
 from abc import abstractmethod
-import random
 from typing import List
 
 
@@ -27,11 +26,3 @@ class TransitionProbabilityProviderFactory(abc.ABC):
     def get(self, number_of_data_sources):
         pass
 
-
-class DrawWithoutReplacementTransitionProbabilityProviderFactory(TransitionProbabilityProviderFactory):
-
-    def __init__(self, transition_indices_provider):
-        self.transition_indices_provider = transition_indices_provider
-
-    def get(self, number_of_data_sources):
-        return DrawWithoutReplacementTransitionProvider(number_of_data_sources, self.transition_indices_provider)

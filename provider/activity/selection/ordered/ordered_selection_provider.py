@@ -20,7 +20,7 @@ class OrderedActivitySelectionProvider(ActivitySelectionProvider):
         self.potential_activities = potential_activities
         self.state = 0
 
-    def emit_activity(self, payload: int) -> Activity:
+    def emit_activity(self) -> Activity:
         activity = self.potential_activities[self.state % len(self.potential_activities)]
         self.state += 1
         return activity

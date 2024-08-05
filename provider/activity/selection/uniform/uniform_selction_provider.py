@@ -20,5 +20,5 @@ class UniformActivitySelectionProvider(ActivitySelectionProvider):
     def __init__(self, potential_activities: List[Activity]):
         self.potential_activities = potential_activities
 
-    def emit_activity(self, payload: int) -> Activity:
+    def emit_activity(self) -> Activity:
         return self.potential_activities[int(random.uniform(0, len(self.potential_activities)))]
