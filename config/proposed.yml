@@ -13,7 +13,12 @@ dataSourceTopology:
   dataSources:
     - name: "Sensor 0"
       sink:
-        type: console
+        type: kafkaValidation
+        bootstrapServer: "kube1-1:30376"
+        topic: "log"
+        partition: 0
+        validationTopic: "validation"
+        validationSplit: 5
       eventGeneration:
         type: "classic"
         selection: uniform
@@ -33,7 +38,12 @@ dataSourceTopology:
                     - [ "Hugo", "Jonas" ]
     - name: "Sensor 1"
       sink:
-        type: console
+        type: kafkaValidation
+        bootstrapServer: "kube1-1:30376"
+        topic: "log"
+        partition: 1
+        validationTopic: "validation"
+        validationSplit: 5
       eventGeneration:
         type: "classic"
         selection: uniform

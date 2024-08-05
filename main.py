@@ -1,9 +1,15 @@
+import os
+
 from provider.provider_registry import ProviderRegistry
 from simulation.simulation import Simulation
+from dotenv import load_dotenv
 import yaml
 
 if __name__ == '__main__':
-    with open('proposed.yml') as file:
+    load_dotenv()
+    config_file = os.environ["CONFIG_FILE"]
+
+    with open(config_file) as file:
         configuration = yaml.safe_load(file)
     registry = ProviderRegistry(configuration)
 

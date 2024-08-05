@@ -23,6 +23,7 @@ class BaseSensor(ABC):
     def get_data(self) -> Generator[Any, Any, Any]:
         pass
 
+
 class SensorManager:
     def __init__(self):
         """
