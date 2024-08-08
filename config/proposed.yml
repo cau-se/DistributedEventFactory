@@ -7,13 +7,13 @@ eventLoop:
   loadProfile:
     type: gradual
     tickCount: 100
-    minimalLoad: 100
-    maximalLoad: 200
+    minimalLoad: 10
+    maximalLoad: 20
 dataSourceTopology:
   dataSources:
     - name: "Sensor 0"
       sink:
-        type: kafkaValidation
+        type: console
         bootstrapServer: "kube1-1:30376"
         topic: "log"
         partition:
@@ -41,7 +41,7 @@ dataSourceTopology:
                     - [ "Hugo", "Jonas" ]
     - name: "Sensor 1"
       sink:
-        type: kafkaValidation
+        type: console
         bootstrapServer: "kube1-1:30376"
         topic: "log"
         partition:
@@ -51,9 +51,8 @@ dataSourceTopology:
         validationSplit: 5
       eventGeneration:
         type: "classic"
-        selection:
-          type: "probability"
-          distribution: [0.1, 0.9]
+        selection: "genericProbability"
+        distribution: [ 0.9, 0.1 ]
         from:
           events:
             - duration:

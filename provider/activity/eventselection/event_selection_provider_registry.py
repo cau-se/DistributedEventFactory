@@ -1,6 +1,8 @@
 from typing import List
 
 from provider.activity.eventselection.event_selection_provider import EventSelectionProvider
+from provider.activity.eventselection.generic_probability_event_selection_provider import \
+    GenericProbabilityEventSelectionProvider
 from provider.activity.eventselection.ordered_selection_provider import OrderedEventSelectionProvider
 from provider.activity.eventselection.uniform_selction_provider import UniformEventSelectionProvider
 from provider.activity.generation.activity_generation_registry import ActivityGenerationProviderRegistry
@@ -26,6 +28,12 @@ class EventSelectionProviderRegistry:
             )
         registry["ordered"] = lambda config: (
             OrderedEventSelectionProvider(
+                potential_events=self._transform_list(config["from"])
+            )
+        )
+        registry["genericProbability"] = lambda config: (
+            GenericProbabilityEventSelectionProvider(
+                probability_distribution=config["distribution"],
                 potential_events=self._transform_list(config["from"])
             )
         )

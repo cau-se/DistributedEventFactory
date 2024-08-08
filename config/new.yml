@@ -48,7 +48,8 @@ dataSourceTopology:
         #validationSplit: 5
       eventGeneration:
         type: "classic"
-        selection: [0.9, 0.1]
+        selection: "genericProbability"
+        distribution: [0.9, 0.1]
         from:
           events:
             - duration:
