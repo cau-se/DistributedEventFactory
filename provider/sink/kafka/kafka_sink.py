@@ -1,12 +1,14 @@
 import json
+import string
 
 from kafka import KafkaProducer
 from core.event import AbstractEvent
+from provider.sink.kafka.partition.partition_provider import PartitionProvider
 from provider.sink.sink_provider import Sink, SinkProvider
 
 
 class KafkaSink(Sink):
-    def __init__(self, bootstrap_server_url, client_id, topic, partition):
+    def __init__(self, bootstrap_server_url: string, client_id: string, topic: string, partition_provider: PartitionProvider):
         self.producer = KafkaProducer(
             bootstrap_servers=bootstrap_server_url,
             client_id=client_id,
@@ -14,28 +16,28 @@ class KafkaSink(Sink):
             value_serializer=lambda value: str.encode(value)
         )
         self.topic = topic
-        self.partition = partition
+        self.partition_provider = partition_provider
 
     def send(self, event: AbstractEvent) -> None:
         self.producer.send(
             self.topic,
             value=json.dumps(event.__dict__),
             key=event.get_case(),
-            partition=hash(event.get_case()) % self.partition
+            partition=self.partition_provider.get_partition(event)
         ).add_callback(lambda record_metadata: print(record_metadata))
 
 
 class KafkaSinkProvider(SinkProvider):
 
-    def __init__(self, bootstrap_server, topic, partition):
+    def __init__(self, bootstrap_server: string, topic: string, partition_provider: PartitionProvider):
         self.bootstrapServer = bootstrap_server
         self.topic = topic
-        self.partition = partition
+        self.partition_provider = partition_provider
 
     def get_sender(self, id) -> Sink:
         return KafkaSink(
             bootstrap_server_url=self.bootstrapServer,
             client_id=str(id),
-            partition=self.partition,
+            partition_provider=self.partition_provider,
             topic=self.topic
         )

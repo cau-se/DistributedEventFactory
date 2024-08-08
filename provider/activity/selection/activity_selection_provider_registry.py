@@ -1,6 +1,6 @@
 from provider.activity.generation.activity_generation_registry import ActivityGenerationProviderRegistry
 from provider.activity.selection.ordered.ordered_selection_provider import OrderedActivitySelectionProviderFactory
-from provider.activity.selection.uniform.uniform_selction_provider import UniformActivitySelectionProviderFactory
+from provider.activity.selection.uniform.uniform_selection_provider import UniformActivitySelectionProviderFactory
 
 
 class ActivitySelectionProviderRegistry:

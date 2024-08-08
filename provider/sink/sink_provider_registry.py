@@ -1,6 +1,7 @@
 from provider.sink.console.console_sink import PrintConsoleSinkProvider
 from provider.sink.kafka.kafka_sink import KafkaSinkProvider
 from provider.sink.kafka.kafka_validation_sink import KafkaValidationSinkProvider
+from provider.sink.kafka.partition.partition_registry import PartitionProviderRegistry
 from provider.sink.sink_provider import SinkProvider
 
 
@@ -15,12 +16,12 @@ class SinkProviderRegistry:
         registry["kafka"] = lambda config: KafkaSinkProvider(
             bootstrap_server=config["bootstrapServer"],
             topic=config["topic"],
-            partition=config["partition"]
+            partition_provider=config["partition"]
         )
         registry["kafkaValidation"] = lambda config: KafkaValidationSinkProvider(
             bootstrap_server=config["bootstrapServer"],
             topic=config["topic"],
-            partition=config["partition"],
+            partition_provider=PartitionProviderRegistry().get(config["partition"]),
             validation_topic=config["validationTopic"],
             validation_split=config["validationSplit"]
         )

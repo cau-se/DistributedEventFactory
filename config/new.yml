@@ -16,9 +16,7 @@ dataSourceTopology:
         type: kafkaValidation
         bootstrapServer: "kube1-1:30376"
         topic: "log"
-        partition:
-          type: caseId
-          numberPartitions: 2
+        partition: 0
         validationTopic: "validation"
         validationSplit: 5
       eventGeneration:
@@ -41,19 +39,16 @@ dataSourceTopology:
                     - [ "Hugo", "Jonas" ]
     - name: "Sensor 1"
       sink:
-        type: kafkaValidation
-        bootstrapServer: "kube1-1:30376"
-        topic: "log"
-        partition:
-          type: caseId
-          numberPartitions: 2
-        validationTopic: "validation"
-        validationSplit: 5
+        type: ui
+        #type: kafkaValidation
+        #bootstrapServer: "kube1-1:30376"
+        #topic: "log"
+        #partition: 1
+        #validationTopic: "validation"
+        #validationSplit: 5
       eventGeneration:
         type: "classic"
-        selection:
-          type: "probability"
-          distribution: [0.1, 0.9]
+        selection: [0.9, 0.1]
         from:
           events:
             - duration:

@@ -28,5 +28,4 @@ class GradualIncreasingLoadProvider(LoadProvider):
     def get_load_value(self):
         self.load_parameter += self.tick_size
         load = self.minimal_load + (self.maximal_load - self.minimal_load) * self.load_parameter
-
         return min(self.maximal_load, load)
