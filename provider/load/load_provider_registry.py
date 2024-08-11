@@ -3,7 +3,7 @@ from provider.load.load_provider import LoadProvider, ConstantLoadProvider, Grad
 class LoadProviderRegistry:
     def get(self, config) -> LoadProvider:
         registry = dict()
-        registry["constant"] = lambda config: ConstantLoadProvider(config["intensity"])
+        registry["constant"] = lambda config: ConstantLoadProvider(config["load"])
         registry["gradual"] = lambda config: GradualIncreasingLoadProvider(config["tickCount"], config["minimalLoad"],
-                                                                           config["maximalLoad"])
-        return registry[config["type"]](config)
+                                                                           config["load"])
+        return registry[config["loadType"]](config)

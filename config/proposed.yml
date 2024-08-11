@@ -2,13 +2,11 @@ numberOfDataSources:
   type: static
   count: 2
 caseId: increasing
-eventLoop:
-  type: load
-  loadProfile:
-    type: gradual
-    tickCount: 100
-    minimalLoad: 10
-    maximalLoad: 20
+load: 20
+type: "load"
+loadType: gradual
+tickCount: 100
+minimalLoad: 10
 dataSourceTopology:
   dataSources:
     - name: "Sensor 0"

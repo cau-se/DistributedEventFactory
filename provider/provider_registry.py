@@ -6,12 +6,12 @@ from provider.transition.duration.duration_registry import DurationProviderRegis
 from simulation.event_loop_registry import EventLoopRegistry
 
 providers = dict()
-providers["numberOfDataSources"] = lambda config: CountProviderRegistry().get(config)
-providers["caseId"] = lambda config: CaseIdProviderRegistry().get(config)
-providers["duration"] = lambda config: DurationProviderRegistry().get(config)
-providers["eventLoop"] = lambda config: EventLoopRegistry().get(config)
-providers["loadProfile"] = lambda config: LoadProviderRegistry().get(config)
-providers["dataSourceTopology"] = lambda config: DataSourceProviderRegistry().get(config)
+providers["numberOfDataSources"] = lambda config, field: CountProviderRegistry().get(config[field])
+providers["caseId"] = lambda config, field: CaseIdProviderRegistry().get(config[field])
+providers["duration"] = lambda config, field: DurationProviderRegistry().get(config[field])
+providers["eventLoop"] = lambda config, field: EventLoopRegistry().get(config)
+providers["loadProfile"] = lambda config, field: LoadProviderRegistry().get(config[field])
+providers["dataSourceTopology"] = lambda config, field: DataSourceProviderRegistry().get(config[field])
 
 
 class ProviderRegistry:
@@ -20,4 +20,4 @@ class ProviderRegistry:
         self.configuration = configuration
 
     def get(self, field):
-        return providers[field](self.configuration[field])
+        return providers[field](self.configuration, field)
