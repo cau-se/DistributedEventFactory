@@ -3,7 +3,7 @@ from provider.datasource.sensor_topology_registry import DataSourceProviderRegis
 from provider.generic.count_provider_registry import CountProviderRegistry
 from provider.load.load_provider_registry import LoadProviderRegistry
 from provider.transition.duration.duration_registry import DurationProviderRegistry
-from simulation.event_loop_registry import EventLoopRegistry
+from simulation.eventloop.event_loop_registry import EventLoopRegistry
 
 providers = dict()
 providers["numberOfDataSources"] = lambda config, field: CountProviderRegistry().get(config[field])

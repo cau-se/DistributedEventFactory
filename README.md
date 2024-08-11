@@ -17,6 +17,12 @@ A use case for the tool is the simulation of a smart factory with multiple produ
 Each Sensor writes its own event logs. On this data process mining should be applied. 
 We use such a factory as a running example for configuring the DEF.
 
+## Core concepts
+DEF is based on a Markov chain. The vertices of the Markov chain represent the distributed data sources. 
+The edges represent transitions between the data sources. They contain a probability for transitioning, the activity performed 
+and a function modelling the process duration.  
+![Markov Chain](markov.png)
+
 ## Minimal Running Example
 
 The DEF is configured via a yaml file. A minimal running example is presented here
@@ -75,18 +81,11 @@ The data sources are defined via a Markov chain. The Markov Chain is configured 
 Each data source knows its successor a
 
 ## Features
+A main design principle is that every implementation is interchangable by a funciton. In the following all functions
+that could be extended are listed and shown how they are configured.
 
-SFDE, or SENSOR-FLOW-DISTRIBUTION-ENGINE, 
-is a tool that empowers users to synthetically create 
-distributed systems from sensor networks. 
-The primary purpose of this system is to cater to the specific 
-demands of Process Mining, a critical field in data analysis.
+- [Data Sink](provider/sink/README.md)
 
-By harnessing the power of SFDE, users can generate an artificial stream of data. 
-This stream serves as a resource for developing, testing, 
-and deploying new methods tailored to the domain of distributed process mining. 
-In essence, SFDE enables researchers and practitioners to explore and refine their approaches 
-in a controlled yet dynamic environment.
 
 ## Installation
 Requirements:

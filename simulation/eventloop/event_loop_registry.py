@@ -1,5 +1,5 @@
 from provider.load.load_provider_registry import LoadProviderRegistry
-from simulation.event_loop import DebugEventLoop, LoadEventLoop
+from simulation.eventloop.event_loop import DebugEventLoop, LoadEventLoop
 
 
 class EventLoopRegistry:

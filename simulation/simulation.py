@@ -1,8 +1,7 @@
-from simulation.event_loop import EventLoop
+from simulation.eventloop.event_loop import EventLoop
 from simulation.process_simulator import ProcessSimulator
 from provider.data.case_provider import CaseIdProvider
 from provider.generic.count_provider import CountProvider
-from provider.load.load_provider import LoadProvider
 from provider.datasource.sensor_topology import DataSourceTopologyProvider
 
 
