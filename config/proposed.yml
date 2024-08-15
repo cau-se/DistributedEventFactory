@@ -11,8 +11,8 @@ dataSourceTopology:
   dataSources:
     - name: "Sensor 0"
       sink:
-        type: console
-        bootstrapServer: "kube1-1:30376"
+        type: kafka
+        bootstrapServer: "localhost:9092"
         topic: "log"
         partition:
           type: caseId
@@ -39,8 +39,8 @@ dataSourceTopology:
                     - [ "Hugo", "Jonas" ]
     - name: "Sensor 1"
       sink:
-        type: console
-        bootstrapServer: "kube1-1:30376"
+        type: kafka
+        bootstrapServer: "localhost:9092"
         topic: "log"
         partition:
           type: caseId

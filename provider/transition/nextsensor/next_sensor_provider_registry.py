@@ -8,4 +8,7 @@ class NextSensorProviderRegistry:
         registry["classic"] = lambda config: NextSensorProvider(config["transition"])
         registry["next_sensor"] = lambda config: DistinctNextSensorProvider(config["index"])
 
+        if type(config) is int:
+            return DistinctNextSensorProvider(config)
+
         return registry[config["type"]](config)

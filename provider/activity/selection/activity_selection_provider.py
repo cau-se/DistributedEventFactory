@@ -12,5 +12,3 @@ class ActivitySelectionProviderFactory:
     @abstractmethod
     def get_activity_provider(self) -> ActivitySelectionProvider:
         pass
-
-

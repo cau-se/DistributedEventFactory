@@ -1,7 +1,6 @@
 import random
 from abc import abstractmethod
 
-
 class DurationProvider:
 
     @abstractmethod

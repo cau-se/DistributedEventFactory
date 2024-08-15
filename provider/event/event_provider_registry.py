@@ -13,8 +13,10 @@ class EventProviderRegistry:
                 duration_provider=DurationProviderRegistry().get(config=config["duration"]),
                 transition_provider=NextSensorProviderRegistry().get(config["transition"]),
                 activity_provider=ActivitySelectionProviderRegistry()
-                .get(config=config["activities"])
+                .get(config=config["activity"])
                 .get_activity_provider(),
             ))
+
+
 
         return registry["classic"](config)

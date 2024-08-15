@@ -16,7 +16,7 @@ class SinkProviderRegistry:
         registry["kafka"] = lambda config: KafkaSinkProvider(
             bootstrap_server=config["bootstrapServer"],
             topic=config["topic"],
-            partition_provider=config["partition"]
+            partition_provider=PartitionProviderRegistry().get(config["partition"])
         )
         registry["kafkaValidation"] = lambda config: KafkaValidationSinkProvider(
             bootstrap_server=config["bootstrapServer"],
@@ -27,4 +27,5 @@ class SinkProviderRegistry:
         )
         registry["ui"] = lambda config: self.get_ui()
         registry["console"] = lambda config: PrintConsoleSinkProvider()
+
         return registry[config["type"]](config)

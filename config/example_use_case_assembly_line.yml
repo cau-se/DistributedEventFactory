@@ -1,0 +1,118 @@
+numberOfDataSources:
+  type: static
+  count: 9
+caseId: increasing
+type: debug
+loadType: gradual
+tickCount: 100
+load: 1
+minimalLoad: 5
+dataSourceTopology:
+  defaultSink:
+    type: console
+  dataSources:
+  - name: "GoodsDelivery"
+    eventGeneration:
+      selection: genericProbability
+      distribution: [0.1, 0.7, 0.2]
+      from:
+        events:
+          - activity: "Reject"
+            duration: 1
+            transition: 7
+          - activity: "Store"
+            transition: 0
+            duration: 720
+          - activity: "Pass To Production"
+            duration: 5
+            transition: 1
+  - name: "MaterialPreparation"
+    eventGeneration:
+      selection: genericProbability
+      distribution: [ 0.25, 0.7, 0.05 ]
+      from:
+        events:
+          - activity: "MaterialPreparation - Finished"
+            duration: 5
+            transition: 2
+          - activity: "Waiting for Material"
+            duration: 1
+            transition: 1
+          - activity: "Internal Error"
+            duration: 500
+            transition: 1
+  - name: "AssemblyLineSetup"
+    eventGeneration:
+      selection: genericProbability
+      distribution: [ 0.3, 0.4, 0.15, 0.05, 0.1 ]
+      from:
+        events:
+          - activity: "Material Not Set Up as expected"
+            duration: 2
+            transition: 1
+          - activity: "Assembly Line Setup successfully"
+            duration: 3
+            transition: 3
+          - activity: "Material in wrong order. Reordering.."
+            duration: 1
+            transition: 2
+          - activity: "Maximum Material count exceeded. Remove item"
+            duration: 1
+            transition: 2
+          - activity: "Internal Error"
+            duration: 500
+            transition: 3
+  - name: "AssemblyProcess"
+    eventGeneration:
+      selection: genericProbability
+      distribution: [ 0.8, 0.1, 0.08, 0.02 ]
+      from:
+        events:
+          - activity: "Assembling completed"
+            duration: 10
+            transition: 4
+          - activity: "Overheating"
+            duration: 2
+            transition: 7
+          - activity: "Item broke"
+            duration: 1
+            transition: 7
+          - activity: "Internal Error"
+            duration: 500
+            transition: 3
+  - name: "QualityControl"
+    eventGeneration:
+      selection: genericProbability
+      distribution: [ 0.3, 0.1, 0.6 ]
+      from:
+        events:
+          - activity: "Item Needs Corrections"
+            duration: 2
+            transition: 3
+          - activity: "Quality Insufficient"
+            duration: 2
+            transition: 7
+          - activity: "Quality check passed"
+            duration: 7
+            transition: 5
+  - name: "Packaging"
+    eventGeneration:
+      selection: genericProbability
+      distribution: [ 1.0 ]
+      from:
+        events:
+          - activity: "Packaging completed"
+            duration: 3
+            transition: 6
+  - name: "Shipping"
+    eventGeneration:
+      selection: uniform
+      distribution: [ 0.8, 0.2 ]
+      from:
+        events:
+          - activity: "Package waits for sending"
+            duration: 180
+            transition: 6
+          - activity: "Package sent"
+            duration: 1
+            transition: 7
