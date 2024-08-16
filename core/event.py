@@ -41,11 +41,12 @@ class EndEvent(AbstractEvent):
 
 
 class Event(AbstractEvent):
-    def __init__(self, timestamp, sensor_value, case_id: CaseId, sensor_name):
+    def __init__(self, timestamp, sensor_value, case_id: CaseId, sensor_name, group_id):
         self.timestamp = timestamp
         self.sensor_value: any = sensor_value
         self.case_id: CaseId = case_id
         self.sensor_name: str = sensor_name
+        self.group_id: str = group_id
 
     def get_case(self):
         return self.case_id

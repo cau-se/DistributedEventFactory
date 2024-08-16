@@ -81,10 +81,12 @@ class GenericDataSource(DataSource):
     def __init__(
             self,
             sensor_id: DataSourceId,
+            group_id: str,
             event_provider: EventSelectionProvider,
             sender: Sink,
     ):
         self.sensor_id: DataSourceId = sensor_id
+        self.group_id: str = group_id
         self.sender = sender
         self.event_provider = event_provider
         self.event_log: List[AbstractEvent] = []
@@ -101,6 +103,7 @@ class GenericDataSource(DataSource):
             sensor_value=activity_name,
             case_id=case,
             sensor_name=self.sensor_id.get_name(),
+            group_id=self.group_id
         )
         self.event_log.append(event)
         self.sender.send(event)

@@ -14,7 +14,6 @@ class DataSourceRegistry:
             return default_sink.get_sender(sensor_id)
         return SinkProviderRegistry().get(config=definition["sink"]).get_sender(sensor_id)
 
-
     def get(self, data_source_definitions: List[str], default_sink: SinkProvider):
         data_sources = []
         for definition in data_source_definitions:
@@ -22,6 +21,7 @@ class DataSourceRegistry:
             data_sources.append(
                 GenericDataSource(
                     sensor_id=DataSourceId(sensor_id),
+                    group_id=definition.get("groupId", "default group"),
                     event_provider=EventSelectionProviderRegistry().get(config=definition["eventGeneration"]),
                     sender=self.get_sink(definition, sensor_id, default_sink)
                 )

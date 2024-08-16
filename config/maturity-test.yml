@@ -1,0 +1,22 @@
+numberOfDataSources:
+  type: static
+  count: 9
+caseId: increasing
+type: debug
+loadType: gradual
+tickCount: 100
+load: 1
+minimalLoad: 5
+dataSourceTopology:
+  defaultSink:
+    type: console
+  dataSources:
+  - name: "Test"
+    eventGeneration:
+      selection: genericProbability
+      distribution: [1.0]
+      from:
+        events:
+          - activity: "A"
+            duration: 1
+            transition: 1

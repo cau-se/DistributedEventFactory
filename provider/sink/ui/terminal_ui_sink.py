@@ -12,5 +12,10 @@ class TerminalGui(Sink):
 
 
 class TerminalGuiSinkProvider(SinkProvider):
+
+    def __init__(self):
+        self.i = -1
+
     def get_sender(self, id) -> Sink:
-        return TerminalGui(Terminal(title=id))
+        self.i += 1
+        return TerminalGui(Terminal(title=id, start_position=self.i))

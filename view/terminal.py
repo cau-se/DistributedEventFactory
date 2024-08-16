@@ -2,8 +2,10 @@ import tkinter as tk
 from tkinter.scrolledtext import ScrolledText
 import threading
 
+
 class Terminal(threading.Thread):
-    def __init__(self, title="Terminal"):
+    def __init__(self, title="Terminal", start_position=0):
+        self.start_position = start_position
         self.title = title
         self.root = None
         self.scrolled_text = None
@@ -21,6 +23,8 @@ class Terminal(threading.Thread):
         self.root = tk.Tk()
         self.root.protocol("WM_DELETE_WINDOW", self.close)
         self.root.title(self.title)
+        self.root.geometry("600x400")
+        self.root.geometry(f"+{50 +((self.start_position % 3)*700)}+{int(self.start_position / 3) * 500}")
         self.scrolled_text = ScrolledText(self.root)
         self.scrolled_text.pack()
         self.root.mainloop()

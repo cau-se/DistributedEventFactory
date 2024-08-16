@@ -26,4 +26,8 @@ class Simulation:
             data_sources=data_sources,
             case_id_provider=self.case_id_provider,
         )
-        self.event_loop.run(process_simulator)
+        try:
+            self.event_loop.run(process_simulator)
+        except KeyboardInterrupt:
+            print(self.event_loop.get_number_of_generated_events())
+            print("Simulation ended by user")
