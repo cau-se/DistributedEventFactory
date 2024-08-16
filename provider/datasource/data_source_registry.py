@@ -2,7 +2,7 @@ from typing import List
 
 from core.datasource import GenericDataSource
 from core.datasource_id import DataSourceId
-from provider.activity.eventselection.event_selection_provider_registry import EventSelectionProviderRegistry
+from provider.eventselection.event_selection_provider_registry import EventSelectionProviderRegistry
 from provider.sink.sink_provider import SinkProvider
 from provider.sink.sink_provider_registry import SinkProviderRegistry
 
@@ -23,7 +23,7 @@ class DataSourceRegistry:
                     sensor_id=DataSourceId(sensor_id),
                     group_id=definition.get("groupId", "default group"),
                     event_provider=EventSelectionProviderRegistry().get(config=definition["eventGeneration"]),
-                    sender=self.get_sink(definition, sensor_id, default_sink)
+                    sink=self.get_sink(definition, sensor_id, default_sink)
                 )
             )
         return data_sources

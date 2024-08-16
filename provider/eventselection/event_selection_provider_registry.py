@@ -1,11 +1,10 @@
 from typing import List
 
-from provider.activity.eventselection.event_selection_provider import EventSelectionProvider
-from provider.activity.eventselection.generic_probability_event_selection_provider import \
+from provider.eventselection.event_selection_provider import EventSelectionProvider
+from provider.eventselection.generic_probability_event_selection_provider import \
     GenericProbabilityEventSelectionProvider
-from provider.activity.eventselection.ordered_selection_provider import OrderedEventSelectionProvider
-from provider.activity.eventselection.uniform_selction_provider import UniformEventSelectionProvider
-from provider.activity.generation.activity_generation_registry import ActivityGenerationProviderRegistry
+from provider.eventselection.ordered_selection_provider import OrderedEventSelectionProvider
+from provider.eventselection.uniform_selction_provider import UniformEventSelectionProvider
 from provider.event.event_provider import EventDataProvider
 from provider.event.event_provider_registry import EventProviderRegistry
 

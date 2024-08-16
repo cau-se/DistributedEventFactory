@@ -1,15 +1,10 @@
-from abc import ABC, abstractmethod
+from abc import abstractmethod
 from typing import List
 
-from core.datasource import DataSource, GenericDataSource, StartDataSource, EndDataSource
+from core.datasource import DataSource, StartDataSource, EndDataSource
 from core.datasource_id import START_SENSOR_ID, END_DATA_SOURCE_ID
-from provider.activity.selection.activity_selection_provider import ActivitySelectionProviderFactory
-from provider.datasource.datasource_id_provider import DataSourceIdProvider
 from provider.sink.console.console_sink import PrintConsoleSinkProvider
-from provider.sink.sink_provider import SinkProvider
-from provider.transition.duration.duration_provider import DurationProvider
 from provider.transition.nextsensor.next_sensor_provider import NextSensorProvider
-from provider.transition.transition_provider_factory import MatrixBasedTransitionProvider
 
 
 class DataSourceTopologyProvider:

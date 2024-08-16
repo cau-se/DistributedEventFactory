@@ -1,7 +1,7 @@
 import random
 from typing import List
 
-from provider.activity.eventselection.event_selection_provider import EventSelectionProvider
+from provider.eventselection.event_selection_provider import EventSelectionProvider
 from provider.event.event_provider import EventDataProvider
 
 

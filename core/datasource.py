@@ -2,7 +2,7 @@ from abc import abstractmethod, ABC
 from typing import List
 
 from core.event import Event, StartEvent, EndEvent, AbstractEvent
-from provider.activity.eventselection.event_selection_provider import EventSelectionProvider
+from provider.eventselection import EventSelectionProvider
 from provider.event.event_provider import EventDataProvider, StartEventProvider, EndEventProvider
 from provider.sink.sink_provider import Sink
 from core.datasource_id import DataSourceId, START_SENSOR_ID, END_DATA_SOURCE_ID
@@ -83,11 +83,11 @@ class GenericDataSource(DataSource):
             sensor_id: DataSourceId,
             group_id: str,
             event_provider: EventSelectionProvider,
-            sender: Sink,
+            sink: Sink,
     ):
         self.sensor_id: DataSourceId = sensor_id
         self.group_id: str = group_id
-        self.sender = sender
+        self.sender = sink
         self.event_provider = event_provider
         self.event_log: List[AbstractEvent] = []
 
