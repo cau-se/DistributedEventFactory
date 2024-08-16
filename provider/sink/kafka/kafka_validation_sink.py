@@ -1,7 +1,7 @@
 import json
 import string
 
-from kafka import KafkaProducer
+
 
 from core.event import AbstractEvent
 from provider.sink.kafka.partition.partition_provider import ConstantPartitionProvider, PartitionProvider
@@ -18,6 +18,8 @@ class KafkaValidationSink(Sink):
             validation_topic,
             validation_split
     ):
+        from kafka import KafkaProducer
+
         self.producer = KafkaProducer(
             bootstrap_servers=bootstrap_server_url,
             client_id=client_id,

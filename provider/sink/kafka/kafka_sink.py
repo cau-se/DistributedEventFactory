@@ -1,7 +1,7 @@
 import json
 import string
 
-from kafka import KafkaProducer
+
 from core.event import AbstractEvent
 from provider.sink.kafka.partition.partition_provider import PartitionProvider
 from provider.sink.sink_provider import Sink, SinkProvider
@@ -9,6 +9,8 @@ from provider.sink.sink_provider import Sink, SinkProvider
 
 class KafkaSink(Sink):
     def __init__(self, bootstrap_server_url: string, client_id: string, topic: string, partition_provider: PartitionProvider):
+        from kafka import KafkaProducer
+
         self.producer = KafkaProducer(
             bootstrap_servers=bootstrap_server_url,
             client_id=client_id,
