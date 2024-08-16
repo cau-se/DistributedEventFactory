@@ -2,11 +2,10 @@ numberOfDataSources:
   type: static
   count: 7
 caseId: increasing
-type: debug
-loadType: gradual
+type: load
+loadType: constant
 tickCount: 100
 load: 10
-minimalLoad: 5
 dataSourceTopology:
   defaultSink:
     type: console
