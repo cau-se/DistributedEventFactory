@@ -78,7 +78,7 @@ The `debug` option should be used for development and produces more verbose stac
 
 The data sources are defined via a Markov chain. The Markov Chain is configured in a distributed fashion.
 Each data source knows its successor. On every edge a duration, a generated activity and the next invoked datasource is
-defined. More details can be found [here](provider/datasource/README.md)
+defined. More details can be found [here](src/distributed_event_factory/provider/datasource/README.md)
 
 ## Installation
 
@@ -94,11 +94,10 @@ pip install -r requirements.txt
 
 Define the `Distribted Event Factory` and specify a config file like mentioned above.
 
-
 ```python
-from simulation.distributed_event_factory import DistributedEventFactory
+from src.simulation.distributed_event_factory import DistributedEventFactory
 
-config_file="config/assembly_line.yml"
+config_file = "src/distributed_event_factory/config/assembly_line.yml"
 DistributedEventFactory(config_file).start()
 ```
 
