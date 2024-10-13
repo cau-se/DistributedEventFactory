@@ -1,8 +1,8 @@
-from src.distributed_event_factory.provider.data.case_provider import CaseIdProvider
-from src.distributed_event_factory.provider.datasource.sensor_topology import DataSourceTopologyProvider
-from src.distributed_event_factory.provider.generic.count_provider import CountProvider
-from src.distributed_event_factory.simulation.eventloop.event_loop import EventLoop
-from src.distributed_event_factory.simulation.process_simulator import ProcessSimulator
+from distributed_event_factory.provider.data.case_provider import CaseIdProvider
+from distributed_event_factory.provider.datasource.sensor_topology import DataSourceTopologyProvider
+from distributed_event_factory.provider.generic.count_provider import CountProvider
+from distributed_event_factory.simulation.eventloop.event_loop import EventLoop
+from distributed_event_factory.simulation.process_simulator import ProcessSimulator
 
 
 class Simulation:

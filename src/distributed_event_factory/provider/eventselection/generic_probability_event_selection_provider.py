@@ -2,8 +2,8 @@ from typing import List
 
 from numpy import random
 
-from src.distributed_event_factory.provider.event.event_provider import EventDataProvider
-from src.distributed_event_factory.provider.eventselection.event_selection_provider import EventSelectionProvider
+from distributed_event_factory.provider.event.event_provider import EventDataProvider
+from distributed_event_factory.provider.eventselection.event_selection_provider import EventSelectionProvider
 
 class GenericProbabilityEventSelectionProvider(EventSelectionProvider):
 

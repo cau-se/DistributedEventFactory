@@ -1,6 +1,6 @@
-from src.distributed_event_factory.provider.activity.generation.activity_generation_provider import \
+from distributed_event_factory.provider.activity.generation.activity_generation_provider import \
     ActivityGenerationProvider, DistinctActivityGenerationProvider, ListBasedActivityGenerationProvider
-from src.distributed_event_factory.provider.generic.count_provider_registry import CountProviderRegistry
+from distributed_event_factory.provider.generic.count_provider_registry import CountProviderRegistry
 
 
 class ActivityGenerationProviderRegistry:

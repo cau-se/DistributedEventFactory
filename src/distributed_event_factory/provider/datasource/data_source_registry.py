@@ -1,11 +1,11 @@
 from typing import List
 
-from src.distributed_event_factory.core.datasource import GenericDataSource
-from src.distributed_event_factory.core.datasource_id import DataSourceId
-from src.distributed_event_factory.provider.eventselection.event_selection_provider_registry import \
+from distributed_event_factory.core.datasource import GenericDataSource
+from distributed_event_factory.core.datasource_id import DataSourceId
+from distributed_event_factory.provider.eventselection.event_selection_provider_registry import \
     EventSelectionProviderRegistry
-from src.distributed_event_factory.provider.sink.sink_provider import SinkProvider
-from src.distributed_event_factory.provider.sink.sink_provider_registry import SinkProviderRegistry
+from distributed_event_factory.provider.sink.sink_provider import SinkProvider
+from distributed_event_factory.provider.sink.sink_provider_registry import SinkProviderRegistry
 
 
 class DataSourceRegistry:

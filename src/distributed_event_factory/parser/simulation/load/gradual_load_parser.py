@@ -1,5 +1,5 @@
-from src.distributed_event_factory.parser.parser import Parser
-from src.distributed_event_factory.provider.load.load_provider import GradualIncreasingLoadProvider
+from distributed_event_factory.parser.parser import Parser
+from distributed_event_factory.provider.load.load_provider import GradualIncreasingLoadProvider
 
 
 class GradualLoadParser(Parser):

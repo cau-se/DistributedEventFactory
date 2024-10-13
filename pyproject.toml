@@ -1,6 +1,6 @@
 [project]
 name = "distributed-event-factory"
-version = "0.2.0.dev3"
+version = "0.2.0.dev5"
 authors = [
   { name="Hendrik Reiter", email="hendrik.reiter@email.uni-kiel.de" },
 ]
@@ -18,3 +18,6 @@ Homepage = "https://github.com/cau-se/DistributedEventFactory"
 [build-system]
 requires = ["hatchling"]
 build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel.force-include]
+"src" = "src"

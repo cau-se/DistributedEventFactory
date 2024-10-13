@@ -1,4 +1,4 @@
-from src.distributed_event_factory.simulation.new_simulation import NewSimulation
+from distributed_event_factory.simulation.new_simulation import NewSimulation
 
 class SimulationParser:
 

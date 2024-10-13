@@ -1,13 +1,13 @@
 from typing import List
 
-from src.distributed_event_factory.provider.event.event_provider import EventDataProvider
-from src.distributed_event_factory.provider.event.event_provider_registry import EventProviderRegistry
-from src.distributed_event_factory.provider.eventselection.event_selection_provider import EventSelectionProvider
-from src.distributed_event_factory.provider.eventselection.generic_probability_event_selection_provider import \
+from distributed_event_factory.provider.event.event_provider import EventDataProvider
+from distributed_event_factory.provider.event.event_provider_registry import EventProviderRegistry
+from distributed_event_factory.provider.eventselection.event_selection_provider import EventSelectionProvider
+from distributed_event_factory.provider.eventselection.generic_probability_event_selection_provider import \
     GenericProbabilityEventSelectionProvider
-from src.distributed_event_factory.provider.eventselection.ordered_selection_provider import \
+from distributed_event_factory.provider.eventselection.ordered_selection_provider import \
     OrderedEventSelectionProvider
-from src.distributed_event_factory.provider.eventselection.uniform_selction_provider import \
+from distributed_event_factory.provider.eventselection.uniform_selction_provider import \
     UniformEventSelectionProvider
 
 

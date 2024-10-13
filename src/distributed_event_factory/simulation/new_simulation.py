@@ -1,9 +1,9 @@
 import time
 
 from scheduled_futures import ScheduledThreadPoolExecutor
-from src.distributed_event_factory.provider.data.case_provider import CaseIdProvider
-from src.distributed_event_factory.provider.load.load_provider import LoadProvider
-from src.distributed_event_factory.simulation.new_process_simulation import NewProcessSimulator
+from distributed_event_factory.provider.data.case_provider import CaseIdProvider
+from distributed_event_factory.provider.load.load_provider import LoadProvider
+from distributed_event_factory.simulation.new_process_simulation import NewProcessSimulator
 
 class NewSimulation:
     def send_event(self, event):

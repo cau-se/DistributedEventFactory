@@ -1,5 +1,5 @@
-from src.distributed_event_factory.core.event import AbstractEvent, Event
-from src.distributed_event_factory.provider.sink.sink_provider import Sink, SinkProvider
+from distributed_event_factory.core.event import AbstractEvent, Event
+from distributed_event_factory.provider.sink.sink_provider import Sink, SinkProvider
 
 
 class PrintConsole(Sink):

@@ -1,8 +1,8 @@
-from src.distributed_event_factory.parser.parser import Parser
-from src.distributed_event_factory.provider.activity.activity_provider import ConstantActivityProvider
-from src.distributed_event_factory.provider.event.event_data import EventData
-from src.distributed_event_factory.provider.transition.duration.duration_provider import ConstantDurationProvider
-from src.distributed_event_factory.provider.transition.nextsensor.next_sensor_provider import ConstantNextSensorProvider
+from distributed_event_factory.parser.parser import Parser
+from distributed_event_factory.provider.activity.activity_provider import ConstantActivityProvider
+from distributed_event_factory.provider.event.event_data import EventData
+from distributed_event_factory.provider.transition.duration.duration_provider import ConstantDurationProvider
+from distributed_event_factory.provider.transition.nextsensor.next_sensor_provider import ConstantNextSensorProvider
 
 
 class EventDataParser(Parser):

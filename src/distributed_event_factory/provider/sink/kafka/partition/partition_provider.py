@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
 
-from src.distributed_event_factory.core.event import AbstractEvent, Event
+from distributed_event_factory.core.event import AbstractEvent, Event
 
 
 class PartitionProvider(ABC):

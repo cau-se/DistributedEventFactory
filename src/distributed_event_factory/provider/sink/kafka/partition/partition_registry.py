@@ -1,4 +1,4 @@
-from src.distributed_event_factory.provider.sink.kafka.partition.partition_provider import ConstantPartitionProvider, \
+from distributed_event_factory.provider.sink.kafka.partition.partition_provider import ConstantPartitionProvider, \
     CaseIdPartitionProvider
 
 

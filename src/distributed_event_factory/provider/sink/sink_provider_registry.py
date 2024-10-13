@@ -1,14 +1,14 @@
-from src.distributed_event_factory.provider.sink.console.console_sink import PrintConsoleSinkProvider
-from src.distributed_event_factory.provider.sink.http.http_sink import HttpSink, HttpSinkProvider
-from src.distributed_event_factory.provider.sink.kafka.kafka_sink import KafkaSinkProvider
-from src.distributed_event_factory.provider.sink.kafka.kafka_validation_sink import KafkaValidationSinkProvider
-from src.distributed_event_factory.provider.sink.kafka.partition.partition_registry import PartitionProviderRegistry
-from src.distributed_event_factory.provider.sink.sink_provider import SinkProvider
+from distributed_event_factory.provider.sink.console.console_sink import PrintConsoleSinkProvider
+from distributed_event_factory.provider.sink.http.http_sink import HttpSink, HttpSinkProvider
+from distributed_event_factory.provider.sink.kafka.kafka_sink import KafkaSinkProvider
+from distributed_event_factory.provider.sink.kafka.kafka_validation_sink import KafkaValidationSinkProvider
+from distributed_event_factory.provider.sink.kafka.partition.partition_registry import PartitionProviderRegistry
+from distributed_event_factory.provider.sink.sink_provider import SinkProvider
 
 class SinkProviderRegistry:
 
     def get_ui(self):
-        from src.distributed_event_factory.provider.sink.ui.terminal_ui_sink import TerminalGuiSinkProvider
+        from distributed_event_factory.provider.sink.ui.terminal_ui_sink import TerminalGuiSinkProvider
         return TerminalGuiSinkProvider()
 
     def get(self, config) -> SinkProvider:

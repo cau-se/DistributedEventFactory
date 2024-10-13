@@ -1,7 +1,7 @@
-from src.distributed_event_factory.parser.parser import Parser
-from src.distributed_event_factory.provider.activity.activity_provider import ConstantActivityProvider
-from src.distributed_event_factory.provider.event.event_provider import CustomEventDataProvider
-from src.distributed_event_factory.provider.transition.nextsensor.next_sensor_provider import ConstantNextSensorProvider
+from distributed_event_factory.parser.parser import Parser
+from distributed_event_factory.provider.activity.activity_provider import ConstantActivityProvider
+from distributed_event_factory.provider.event.event_provider import CustomEventDataProvider
+from distributed_event_factory.provider.transition.nextsensor.next_sensor_provider import ConstantNextSensorProvider
 
 class EventDataListParser(Parser):
     def __init__(self):

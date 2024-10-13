@@ -1,4 +1,4 @@
-from src.distributed_event_factory.provider.transition.nextsensor.next_sensor_provider import NextSensorProvider, ConstantNextSensorProvider
+from distributed_event_factory.provider.transition.nextsensor.next_sensor_provider import NextSensorProvider, ConstantNextSensorProvider
 
 class NextSensorProviderRegistry:
 

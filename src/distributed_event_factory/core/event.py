@@ -1,6 +1,6 @@
 from abc import abstractmethod, ABC
 
-from src.distributed_event_factory.provider.transition.nextsensor.next_sensor_provider import NextSensorProvider, \
+from distributed_event_factory.provider.transition.nextsensor.next_sensor_provider import NextSensorProvider, \
     AbstractNextSensorProvider
 
 

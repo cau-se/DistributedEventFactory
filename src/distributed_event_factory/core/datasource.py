@@ -1,13 +1,13 @@
 from abc import abstractmethod, ABC
 from typing import List
 
-from src.distributed_event_factory.core.datasource_id import DataSourceId, START_SENSOR_ID, END_DATA_SOURCE_ID
-from src.distributed_event_factory.core.event import AbstractEvent, StartEvent, EndEvent, Event
-from src.distributed_event_factory.provider.event.event_data import EventData
-from src.distributed_event_factory.provider.event.event_provider import EventDataProvider, EndEventProvider, \
+from distributed_event_factory.core.datasource_id import DataSourceId, START_SENSOR_ID, END_DATA_SOURCE_ID
+from distributed_event_factory.core.event import AbstractEvent, StartEvent, EndEvent, Event
+from distributed_event_factory.provider.event.event_data import EventData
+from distributed_event_factory.provider.event.event_provider import EventDataProvider, EndEventProvider, \
     StartEventProvider
-from src.distributed_event_factory.provider.eventselection.event_selection_provider import EventSelectionProvider
-from src.distributed_event_factory.provider.transition.nextsensor.next_sensor_provider import NextSensorProvider, \
+from distributed_event_factory.provider.eventselection.event_selection_provider import EventSelectionProvider
+from distributed_event_factory.provider.transition.nextsensor.next_sensor_provider import NextSensorProvider, \
     AbstractNextSensorProvider
 
 

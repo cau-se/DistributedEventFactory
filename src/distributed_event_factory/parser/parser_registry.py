@@ -1,27 +1,27 @@
-from src.distributed_event_factory.parser.datasource.event.activity.activity_parser import ActivityParser
-from src.distributed_event_factory.parser.datasource.event.duration.constant_duration_parser import \
+from distributed_event_factory.parser.datasource.event.activity.activity_parser import ActivityParser
+from distributed_event_factory.parser.datasource.event.duration.constant_duration_parser import \
     ConstantDurationParser
-from src.distributed_event_factory.parser.datasource.event.duration.duration_parser import DurationParser
-from src.distributed_event_factory.parser.datasource.event.duration.gaussian_duration_parser import \
+from distributed_event_factory.parser.datasource.event.duration.duration_parser import DurationParser
+from distributed_event_factory.parser.datasource.event.duration.gaussian_duration_parser import \
     GaussianDurationParser
-from src.distributed_event_factory.parser.datasource.event.duration.uniform_duration_parser import \
+from distributed_event_factory.parser.datasource.event.duration.uniform_duration_parser import \
     UniformDurationParser
-from src.distributed_event_factory.parser.datasource.event.transition.transition_parser import TransitionParser
-from src.distributed_event_factory.parser.simulation.case.case_id_parser import CaseIdParser
-from src.distributed_event_factory.parser.datasource.data_source_parser import DataSourceParser
-from src.distributed_event_factory.parser.datasource.event.distribution_parser import DistributionParser
-from src.distributed_event_factory.parser.datasource.event.event_data_list_parser import EventDataListParser
-from src.distributed_event_factory.parser.datasource.event.event_data_parser import EventDataParser
-from src.distributed_event_factory.parser.datasource.event.event_selection_parser import EventSelectionParser
-from src.distributed_event_factory.parser.kind_parser import KindParser
-from src.distributed_event_factory.parser.simulation.load.constant_load_parser import ConstantLoadParser
-from src.distributed_event_factory.parser.simulation.load.gradual_load_parser import GradualLoadParser
-from src.distributed_event_factory.parser.simulation.load.load_parser import LoadParser
-from src.distributed_event_factory.parser.simulation.simulation_parser import SimulationParser
-from src.distributed_event_factory.parser.sink.print_console_sink_parser import PrintConsoleSinkParser
-from src.distributed_event_factory.parser.sink.sink_parser import SinkParser
-from src.distributed_event_factory.parser.sink.ui_sink_parser import UiSinkParser
-from src.distributed_event_factory.provider.data.case_provider import IncreasingCaseIdProvider
+from distributed_event_factory.parser.datasource.event.transition.transition_parser import TransitionParser
+from distributed_event_factory.parser.simulation.case.case_id_parser import CaseIdParser
+from distributed_event_factory.parser.datasource.data_source_parser import DataSourceParser
+from distributed_event_factory.parser.datasource.event.distribution_parser import DistributionParser
+from distributed_event_factory.parser.datasource.event.event_data_list_parser import EventDataListParser
+from distributed_event_factory.parser.datasource.event.event_data_parser import EventDataParser
+from distributed_event_factory.parser.datasource.event.event_selection_parser import EventSelectionParser
+from distributed_event_factory.parser.kind_parser import KindParser
+from distributed_event_factory.parser.simulation.load.constant_load_parser import ConstantLoadParser
+from distributed_event_factory.parser.simulation.load.gradual_load_parser import GradualLoadParser
+from distributed_event_factory.parser.simulation.load.load_parser import LoadParser
+from distributed_event_factory.parser.simulation.simulation_parser import SimulationParser
+from distributed_event_factory.parser.sink.print_console_sink_parser import PrintConsoleSinkParser
+from distributed_event_factory.parser.sink.sink_parser import SinkParser
+from distributed_event_factory.parser.sink.ui_sink_parser import UiSinkParser
+from distributed_event_factory.provider.data.case_provider import IncreasingCaseIdProvider
 
 
 class ParserRegistry:

@@ -1,6 +1,6 @@
-from src.distributed_event_factory.core.event import AbstractEvent
-from src.distributed_event_factory.provider.sink.sink_provider import Sink, SinkProvider
-from src.distributed_event_factory.view.terminal import Terminal
+from distributed_event_factory.core.event import AbstractEvent
+from distributed_event_factory.provider.sink.sink_provider import Sink, SinkProvider
+from distributed_event_factory.view.terminal import Terminal
 
 class TerminalGui(Sink):
     def __init__(self, terminal):

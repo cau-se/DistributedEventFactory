@@ -1,13 +1,13 @@
 from abc import ABC, abstractmethod
 from typing import List
 
-from src.distributed_event_factory.provider.activity.activity_provider import ConstantActivityProvider, ActivityProvider
-from src.distributed_event_factory.provider.activity.selection.activity_selection_provider import \
+from distributed_event_factory.provider.activity.activity_provider import ConstantActivityProvider, ActivityProvider
+from distributed_event_factory.provider.activity.selection.activity_selection_provider import \
     ActivitySelectionProvider
-from src.distributed_event_factory.provider.event.event_data import EventData
-from src.distributed_event_factory.provider.transition.duration.duration_provider import DurationProvider, \
+from distributed_event_factory.provider.event.event_data import EventData
+from distributed_event_factory.provider.transition.duration.duration_provider import DurationProvider, \
     ConstantDurationProvider
-from src.distributed_event_factory.provider.transition.nextsensor.next_sensor_provider import NextSensorProvider, \
+from distributed_event_factory.provider.transition.nextsensor.next_sensor_provider import NextSensorProvider, \
     ConstantNextSensorProvider, AbstractNextSensorProvider
 
 

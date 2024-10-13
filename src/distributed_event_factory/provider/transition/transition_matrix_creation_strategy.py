@@ -1,9 +1,9 @@
 from abc import ABC, abstractmethod
 import random
 
-from src.provider.generic.count_provider_registry import CountProviderRegistry
-from src.provider.transition.nextsensor.next_sensor_provider import NextSensorProvider, NextSensorChooseProvider
-from src.provider.transition.next_state_provider import DistinctProbabilityDistributionProvider
+from provider.generic.count_provider_registry import CountProviderRegistry
+from provider.transition.nextsensor.next_sensor_provider import NextSensorProvider, NextSensorChooseProvider
+from provider.transition.next_state_provider import DistinctProbabilityDistributionProvider
 
 
 class TransitionMatrixCreationStrategy(ABC):

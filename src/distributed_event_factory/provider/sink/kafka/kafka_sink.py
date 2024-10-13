@@ -3,9 +3,9 @@ import string
 
 from scheduled_futures import ScheduledThreadPoolExecutor
 
-from src.distributed_event_factory.core.event import AbstractEvent
-from src.distributed_event_factory.provider.sink.kafka.partition.partition_provider import PartitionProvider
-from src.distributed_event_factory.provider.sink.sink_provider import Sink, SinkProvider
+from distributed_event_factory.core.event import AbstractEvent
+from distributed_event_factory.provider.sink.kafka.partition.partition_provider import PartitionProvider
+from distributed_event_factory.provider.sink.sink_provider import Sink, SinkProvider
 
 
 class KafkaSink(Sink):

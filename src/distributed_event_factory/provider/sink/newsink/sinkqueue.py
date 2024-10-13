@@ -1,6 +1,6 @@
 from queue import Queue
 
-from src.distributed_event_factory.provider.sink.http.http_sink import TimeFrame
+from distributed_event_factory.provider.sink.http.http_sink import TimeFrame
 
 
 class SinkQueue:

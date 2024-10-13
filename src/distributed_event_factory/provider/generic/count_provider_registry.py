@@ -1,4 +1,4 @@
-from src.distributed_event_factory.provider.generic.count_provider import CountProvider, StaticCountProvider, \
+from distributed_event_factory.provider.generic.count_provider import CountProvider, StaticCountProvider, \
     UniformCountProvider
 
 

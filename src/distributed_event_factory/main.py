@@ -1,6 +1,6 @@
-from src.distributed_event_factory.event_factory import EventFactory
-from src.distributed_event_factory.parser.parser import Parser
-from src.distributed_event_factory.provider.load.load_provider import LoadProvider
+from distributed_event_factory.event_factory import EventFactory
+from distributed_event_factory.parser.parser import Parser
+from distributed_event_factory.provider.load.load_provider import LoadProvider
 import math
 
 class SinusLoadProvider(LoadProvider):

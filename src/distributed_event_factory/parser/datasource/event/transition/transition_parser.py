@@ -1,5 +1,5 @@
-from src.distributed_event_factory.parser.parser import Parser
-from src.distributed_event_factory.provider.transition.nextsensor.next_sensor_provider import ConstantNextSensorProvider
+from distributed_event_factory.parser.parser import Parser
+from distributed_event_factory.provider.transition.nextsensor.next_sensor_provider import ConstantNextSensorProvider
 
 
 class TransitionParser(Parser):
