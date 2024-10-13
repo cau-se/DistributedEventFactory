@@ -1,9 +1,9 @@
 from typing import List
 
-from src.distributed_event_factory.core.event import Activity
-from src.distributed_event_factory.provider.activity.generation.activity_generation_provider import \
+from distributed_event_factory.core.event import Activity
+from distributed_event_factory.provider.activity.generation.activity_generation_provider import \
     ActivityGenerationProvider
-from src.distributed_event_factory.provider.activity.selection.activity_selection_provider import \
+from distributed_event_factory.provider.activity.selection.activity_selection_provider import \
     ActivitySelectionProviderFactory, ActivitySelectionProvider
 
 

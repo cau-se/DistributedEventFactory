@@ -1,4 +1,4 @@
-from src.distributed_event_factory.provider.transition.duration.duration_provider import DurationProvider, ConstantDurationProvider, \
+from distributed_event_factory.provider.transition.duration.duration_provider import DurationProvider, ConstantDurationProvider, \
     UniformDurationProvider, GaussianDurationProvider
 
 

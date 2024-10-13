@@ -1,10 +1,10 @@
 import json
 import string
 
-from src.distributed_event_factory.core.event import AbstractEvent
-from src.distributed_event_factory.provider.sink.kafka.partition.partition_provider import ConstantPartitionProvider, \
+from distributed_event_factory.core.event import AbstractEvent
+from distributed_event_factory.provider.sink.kafka.partition.partition_provider import ConstantPartitionProvider, \
     PartitionProvider
-from src.distributed_event_factory.provider.sink.sink_provider import Sink, SinkProvider
+from distributed_event_factory.provider.sink.sink_provider import Sink, SinkProvider
 
 
 class KafkaValidationSink(Sink):

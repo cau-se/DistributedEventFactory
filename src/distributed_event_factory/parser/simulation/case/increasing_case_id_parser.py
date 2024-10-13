@@ -1,5 +1,5 @@
-from src.distributed_event_factory.parser.parser import Parser
-from src.distributed_event_factory.provider.data.case_provider import IncreasingCaseIdProvider
+from distributed_event_factory.parser.parser import Parser
+from distributed_event_factory.provider.data.case_provider import IncreasingCaseIdProvider
 
 
 class IncreasingCaseIdParser(Parser):

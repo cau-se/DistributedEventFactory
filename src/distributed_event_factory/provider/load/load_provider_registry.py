@@ -1,4 +1,4 @@
-from src.distributed_event_factory.provider.load.load_provider import LoadProvider, ConstantLoadProvider, \
+from distributed_event_factory.provider.load.load_provider import LoadProvider, ConstantLoadProvider, \
     GradualIncreasingLoadProvider
 
 

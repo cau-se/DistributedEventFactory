@@ -2,9 +2,9 @@ import os
 
 import yaml
 
-from src.distributed_event_factory.parser.simulation.load.gradual_load_parser import GradualLoadParser
-from src.distributed_event_factory.parser.parser_registry import ParserRegistry
-from src.distributed_event_factory.core.datasource import EndDataSource
+from distributed_event_factory.parser.simulation.load.gradual_load_parser import GradualLoadParser
+from distributed_event_factory.parser.parser_registry import ParserRegistry
+from distributed_event_factory.core.datasource import EndDataSource
 
 if __name__ == '__main__':
     sinks = dict()

@@ -3,10 +3,10 @@ import string
 from datetime import datetime, timedelta
 from typing import List
 
-from src.distributed_event_factory.core.datasource import DataSource
-from src.distributed_event_factory.core.datasource_id import START_SENSOR_ID, END_DATA_SOURCE_ID, DataSourceId
-from src.distributed_event_factory.core.event import Event
-from src.distributed_event_factory.provider.data.case_provider import CaseIdProvider
+from distributed_event_factory.core.datasource import DataSource
+from distributed_event_factory.core.datasource_id import START_SENSOR_ID, END_DATA_SOURCE_ID, DataSourceId
+from distributed_event_factory.core.event import Event
+from distributed_event_factory.provider.data.case_provider import CaseIdProvider
 
 class ProcessSimulator:
     def __init__(

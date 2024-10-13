@@ -1,4 +1,4 @@
-from src.distributed_event_factory.parser.parser import Parser
+from distributed_event_factory.parser.parser import Parser
 
 
 class LoadParser(Parser):

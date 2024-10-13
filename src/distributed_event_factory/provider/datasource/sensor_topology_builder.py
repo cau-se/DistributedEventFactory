@@ -1,7 +1,7 @@
 from typing import List
 
-from src.distributed_event_factory.core.datasource import DataSource
-from src.distributed_event_factory.provider.datasource.sensor_topology import ConcreteDataSourceTopologyProvider
+from distributed_event_factory.core.datasource import DataSource
+from distributed_event_factory.provider.datasource.sensor_topology import ConcreteDataSourceTopologyProvider
 
 class SensorTopologyBuilder:
 

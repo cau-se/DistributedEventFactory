@@ -1,10 +1,10 @@
 from abc import abstractmethod
 from typing import List
 
-from src.distributed_event_factory.core.datasource import DataSource, StartDataSource, EndDataSource
-from src.distributed_event_factory.core.datasource_id import START_SENSOR_ID, END_DATA_SOURCE_ID
-from src.distributed_event_factory.provider.sink.console.console_sink import PrintConsoleSinkProvider
-from src.distributed_event_factory.provider.transition.nextsensor.next_sensor_provider import NextSensorProvider
+from distributed_event_factory.core.datasource import DataSource, StartDataSource, EndDataSource
+from distributed_event_factory.core.datasource_id import START_SENSOR_ID, END_DATA_SOURCE_ID
+from distributed_event_factory.provider.sink.console.console_sink import PrintConsoleSinkProvider
+from distributed_event_factory.provider.transition.nextsensor.next_sensor_provider import NextSensorProvider
 
 
 class DataSourceTopologyProvider:

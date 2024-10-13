@@ -95,7 +95,7 @@ pip install -r requirements.txt
 Define the `Distribted Event Factory` and specify a config file like mentioned above.
 
 ```python
-from src.simulation.distributed_event_factory import DistributedEventFactory
+from simulation.distributed_event_factory import DistributedEventFactory
 
 config_file = "src/distributed_event_factory/config/assembly_line.yml"
 DistributedEventFactory(config_file).start()

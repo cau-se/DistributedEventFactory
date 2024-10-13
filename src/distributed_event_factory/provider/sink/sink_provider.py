@@ -1,6 +1,6 @@
 import abc
 
-from src.distributed_event_factory.core.event import AbstractEvent
+from distributed_event_factory.core.event import AbstractEvent
 
 
 class Sink:

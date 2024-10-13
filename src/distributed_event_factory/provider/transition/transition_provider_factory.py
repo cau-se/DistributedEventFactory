@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
 
-from src.provider.transition.nextsensor.next_sensor_provider import NextSensorProvider, NextSensorChooseProvider
-from src.provider.transition.transition_matrix_creation_strategy import RandomTransitionMatrixCreationStrategy, \
+from provider.transition.nextsensor.next_sensor_provider import NextSensorProvider, NextSensorChooseProvider
+from provider.transition.transition_matrix_creation_strategy import RandomTransitionMatrixCreationStrategy, \
     RandomTransitionMatrixProviderRegistry
 
 

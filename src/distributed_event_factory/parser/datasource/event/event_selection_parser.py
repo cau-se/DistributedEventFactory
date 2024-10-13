@@ -1,5 +1,5 @@
-from src.distributed_event_factory.parser.parser import Parser
-from src.distributed_event_factory.provider.eventselection.generic_probability_event_selection_provider import \
+from distributed_event_factory.parser.parser import Parser
+from distributed_event_factory.provider.eventselection.generic_probability_event_selection_provider import \
     GenericProbabilityEventSelectionProvider
 
 

@@ -1,5 +1,5 @@
-from src.distributed_event_factory.provider.load.load_provider_registry import LoadProviderRegistry
-from src.distributed_event_factory.simulation.eventloop.event_loop import DebugEventLoop, LoadEventLoop
+from distributed_event_factory.provider.load.load_provider_registry import LoadProviderRegistry
+from distributed_event_factory.simulation.eventloop.event_loop import DebugEventLoop, LoadEventLoop
 
 
 class EventLoopRegistry:

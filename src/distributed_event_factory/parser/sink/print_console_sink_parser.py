@@ -1,5 +1,5 @@
-from src.distributed_event_factory.parser.parser import Parser
-from src.distributed_event_factory.provider.sink.console.console_sink import PrintConsole
+from distributed_event_factory.parser.parser import Parser
+from distributed_event_factory.provider.sink.console.console_sink import PrintConsole
 
 
 class PrintConsoleSinkParser(Parser):

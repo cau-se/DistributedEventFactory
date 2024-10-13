@@ -1,9 +1,9 @@
 from typing import Dict
-from src.distributed_event_factory.core.datasource import DataSource
-from src.distributed_event_factory.provider.data.case_provider import CaseIdProvider
-from src.distributed_event_factory.provider.load.load_provider import LoadProvider
-from src.distributed_event_factory.provider.sink.sink_provider import Sink
-from src.distributed_event_factory.simulation.new_process_simulation import NewProcessSimulator
+from distributed_event_factory.core.datasource import DataSource
+from distributed_event_factory.provider.data.case_provider import CaseIdProvider
+from distributed_event_factory.provider.load.load_provider import LoadProvider
+from distributed_event_factory.provider.sink.sink_provider import Sink
+from distributed_event_factory.simulation.new_process_simulation import NewProcessSimulator
 
 
 class NewSimulation2:

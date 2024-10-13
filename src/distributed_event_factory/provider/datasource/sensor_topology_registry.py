@@ -1,7 +1,7 @@
-from src.distributed_event_factory.provider.datasource.data_source_registry import DataSourceRegistry
-from src.distributed_event_factory.provider.datasource.sensor_topology import DataSourceTopologyProvider, \
+from distributed_event_factory.provider.datasource.data_source_registry import DataSourceRegistry
+from distributed_event_factory.provider.datasource.sensor_topology import DataSourceTopologyProvider, \
     ConcreteDataSourceTopologyProvider
-from src.distributed_event_factory.provider.sink.sink_provider_registry import SinkProviderRegistry
+from distributed_event_factory.provider.sink.sink_provider_registry import SinkProviderRegistry
 
 class DataSourceProviderRegistry:
 

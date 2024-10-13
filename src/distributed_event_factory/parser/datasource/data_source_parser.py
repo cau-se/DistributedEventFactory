@@ -1,7 +1,6 @@
-from src.distributed_event_factory.parser.parser import Parser
-from src.distributed_event_factory.core.datasource import GenericDataSource
-from src.distributed_event_factory.core.datasource_id import DataSourceId
-
+from distributed_event_factory.parser.parser import Parser
+from distributed_event_factory.core.datasource import GenericDataSource
+from distributed_event_factory.core.datasource_id import DataSourceId
 
 class DataSourceParser(Parser):
 

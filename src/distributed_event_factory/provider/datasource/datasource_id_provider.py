@@ -1,6 +1,6 @@
 from abc import abstractmethod, ABC
 
-from src.distributed_event_factory.core.datasource_id import DataSourceId
+from distributed_event_factory.core.datasource_id import DataSourceId
 
 
 class DataSourceIdProvider(ABC):

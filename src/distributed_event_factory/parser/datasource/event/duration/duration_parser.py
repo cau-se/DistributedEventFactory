@@ -1,5 +1,5 @@
-from src.distributed_event_factory.parser.parser import Parser
-from src.distributed_event_factory.provider.transition.duration.duration_provider import ConstantDurationProvider
+from distributed_event_factory.parser.parser import Parser
+from distributed_event_factory.provider.transition.duration.duration_provider import ConstantDurationProvider
 
 
 class DurationParser(Parser):

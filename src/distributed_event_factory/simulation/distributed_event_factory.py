@@ -1,7 +1,7 @@
 import yaml
 
-from src.distributed_event_factory.provider.provider_registry import ProviderRegistry
-from src.distributed_event_factory.simulation.simulation import Simulation
+from distributed_event_factory.provider.provider_registry import ProviderRegistry
+from distributed_event_factory.simulation.simulation import Simulation
 
 class DistributedEventFactory:
 

@@ -1,6 +1,6 @@
-from src.distributed_event_factory.provider.activity.activity_provider import ActivityProvider
-from src.distributed_event_factory.provider.transition.duration.duration_provider import DurationProvider
-from src.distributed_event_factory.provider.transition.nextsensor.next_sensor_provider import AbstractNextSensorProvider
+from distributed_event_factory.provider.activity.activity_provider import ActivityProvider
+from distributed_event_factory.provider.transition.duration.duration_provider import DurationProvider
+from distributed_event_factory.provider.transition.nextsensor.next_sensor_provider import AbstractNextSensorProvider
 
 
 class EventData:
