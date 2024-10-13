@@ -1,0 +1,10 @@
+kind: sink
+name: ui-sink
+spec:
+  type: ui
+  id: "UI"
+  dataSourceRefs:
+    - "Assembling"
+    - "QualityControl"
+    - "Packaging"
+    - "Shipping"

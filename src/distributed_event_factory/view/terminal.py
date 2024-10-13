@@ -24,7 +24,7 @@ class Terminal(threading.Thread):
         self.root.protocol("WM_DELETE_WINDOW", self.close)
         self.root.title(self.title)
         self.root.geometry("600x400")
-        self.root.geometry(f"+{50 +((self.start_position % 3)*700)}+{int(self.start_position / 3) * 500}")
+        self.root.geometry(f"+{50 +((self.start_position % 3)*900)}+{int(self.start_position / 3) * 500}")
         self.scrolled_text = ScrolledText(self.root)
         self.scrolled_text.pack()
         self.root.mainloop()

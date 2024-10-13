@@ -1,4 +1,5 @@
 import abc
+from random import random
 
 
 class CaseIdProvider:
@@ -22,4 +23,4 @@ class IncreasingCaseIdProvider(CaseIdProvider):
 
     def get(self):
         self.current_case_id += 1
-        return "case " + str(self.current_case_id)
+        return f"case_{int(random()*1000000000)}_{str(self.current_case_id)}"

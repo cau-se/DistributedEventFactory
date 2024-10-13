@@ -27,7 +27,7 @@ class NextSensorChooseProvider:
         return NextSensorProvider(distribution)
 
 
-class DistinctNextSensorProvider(AbstractNextSensorProvider):
+class ConstantNextSensorProvider(AbstractNextSensorProvider):
     def __init__(self, next_sensor_index):
         self.next_sensor_index = next_sensor_index
 

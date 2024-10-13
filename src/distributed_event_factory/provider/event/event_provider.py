@@ -1,14 +1,14 @@
 from abc import ABC, abstractmethod
 from typing import List
 
-from src.distributed_event_factory.provider.activity.activity_provider import DistinctActivityProvider
+from src.distributed_event_factory.provider.activity.activity_provider import ConstantActivityProvider, ActivityProvider
 from src.distributed_event_factory.provider.activity.selection.activity_selection_provider import \
     ActivitySelectionProvider
 from src.distributed_event_factory.provider.event.event_data import EventData
 from src.distributed_event_factory.provider.transition.duration.duration_provider import DurationProvider, \
-    StaticDurationProvider
+    ConstantDurationProvider
 from src.distributed_event_factory.provider.transition.nextsensor.next_sensor_provider import NextSensorProvider, \
-    DistinctNextSensorProvider
+    ConstantNextSensorProvider, AbstractNextSensorProvider
 
 
 class EventDataProvider(ABC):
@@ -32,8 +32,8 @@ class CustomEventDataProvider(EventDataProvider):
     def __init__(
             self,
             duration_provider: DurationProvider,
-            activity_provider: ActivitySelectionProvider,
-            transition_provider: NextSensorProvider
+            activity_provider: ActivityProvider,
+            transition_provider: AbstractNextSensorProvider
     ):
         self.duration_provider = duration_provider
         self.activity_provider = activity_provider
@@ -47,7 +47,7 @@ class CustomEventDataProvider(EventDataProvider):
         )
 
     def get_activity(self):
-        return self.activity_provider.emit_activity()
+        return self.activity_provider.get_activity()
 
     def get_duration(self):
         return self.duration_provider.get_duration()
@@ -58,18 +58,21 @@ class CustomEventDataProvider(EventDataProvider):
 
 class StartEventProvider(EventDataProvider):
 
+    def __init__(self, transtition_provider):
+        self.transtition_provider = transtition_provider
+
     def get_event_data(self):
         return EventData(
-            StaticDurationProvider(0),
-            DistinctActivityProvider("start"),
-            DistinctNextSensorProvider(0),
+            ConstantDurationProvider(0),
+            ConstantActivityProvider("start"),
+            self.transtition_provider
         )
 
 
 class EndEventProvider(EventDataProvider):
     def get_event_data(self):
         return EventData(
-            StaticDurationProvider(0),
-            DistinctActivityProvider("end"),
-            DistinctNextSensorProvider(0),
+            ConstantDurationProvider(0),
+            ConstantActivityProvider("end"),
+            ConstantNextSensorProvider(0),
         )

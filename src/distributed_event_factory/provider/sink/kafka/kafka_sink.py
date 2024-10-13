@@ -1,6 +1,8 @@
 import json
 import string
 
+from scheduled_futures import ScheduledThreadPoolExecutor
+
 from src.distributed_event_factory.core.event import AbstractEvent
 from src.distributed_event_factory.provider.sink.kafka.partition.partition_provider import PartitionProvider
 from src.distributed_event_factory.provider.sink.sink_provider import Sink, SinkProvider
@@ -18,14 +20,23 @@ class KafkaSink(Sink):
         )
         self.topic = topic
         self.partition_provider = partition_provider
+        self.executor = ScheduledThreadPoolExecutor()
 
-    def send(self, event: AbstractEvent) -> None:
+    def kSend(self, event):
         self.producer.send(
             self.topic,
             value=json.dumps(event.__dict__),
             key=event.get_case(),
-            partition=self.partition_provider.get_partition(event)
-        ).add_callback(lambda record_metadata: print(record_metadata))
+            partition=self.partition_provider.get_partition(event))
+
+    def send(self, event: AbstractEvent) -> None:
+        #self.executor.submit(lambda: self.kSend(event))
+        self.producer.send(
+            self.topic,
+            value=json.dumps(event.__dict__),
+            key=event.get_case(),
+            partition=self.partition_provider.get_partition(event))
+        #.add_callback(lambda record_metadata: print(record_metadata)))
 
 
 class KafkaSinkProvider(SinkProvider):

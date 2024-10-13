@@ -1,0 +1,14 @@
+kind: simulation
+name: assembly-line-simulation
+spec:
+  caseId: increasing
+  timeFrameDuration: 10
+  load:
+    loadBehavior: sinus
+    mean: 10
+    amplitude: 8
+    phase: 50
+    #loadBehavior: gradual
+    #tickCount: 100
+    #minimalLoad: 5
+    #load: 10

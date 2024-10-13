@@ -2,21 +2,19 @@ numberOfDataSources:
   type: static
   count: 9
 caseId: increasing
-type: load
+type: debug
 loadType: gradual
 tickCount: 100
 load: 10
 minimalLoad: 5
 dataSourceTopology:
   defaultSink:
-    type: kafkaValidation
+    type: kafka
     bootstrapServer: localhost:9092
-    topic: assembly
+    topic: input
     partition:
       type: caseId
-      numberPartitions: 10
-    validationTopic: assembly-validation
-    validationSplit: 8
+      numberPartitions: 1
   dataSources:
   - name: "GoodsDelivery"
     eventGeneration:

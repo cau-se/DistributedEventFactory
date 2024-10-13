@@ -19,6 +19,4 @@ class EventProviderRegistry:
                 .get_activity_provider(),
             ))
 
-
-
         return registry["classic"](config)
