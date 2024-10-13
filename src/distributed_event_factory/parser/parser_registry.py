@@ -98,17 +98,3 @@ class ParserRegistry:
                             .add_dependency("datasource", self.datasource_parser)
                             .add_dependency("simulation", self.simulation_parser))
 
-    def add_load_parser(self, key: str, parser: LoadParser):
-        self.load_parser.add_dependency(key, parser)
-
-    def add_case_id_parser(self, key: str, parser: CaseIdParser):
-        self.case_id_parser.add_dependency(key, parser)
-
-    def add_transition_parser(self, key: str, parser: TransitionParser):
-        self.transition_parser.add_dependency(key, parser)
-
-    def add_activity_parser(self, key: str, parser: ActivityParser):
-        self.activity_parser.add_dependency(key, parser)
-
-    def add_sink_parser(self, key: str, parser: SinkParser):
-        self.sink_parser.add_dependency(key, parser)
