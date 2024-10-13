@@ -3,11 +3,12 @@ from typing import List
 
 from src.distributed_event_factory.core.datasource_id import DataSourceId, START_SENSOR_ID, END_DATA_SOURCE_ID
 from src.distributed_event_factory.core.event import AbstractEvent, StartEvent, EndEvent, Event
+from src.distributed_event_factory.provider.event.event_data import EventData
 from src.distributed_event_factory.provider.event.event_provider import EventDataProvider, EndEventProvider, \
     StartEventProvider
 from src.distributed_event_factory.provider.eventselection.event_selection_provider import EventSelectionProvider
-from src.distributed_event_factory.provider.sink.sink_provider import Sink
-from src.distributed_event_factory.provider.transition.nextsensor.next_sensor_provider import NextSensorProvider
+from src.distributed_event_factory.provider.transition.nextsensor.next_sensor_provider import NextSensorProvider, \
+    AbstractNextSensorProvider
 
 
 class DataSource(ABC):
@@ -17,7 +18,7 @@ class DataSource(ABC):
         pass
 
     @abstractmethod
-    def get_event_provider(self) -> EventDataProvider:
+    def get_event_data(self) -> EventData:
         pass
 
     @abstractmethod
@@ -31,18 +32,15 @@ class DataSource(ABC):
 
 class StartDataSource(DataSource):
 
-    def __init__(self, transition_provider: NextSensorProvider, sender):
+    def __init__(self, transition_provider: AbstractNextSensorProvider):
         self.event_log = []
         self.transition_provider = transition_provider
-        self.sender = sender
 
-    def get_event_provider(self) -> EventDataProvider:
-        return StartEventProvider()
+    def get_event_data(self) -> EventDataProvider:
+        return StartEventProvider(self.transition_provider).get_event_data()
 
-    def emit_event(self, case, activity, timestamp) -> None:
-        event = StartEvent(case)
-        self.event_log.append(event)
-        self.sender.send(event)
+    def emit_event(self, case, activity, timestamp) -> AbstractEvent:
+        return StartEvent(case, self.transition_provider)
 
     def get_sensor_transition(self) -> tuple[int, int]:
         return 0, self.transition_provider.get_next_sensor()
@@ -56,17 +54,15 @@ class StartDataSource(DataSource):
 
 class EndDataSource(DataSource):
 
-    def __init__(self, sender):
+    def __init__(self):
         self.event_log = []
-        self.sender = sender
 
     def emit_event(self, case, activity, timestamp) -> None:
         event = EndEvent(case)
         self.event_log.append(event)
-        self.sender.send(event)
 
-    def get_event_provider(self) -> EventDataProvider:
-        return EndEventProvider()
+    def get_event_data(self) -> EventDataProvider:
+        return EndEventProvider().get_event_data()
 
     def get_sensor_transition(self) -> tuple[int, int]:
         raise ValueError("There is no transition on the end datasource")
@@ -81,14 +77,12 @@ class EndDataSource(DataSource):
 class GenericDataSource(DataSource):
     def __init__(
             self,
-            sensor_id: DataSourceId,
+            data_source_id: DataSourceId,
             group_id: str,
             event_provider: EventSelectionProvider,
-            sink: Sink,
     ):
-        self.sensor_id: DataSourceId = sensor_id
+        self.sensor_id: DataSourceId = data_source_id
         self.group_id: str = group_id
-        self.sender = sink
         self.event_provider = event_provider
         self.event_log: List[AbstractEvent] = []
 
@@ -98,7 +92,10 @@ class GenericDataSource(DataSource):
     def get_event_provider(self):
         return self.event_provider
 
-    def emit_event(self, case, activity_name, timestamp) -> None:
+    def get_event_data(self):
+        return self.event_provider.get_event_data()
+
+    def emit_event(self, case, activity_name, timestamp) -> Event:
         event = Event(
             timestamp=timestamp.strftime("%Y-%m-%d %H:%M:%S"),
             sensor_value=activity_name,
@@ -107,7 +104,7 @@ class GenericDataSource(DataSource):
             group_id=self.group_id
         )
         self.event_log.append(event)
-        self.sender.send(event)
+        return event
 
     def get_event_log(self) -> List[AbstractEvent]:
         return self.event_log

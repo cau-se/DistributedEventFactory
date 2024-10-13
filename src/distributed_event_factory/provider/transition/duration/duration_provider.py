@@ -18,7 +18,7 @@ class UniformDurationProvider(DurationProvider):
         return random.uniform(self.lower_border, self.upper_border)
 
 
-class StaticDurationProvider(DurationProvider):
+class ConstantDurationProvider(DurationProvider):
     def __init__(self, duration):
         self.duration = duration
 

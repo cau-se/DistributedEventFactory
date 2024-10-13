@@ -1,0 +1,11 @@
+from src.distributed_event_factory.parser.parser import Parser
+from src.distributed_event_factory.provider.transition.duration.duration_provider import GaussianDurationProvider
+
+
+class GaussianDurationParser(Parser):
+
+    def add_dependency(self, key: str, dependency):
+        pass
+
+    def parse(self, config):
+        return GaussianDurationProvider(config["mu"], config["sigma"])

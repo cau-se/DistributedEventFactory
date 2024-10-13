@@ -1,0 +1,20 @@
+kind: datasource
+name: "QualityControl"
+spec:
+  name: "QualityControl"
+  group: "factory"
+  selection: genericProbability
+  distribution: [ 0.3, 0.1, 0.6 ]
+  eventData:
+    - activity: "Item Needs Corrections"
+      transition: "Assembling"
+      duration: 2
+    - activity: "Quality Insufficient"
+      transition: "<end>"
+      duration: 2
+    - activity: "Quality check passed"
+      transition: "Packaging"
+      duration:
+        type: uniform
+        lowerBound: 5
+        upperBound: 10

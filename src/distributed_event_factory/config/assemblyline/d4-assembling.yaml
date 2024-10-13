@@ -1,0 +1,23 @@
+kind: datasource
+name: "Assembling"
+spec:
+  name: "Assembling"
+  group: "factory"
+  selection: genericProbability
+  distribution: [ 0.8, 0.1, 0.08, 0.02 ]
+  eventData:
+    - activity: "Assembling completed"
+      duration: 10
+      transition: "QualityControl"
+    - activity: "Overheating"
+      transition: "<end>"
+      duration: 2
+    - activity: "Item broke"
+      transition: "<end>"
+      duration: 1
+    - activity: "Internal Error"
+      transition: "Assembling"
+      duration:
+        type: gaussian
+        mu: 500
+        sigma: 100

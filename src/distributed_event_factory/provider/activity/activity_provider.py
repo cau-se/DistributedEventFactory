@@ -8,7 +8,7 @@ class ActivityProvider(ABC):
         pass
 
 
-class DistinctActivityProvider(ActivityProvider):
+class ConstantActivityProvider(ActivityProvider):
 
     def __init__(self, activity_name):
         self.activity_name = activity_name

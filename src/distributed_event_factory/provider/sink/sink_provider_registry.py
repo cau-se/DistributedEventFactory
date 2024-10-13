@@ -1,9 +1,9 @@
 from src.distributed_event_factory.provider.sink.console.console_sink import PrintConsoleSinkProvider
+from src.distributed_event_factory.provider.sink.http.http_sink import HttpSink, HttpSinkProvider
 from src.distributed_event_factory.provider.sink.kafka.kafka_sink import KafkaSinkProvider
 from src.distributed_event_factory.provider.sink.kafka.kafka_validation_sink import KafkaValidationSinkProvider
 from src.distributed_event_factory.provider.sink.kafka.partition.partition_registry import PartitionProviderRegistry
 from src.distributed_event_factory.provider.sink.sink_provider import SinkProvider
-
 
 class SinkProviderRegistry:
 
@@ -27,5 +27,8 @@ class SinkProviderRegistry:
         )
         registry["ui"] = lambda config: self.get_ui()
         registry["console"] = lambda config: PrintConsoleSinkProvider()
+        registry["console"] = lambda config: PrintConsoleSinkProvider()
+        registry["http"] = lambda config: HttpSinkProvider()
+        #registry["custom"] lambda config: CustomReceiver()
 
         return registry[config["type"]](config)

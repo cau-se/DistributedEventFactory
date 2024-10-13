@@ -1,0 +1,379 @@
+numberOfDataSources:
+  type: static
+  count: 9
+caseId: increasing
+type: load
+loadType: constant
+tickCount: 100
+load: 5000
+minimalLoad: 5
+dataSourceTopology:
+  defaultSink:
+    type: http
+    bootstrapServer: kube1-1:30376
+    topic: z12
+    partition:
+      type: caseId
+      numberPartitions: 1
+  dataSources:
+    - name: "start_place"             # start Place to "Inspection"
+      eventGeneration:
+        selection: genericProbability
+        distribution: [0.91, 0.01, 0.01, 0.01, 0.01, 0.01, 0.01, 0.01, 0.01, 0.01]
+        from:
+          events:
+            - activity: "Inspection"
+              duration: 1
+              transition: 1
+            - activity: "Reject"
+              duration: 5
+              transition: 2
+            - activity: "Accept"
+              duration: 4
+              transition: 3
+            - activity: "Process"
+              duration: 1
+              transition: 4
+            - activity: "Return"
+              duration: 5
+              transition: 5
+            - activity: "Pay"
+              duration: 7
+              transition: 6
+            - activity: "Record"
+              duration: 1
+              transition: 7
+            - activity: "Document"
+              duration: 4
+              transition: 8
+            - activity: "Manufacture"
+              duration: 1
+              transition: 9
+            - activity: "Take Stock"
+              duration: 1
+              transition: 10
+  
+    - name: "P1"             # from a to "b or c"
+      eventGeneration:
+        selection: genericProbability
+        distribution: [0.00, 0.48, 0.48, 0.01, 0.01, 0.01, 0.01, 0.00, 0.00, 0.00]
+        from:
+          events:
+            - activity: "Inspection"
+              duration: 1
+              transition: 1
+            - activity: "Reject"
+              duration: 5
+              transition: 2
+            - activity: "Accept"
+              duration: 4
+              transition: 3
+            - activity: "Process"
+              duration: 1
+              transition: 4
+            - activity: "Return"
+              duration: 5
+              transition: 5
+            - activity: "Pay"
+              duration: 7
+              transition: 6
+            - activity: "Record"
+              duration: 1
+              transition: 7
+            - activity: "Document"
+              duration: 4
+              transition: 8
+            - activity: "Manufacture"
+              duration: 1
+              transition: 9
+            - activity: "Take Stock"
+              duration: 1
+              transition: 10
+    - name: "P2"             # from b to "d or e"
+      eventGeneration:
+        selection: genericProbability
+        distribution: [0.00, 0.00, 0.00, 0.49, 0.49, 0.00, 0.00, 0.01, 0.0, 0.01]
+        from:
+          events:
+            - activity: "Inspection"
+              duration: 1
+              transition: 1
+            - activity: "Reject"
+              duration: 5
+              transition: 2
+            - activity: "Accept"
+              duration: 4
+              transition: 3
+            - activity: "Process"
+              duration: 1
+              transition: 4
+            - activity: "Return"
+              duration: 5
+              transition: 5
+            - activity: "Pay"
+              duration: 7
+              transition: 6
+            - activity: "Record"
+              duration: 1
+              transition: 7
+            - activity: "Document"
+              duration: 4
+              transition: 8
+            - activity: "Manufacture"
+              duration: 1
+              transition: 9
+            - activity: "Take Stock"
+              duration: 1
+              transition: 10             
+    - name: "Place4and5"             # exit c to "f and g"
+      eventGeneration:
+        selection: genericProbability
+        distribution: [0.00, 0.00, 0.00, 0.00, 0.00, 0.49, 0.49, 0.00, 0.01, 0.01]
+        from:
+          events:
+            - activity: "Inspection"
+              duration: 1
+              transition: 1
+            - activity: "Reject"
+              duration: 5
+              transition: 2
+            - activity: "Accept"
+              duration: 4
+              transition: 3
+            - activity: "Process"
+              duration: 1
+              transition: 4
+            - activity: "Return"
+              duration: 5
+              transition: 5
+            - activity: "Pay"
+              duration: 7
+              transition: 6
+            - activity: "Record"
+              duration: 1
+              transition: 7
+            - activity: "Document"
+              duration: 4
+              transition: 8
+            - activity: "Manufacture"
+              duration: 1
+              transition: 9
+            - activity: "Take Stock"
+              duration: 1
+              transition: 10    
+    - name: "P3"             # from d  to "Document"
+      eventGeneration:
+        selection: genericProbability
+        distribution: [0.00, 0.00, 0.00, 0.01, 0.00, 0.00, 0.00, 0.98, 0.00, 0.01]
+        from:
+          events:
+            - activity: "Inspection"
+              duration: 1
+              transition: 1
+            - activity: "Reject"
+              duration: 5
+              transition: 2
+            - activity: "Accept"
+              duration: 4
+              transition: 3
+            - activity: "Process"
+              duration: 1
+              transition: 4
+            - activity: "Return"
+              duration: 5
+              transition: 5
+            - activity: "Pay"
+              duration: 7
+              transition: 6
+            - activity: "Record"
+              duration: 1
+              transition: 7
+            - activity: "Document"
+              duration: 4
+              transition: 8
+            - activity: "Manufacture"
+              duration: 1
+              transition: 9
+            - activity: "Take Stock"
+              duration: 1
+              transition: 10      
+    - name: "P3"             # from e to "Manufacture"
+      eventGeneration:
+        selection: genericProbability
+        distribution: [0.00, 0.00, 0.00, 0.00, 0.01, 0.00, 0.00, 0.98, 0.00, 0.01]
+        from:
+          events:
+            - activity: "Inspection"
+              duration: 1
+              transition: 1
+            - activity: "Reject"
+              duration: 5
+              transition: 2
+            - activity: "Accept"
+              duration: 4
+              transition: 3
+            - activity: "Process"
+              duration: 1
+              transition: 4
+            - activity: "Return"
+              duration: 5
+              transition: 5
+            - activity: "Pay"
+              duration: 7
+              transition: 6
+            - activity: "Record"
+              duration: 1
+              transition: 7
+            - activity: "Document"
+              duration: 4
+              transition: 8
+            - activity: "Manufacture"
+              duration: 1
+              transition: 9
+            - activity: "Take Stock"
+              duration: 1
+              transition: 10                                 
+    - name: "P6"             # from f to "i or g"
+      eventGeneration:
+        selection: genericProbability
+        distribution: [0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.39, 0.00, 0.60, 0.01]
+        from:
+          events:
+            - activity: "Inspection"
+              duration: 1
+              transition: 1
+            - activity: "Reject"
+              duration: 5
+              transition: 2
+            - activity: "Accept"
+              duration: 4
+              transition: 3
+            - activity: "Process"
+              duration: 1
+              transition: 4
+            - activity: "Return"
+              duration: 5
+              transition: 5
+            - activity: "Pay"
+              duration: 7
+              transition: 6
+            - activity: "Record"
+              duration: 1
+              transition: 7
+            - activity: "Document"
+              duration: 4
+              transition: 8
+            - activity: "Manufacture"
+              duration: 1
+              transition: 9
+            - activity: "Take Stock"
+              duration: 1
+              transition: 10              
+    - name: "P7"             # from g to "i or f"
+      eventGeneration:
+        selection: genericProbability
+        distribution: [0.00, 0.00, 0.00, 0.00, 0.00, 0.39, 0.00, 0.00, 0.60, 0.01]
+        from:
+          events:
+            - activity: "Inspection"
+              duration: 1
+              transition: 1
+            - activity: "Reject"
+              duration: 5
+              transition: 2
+            - activity: "Accept"
+              duration: 4
+              transition: 3
+            - activity: "Process"
+              duration: 1
+              transition: 4
+            - activity: "Return"
+              duration: 5
+              transition: 5
+            - activity: "Pay"
+              duration: 7
+              transition: 6
+            - activity: "Record"
+              duration: 1
+              transition: 7
+            - activity: "Document"
+              duration: 4
+              transition: 8
+            - activity: "Manufacture"
+              duration: 1
+              transition: 9
+            - activity: "Take Stock"
+              duration: 1
+              transition: 10              
+    - name: "P8"             # from h to "Take Stock"
+      eventGeneration:
+        selection: genericProbability
+        distribution: [0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.01, 0.00, 0.99]
+        from:
+          events:
+            - activity: "Inspection"
+              duration: 1
+              transition: 1
+            - activity: "Reject"
+              duration: 5
+              transition: 2
+            - activity: "Accept"
+              duration: 4
+              transition: 3
+            - activity: "Process"
+              duration: 1
+              transition: 4
+            - activity: "Return"
+              duration: 5
+              transition: 5
+            - activity: "Pay"
+              duration: 7
+              transition: 6
+            - activity: "Record"
+              duration: 1
+              transition: 7
+            - activity: "Document"
+              duration: 4
+              transition: 8
+            - activity: "Manufacture"
+              duration: 1
+              transition: 9
+            - activity: "Take Stock"
+              duration: 1
+              transition: 10              
+    - name: "GoodsDelivery"             # from i to "Take Stock"
+      eventGeneration:
+        selection: genericProbability
+        distribution: [0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.01, 0.99]
+        from:
+          events:
+            - activity: "Inspection"
+              duration: 1
+              transition: 1
+            - activity: "Reject"
+              duration: 5
+              transition: 2
+            - activity: "Accept"
+              duration: 4
+              transition: 3
+            - activity: "Process"
+              duration: 1
+              transition: 4
+            - activity: "Return"
+              duration: 5
+              transition: 5
+            - activity: "Pay"
+              duration: 7
+              transition: 6
+            - activity: "Record"
+              duration: 1
+              transition: 7
+            - activity: "Document"
+              duration: 4
+              transition: 8
+            - activity: "Manufacture"
+              duration: 1
+              transition: 9
+            - activity: "Take Stock"
+              duration: 1
+              transition: 10              

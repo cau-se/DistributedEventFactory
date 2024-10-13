@@ -1,0 +1,23 @@
+kind: datasource
+name: "MaterialPreparation"
+spec:
+  name: "MaterialPreparation"
+  group: "factory"
+  selection: genericProbability
+  distribution: [ 0.25, 0.7, 0.05 ]
+  eventData:
+    - activity: "MaterialPreparation - Finished"
+      duration:
+        type: uniform
+        lowerBound: 1
+        upperBound: 2
+      transition: "AssemblyLineSetup"
+    - activity: "Waiting for Material"
+      transition: "MaterialPreparation"
+      duration: 1
+    - activity: "Internal Error"
+      transition: "MaterialPreparation"
+      duration:
+        type: gaussian
+        mu: 500
+        sigma: 100
