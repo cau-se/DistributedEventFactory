@@ -1,10 +1,10 @@
 import os
 import yaml
 
+from distributed_event_factory.core.end_datasource import EndDataSource
 from distributed_event_factory.parser.datasource.event.activity.activity_parser import ActivityParser
 from distributed_event_factory.parser.datasource.event.transition.transition_parser import TransitionParser
 from distributed_event_factory.parser.parser_registry import ParserRegistry
-from distributed_event_factory.core.datasource import EndDataSource
 from distributed_event_factory.parser.simulation.case.case_id_parser import CaseIdParser
 from distributed_event_factory.parser.simulation.load.load_parser import LoadParser
 from distributed_event_factory.parser.sink.sink_parser import SinkParser

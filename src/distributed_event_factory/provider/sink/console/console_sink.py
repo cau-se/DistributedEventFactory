@@ -1,4 +1,4 @@
-from distributed_event_factory.core.event import AbstractEvent, Event
+from distributed_event_factory.core.event import Event
 from distributed_event_factory.provider.sink.sink_provider import Sink, SinkProvider
 
 

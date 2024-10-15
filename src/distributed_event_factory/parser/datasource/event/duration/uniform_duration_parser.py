@@ -1,5 +1,6 @@
 from distributed_event_factory.parser.parser import Parser
-from distributed_event_factory.provider.transition.duration.duration_provider import UniformDurationProvider
+from distributed_event_factory.provider.transition.duration.uniform_duration import UniformDurationProvider
+
 
 class UniformDurationParser(Parser):
 

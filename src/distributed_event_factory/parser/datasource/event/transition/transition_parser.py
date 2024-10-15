@@ -1,5 +1,5 @@
 from distributed_event_factory.parser.parser import Parser
-from distributed_event_factory.provider.transition.nextsensor.next_sensor_provider import ConstantNextSensorProvider
+from distributed_event_factory.provider.transition.transition.constant_transition import ConstantTransitionProvider
 
 
 class TransitionParser(Parser):
@@ -12,5 +12,5 @@ class TransitionParser(Parser):
 
     def parse(self, config):
         if isinstance(config, str):
-            return ConstantNextSensorProvider(config)
+            return ConstantTransitionProvider(config)
         return self.dependencies[config["type"]].parse(config)

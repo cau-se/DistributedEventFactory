@@ -1,6 +1,6 @@
 # Distributed Event Factory (DEF)
 
-![Factory](factory.png)
+![Factory](docs/factory.png)
 
 ## About
 
@@ -28,7 +28,7 @@ DEF is based on a Markov chain. The vertices of the Markov chain represent the d
 The edges represent transitions between the data sources. They contain a probability for transitioning, the activity
 performed
 and a function modelling the process duration.  
-![Markov Chain](markov.png)
+![Markov Chain](docs/markov.png)
 
 ## Minimal Running Example
 

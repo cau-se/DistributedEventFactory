@@ -2,6 +2,7 @@ from abc import ABC, abstractmethod
 
 
 class ActivitySelectionProvider(ABC):
+
     @abstractmethod
     def emit_activity(self):
         pass

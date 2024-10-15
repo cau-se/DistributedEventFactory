@@ -24,13 +24,6 @@ class SinusLoadParser(Parser):
 
 
 if __name__ == '__main__':
-    #if "CONFIG_FILE" in os.environ:
-    #    config_file = os.environ["CONFIG_FILE"]
-    #else:
-    #    config_file = "config/syntheticpetrinet.yaml"
-
     event_factory = EventFactory()
     event_factory.parser.load_parser.add_dependency("sinus", SinusLoadParser())
     event_factory.run("config/assemblyline")
-
-    #DistributedEventFactory.from_config_file(config_file).start()

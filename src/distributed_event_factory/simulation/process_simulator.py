@@ -27,7 +27,7 @@ class ProcessSimulator:
         token = self.tokens[int(random.uniform(0, len(self.tokens)))]
         current_data_source = self._get_sensor_with_id(token.data_source_id)
         event = current_data_source.get_event_provider().get_event_data()
-        next_datasource = event.get_next_sensor()
+        next_datasource = event.get_transition()
 
         if token.data_source_id == END_DATA_SOURCE_ID:
             event=current_data_source.emit_event(token.case, event.get_activity(), token.last_timestamp)
