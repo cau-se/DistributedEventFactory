@@ -10,40 +10,53 @@ from distributed_event_factory.parser.datasource.event.selection.drifting_probab
     DriftingProbabilityEventSelectionParser
 from distributed_event_factory.parser.datasource.event.selection.generic_probability_event_selection_parser import \
     GenericProbabilityEventSelectionParser
+from distributed_event_factory.parser.datasource.event.selection.ordered_event_selection_parser import \
+    OrderedEventSelectionParser
 from distributed_event_factory.parser.datasource.event.transition.transition_parser import TransitionParser
 from distributed_event_factory.parser.simulation.case.case_id_parser import CaseIdParser
 from distributed_event_factory.parser.datasource.data_source_parser import DataSourceParser
 from distributed_event_factory.parser.datasource.event.distribution_parser import DistributionParser
 from distributed_event_factory.parser.datasource.event.event_data_list_parser import EventDataListParser
-from distributed_event_factory.parser.datasource.event.event_data_parser import EventDataParser
 from distributed_event_factory.parser.datasource.event.event_selection_parser import EventSelectionParser
 from distributed_event_factory.parser.kind_parser import KindParser
 from distributed_event_factory.parser.simulation.load.constant_load_parser import ConstantLoadParser
 from distributed_event_factory.parser.simulation.load.gradual_load_parser import GradualLoadParser
 from distributed_event_factory.parser.simulation.load.load_parser import LoadParser
 from distributed_event_factory.parser.simulation.simulation_parser import SimulationParser
+from distributed_event_factory.parser.sink.kafka.case_partition_parser import CasePartitionParser
+from distributed_event_factory.parser.sink.kafka.constant_partition_parser import ConstantPartitionParser
+from distributed_event_factory.parser.sink.kafka.kafka_sink_parser import KafkaSinkParser
+from distributed_event_factory.parser.sink.kafka.partition_parser import PartitionParser
 from distributed_event_factory.parser.sink.print_console_sink_parser import PrintConsoleSinkParser
 from distributed_event_factory.parser.sink.sink_parser import SinkParser
 from distributed_event_factory.parser.sink.ui_sink_parser import UiSinkParser
 from distributed_event_factory.provider.data.case_provider import IncreasingCaseIdProvider
 from distributed_event_factory.provider.eventselection.generic_probability_event_selection_provider import \
     GenericProbabilityEventSelectionProvider
+from distributed_event_factory.provider.eventselection.ordered_selection_provider import OrderedEventSelectionProvider
+from distributed_event_factory.provider.sink.kafka.partition.case_partition import CaseIdPartitionProvider
 
 
 class ParserRegistry:
 
     def __init__(self):
+        # Partitioning
+        self.constant_partition_parser = ConstantPartitionParser()
+        self.case_partition_parser = CasePartitionParser()
+        self.partition_parser = (PartitionParser()
+                                 .add_dependency("constant", self.constant_partition_parser)
+                                 .add_dependency("case", self.case_partition_parser))
+
+
         # Sinks
         self.console_sink_parser = (PrintConsoleSinkParser())
         self.ui_sink_parser = (UiSinkParser())
+        self.kafka_sink_parser = (KafkaSinkParser())
         self.sink_parser = (SinkParser()
                             .add_dependency("console", self.console_sink_parser)
-                            .add_dependency("ui", self.ui_sink_parser))
-
+                            .add_dependency("ui", self.ui_sink_parser)
+                            .add_dependency("kafka", self.kafka_sink_parser))
         ##########
-        # Event Data
-        self.event_data_parser = EventDataParser()
-
         # Activity
         self.activity_parser = ActivityParser()
 
@@ -63,11 +76,12 @@ class ParserRegistry:
         self.event_data_list_parser = (EventDataListParser()
                                        .add_dependency("duration", self.duration_parser)
                                        .add_dependency("activity", self.activity_parser)
-                                       .add_dependency("transition", self.transition_parser)
-                                       .add_dependency("eventData", self.event_data_parser))
+                                       .add_dependency("transition", self.transition_parser))
 
         # Distribution
         self.distribution_parser = (DistributionParser())
+
+        self.ordered_event_selection_parser = (OrderedEventSelectionParser())
 
         self.drifting_selection_parser = (DriftingProbabilityEventSelectionParser()
                                              .add_dependency("distribution", self.distribution_parser)
@@ -80,6 +94,7 @@ class ParserRegistry:
 
         # Event Selection
         self.event_selection_parser = (EventSelectionParser()
+                                       .add_dependency("ordered", self.ordered_event_selection_parser)
                                        .add_dependency("genericProbability", self.probability_selection_parser)
                                        .add_dependency("driftingProbability", self.drifting_selection_parser))
 

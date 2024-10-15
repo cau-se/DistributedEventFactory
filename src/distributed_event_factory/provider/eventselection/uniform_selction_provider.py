@@ -1,3 +1,4 @@
+import random
 from typing import List
 
 from distributed_event_factory.provider.event.event_provider import EventDataProvider
@@ -9,5 +10,4 @@ class UniformEventSelectionProvider(EventSelectionProvider):
         self.potential_events = potential_events
 
     def get_event_data(self):
-        import random
         return self.potential_events[int(random.uniform(0, len(self.potential_events)))]

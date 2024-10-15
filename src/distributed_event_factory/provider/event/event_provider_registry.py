@@ -2,7 +2,7 @@ from distributed_event_factory.provider.activity.selection.activity_selection_pr
     ActivitySelectionProviderRegistry
 from distributed_event_factory.provider.event.event_provider import EventDataProvider, CustomEventDataProvider
 from distributed_event_factory.provider.transition.duration.duration_registry import DurationProviderRegistry
-from distributed_event_factory.provider.transition.nextsensor.next_sensor_provider_registry import \
+from distributed_event_factory.provider.transition.transition.next_sensor_provider_registry import \
     NextSensorProviderRegistry
 
 

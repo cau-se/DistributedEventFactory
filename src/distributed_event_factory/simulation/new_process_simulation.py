@@ -30,11 +30,11 @@ class NewProcessSimulator:
             token = self.start_new_case()
 
         if token.data_source_id == START_SENSOR_ID:
-            token.data_source_id = DataSourceId(self._get_sensor_with_id(START_SENSOR_ID).get_event_data().get_next_sensor())
+            token.data_source_id = DataSourceId(self._get_sensor_with_id(START_SENSOR_ID).get_event_data().get_transition())
 
         current_data_source = self._get_sensor_with_id(token.data_source_id)
         event = current_data_source.get_event_data()
-        next_datasource = event.get_next_sensor()
+        next_datasource = event.get_transition()
         activity = event.get_activity()
         token.add_to_last_timestamp(event.get_duration())
         token.set_data_source_id(self.datasources[next_datasource].get_id())

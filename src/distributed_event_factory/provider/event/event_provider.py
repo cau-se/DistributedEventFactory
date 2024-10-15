@@ -2,14 +2,11 @@ from abc import ABC, abstractmethod
 from typing import List
 
 from distributed_event_factory.provider.activity.activity_provider import ConstantActivityProvider, ActivityProvider
-from distributed_event_factory.provider.activity.selection.activity_selection_provider import \
-    ActivitySelectionProvider
 from distributed_event_factory.provider.event.event_data import EventData
-from distributed_event_factory.provider.transition.duration.duration_provider import DurationProvider, \
-    ConstantDurationProvider
-from distributed_event_factory.provider.transition.nextsensor.next_sensor_provider import NextSensorProvider, \
-    ConstantNextSensorProvider, AbstractNextSensorProvider
-
+from distributed_event_factory.provider.transition.duration.constant_duration import ConstantDurationProvider
+from distributed_event_factory.provider.transition.duration.duration_provider import DurationProvider
+from distributed_event_factory.provider.transition.transition.constant_transition import ConstantTransitionProvider
+from distributed_event_factory.provider.transition.transition.transition_provider import TransitionProvider
 
 class EventDataProvider(ABC):
 
@@ -33,7 +30,7 @@ class CustomEventDataProvider(EventDataProvider):
             self,
             duration_provider: DurationProvider,
             activity_provider: ActivityProvider,
-            transition_provider: AbstractNextSensorProvider
+            transition_provider: TransitionProvider
     ):
         self.duration_provider = duration_provider
         self.activity_provider = activity_provider
@@ -52,8 +49,8 @@ class CustomEventDataProvider(EventDataProvider):
     def get_duration(self):
         return self.duration_provider.get_duration()
 
-    def get_next_sensor(self):
-        return self.transition_provider.get_next_sensor()
+    def get_transition(self):
+        return self.transition_provider.get_transition()
 
 
 class StartEventProvider(EventDataProvider):
@@ -74,5 +71,5 @@ class EndEventProvider(EventDataProvider):
         return EventData(
             ConstantDurationProvider(0),
             ConstantActivityProvider("end"),
-            ConstantNextSensorProvider(0),
+            ConstantTransitionProvider(0)
         )

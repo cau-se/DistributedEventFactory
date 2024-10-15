@@ -3,7 +3,7 @@ from abc import ABC, abstractmethod
 class TransitionProvider(ABC):
 
     @abstractmethod
-    def get_next_sensor(self) -> int:
+    def get_transition(self) -> int:
         pass
 
 

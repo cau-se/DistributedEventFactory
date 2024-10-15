@@ -39,6 +39,7 @@ class NewSimulation:
             case_id_provider=self.case_id_provider,
             data_sources=datasources
         )
+        process_simulator.simulate()
         while True:
             with ScheduledThreadPoolExecutor() as executor:
                 #self.start()

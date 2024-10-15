@@ -1,5 +1,5 @@
 from distributed_event_factory.parser.parser import Parser
-from distributed_event_factory.provider.transition.duration.duration_provider import GaussianDurationProvider
+from distributed_event_factory.provider.transition.duration.gaussian_duration import GaussianDurationProvider
 
 
 class GaussianDurationParser(Parser):

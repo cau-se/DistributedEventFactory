@@ -1,6 +1,5 @@
 from distributed_event_factory.parser.parser import Parser
 from distributed_event_factory.provider.activity.activity_provider import ConstantActivityProvider
-from distributed_event_factory.provider.transition.duration.duration_provider import ConstantDurationProvider
 
 
 class ActivityParser(Parser):
