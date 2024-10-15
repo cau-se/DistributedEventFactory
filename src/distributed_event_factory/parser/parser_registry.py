@@ -6,6 +6,10 @@ from distributed_event_factory.parser.datasource.event.duration.gaussian_duratio
     GaussianDurationParser
 from distributed_event_factory.parser.datasource.event.duration.uniform_duration_parser import \
     UniformDurationParser
+from distributed_event_factory.parser.datasource.event.selection.drifting_probability_event_selection_parser import \
+    DriftingProbabilityEventSelectionParser
+from distributed_event_factory.parser.datasource.event.selection.generic_probability_event_selection_parser import \
+    GenericProbabilityEventSelectionParser
 from distributed_event_factory.parser.datasource.event.transition.transition_parser import TransitionParser
 from distributed_event_factory.parser.simulation.case.case_id_parser import CaseIdParser
 from distributed_event_factory.parser.datasource.data_source_parser import DataSourceParser
@@ -22,6 +26,8 @@ from distributed_event_factory.parser.sink.print_console_sink_parser import Prin
 from distributed_event_factory.parser.sink.sink_parser import SinkParser
 from distributed_event_factory.parser.sink.ui_sink_parser import UiSinkParser
 from distributed_event_factory.provider.data.case_provider import IncreasingCaseIdProvider
+from distributed_event_factory.provider.eventselection.generic_probability_event_selection_provider import \
+    GenericProbabilityEventSelectionProvider
 
 
 class ParserRegistry:
@@ -53,7 +59,6 @@ class ParserRegistry:
         # Transition
         self.transition_parser = TransitionParser()
 
-
         # Event Data List
         self.event_data_list_parser = (EventDataListParser()
                                        .add_dependency("duration", self.duration_parser)
@@ -64,10 +69,19 @@ class ParserRegistry:
         # Distribution
         self.distribution_parser = (DistributionParser())
 
+        self.drifting_selection_parser = (DriftingProbabilityEventSelectionParser()
+                                             .add_dependency("distribution", self.distribution_parser)
+                                             .add_dependency("eventData", self.event_data_list_parser))
+
+        self.probability_selection_parser = (GenericProbabilityEventSelectionParser()
+                                             .add_dependency("distribution", self.distribution_parser)
+                                             .add_dependency("eventData", self.event_data_list_parser))
+
+
         # Event Selection
         self.event_selection_parser = (EventSelectionParser()
-                                       .add_dependency("distribution", self.distribution_parser)
-                                       .add_dependency("eventDataList", self.event_data_list_parser))
+                                       .add_dependency("genericProbability", self.probability_selection_parser)
+                                       .add_dependency("driftingProbability", self.drifting_selection_parser))
 
         # DataSource
         self.datasource_parser = (DataSourceParser()

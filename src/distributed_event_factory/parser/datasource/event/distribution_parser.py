@@ -10,4 +10,4 @@ class DistributionParser(Parser):
         pass
 
     def parse(self, config):
-        return config['distribution']
+        return config

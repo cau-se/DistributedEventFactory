@@ -13,7 +13,7 @@ class EventDataListParser(Parser):
 
     def parse(self, config):
         event_list = []
-        for event in config["eventData"]:
+        for event in config:
             event_list.append(CustomEventDataProvider(
                 duration_provider=self.dependencies["duration"].parse(event["duration"]),
                 activity_provider=self.dependencies["activity"].parse(event["activity"]),

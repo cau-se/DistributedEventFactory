@@ -33,6 +33,9 @@ class EventFactory:
     def add_sink_parser(self, key: str, parser: SinkParser):
         self.parser.sink_parser.add_dependency(key, parser)
 
+    def add_selection_parser(self, key: str, parser: SinkParser):
+        self.parser.probability_selection_parser.add_dependency(key, parser)
+
     def run(self, directory):
         for filename in os.listdir(directory):
             with open(directory + "/" + filename) as file:
@@ -49,6 +52,3 @@ class EventFactory:
 
         for simulation in self.simulations:
             self.simulations[simulation].run_simulation(self.datasources, self.sinks)
-
-if __name__ == '__main__':
-    EventFactory("")

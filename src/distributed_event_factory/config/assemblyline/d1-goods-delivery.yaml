@@ -3,8 +3,10 @@ name: "GoodsDelivery"
 spec:
   name: "GoodsDelivery"
   group: "factory"
-  selection: genericProbability
-  distribution: [0.1, 0.7, 0.2]
+  selection: driftingProbability
+  startDistribution: [0.1, 0.7, 0.2]
+  endDistribution: [0.1, 0.2, 0.7]
+  steps: 1000
   eventData:
     - activity: "Reject"
       transition: "<end>"
