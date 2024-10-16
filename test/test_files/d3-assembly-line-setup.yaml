@@ -1,0 +1,29 @@
+kind: datasource
+name: "AssemblyLineSetup"
+spec:
+  name: "AssemblyLineSetup"
+  group: "factory"
+  selection: genericProbability
+  distribution: [ 0.3, 0.4, 0.15, 0.05, 0.1 ]
+  eventData:
+    - activity: "Material Not Set Up as expected"
+      transition: "MaterialPreparation"
+      duration:
+        type: uniform
+        lowerBound: 2
+        upperBound: 5
+    - activity: "Assembly Line Setup successfully"
+      transition: "Assembling"
+      duration: 3
+    - activity: "Material in wrong order. Reordering.."
+      transition: "AssemblyLineSetup"
+      duration: 1
+    - activity: "Maximum Material count exceeded. Remove item"
+      transition: "AssemblyLineSetup"
+      duration: 1
+    - activity: "Internal Error"
+      transition: "Assembling"
+      duration:
+        type: gaussian
+        mu: 500
+        sigma: 100

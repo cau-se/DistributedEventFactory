@@ -2,9 +2,6 @@ import abc
 from string import ascii_uppercase as alphabet
 from typing import List
 
-from distributed_event_factory.provider.generic.count_provider import CountProvider
-
-
 class ActivityGenerationProvider(abc.ABC):
 
     @abc.abstractmethod

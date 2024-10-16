@@ -1,0 +1,14 @@
+kind: datasource
+name: "Shipping"
+spec:
+  name: "Shipping"
+  group: "factory"
+  selection: genericProbability
+  distribution: [ 0.8, 0.2 ]
+  eventData:
+    - activity: "Package waits for sending"
+      transition: "Shipping"
+      duration: 180
+    - activity: "Package sent"
+      transition: "<end>"
+      duration: 1

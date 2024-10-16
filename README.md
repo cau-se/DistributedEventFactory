@@ -97,7 +97,7 @@ Define the `Distribted Event Factory` and specify a config file like mentioned a
 ```python
 from simulation.distributed_event_factory import DistributedEventFactory
 
-config_file = "src/distributed_event_factory/config/assembly_line.yml"
+config_file = "config/assembly_line.yml"
 DistributedEventFactory(config_file).start()
 ```
 
