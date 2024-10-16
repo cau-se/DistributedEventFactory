@@ -36,6 +36,9 @@ class EventFactory:
     def add_selection_parser(self, key: str, parser: SinkParser):
         self.parser.probability_selection_parser.add_dependency(key, parser)
 
+    def get_datasource(self, datasource_key):
+        return self.datasources[datasource_key]
+
     def run(self, directory):
         for filename in os.listdir(directory):
             with open(directory + "/" + filename) as file:

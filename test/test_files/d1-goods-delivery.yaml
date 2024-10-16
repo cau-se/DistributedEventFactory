@@ -1,0 +1,25 @@
+kind: datasource
+name: "GoodsDelivery"
+spec:
+  name: "GoodsDelivery"
+  group: "factory"
+  selection: driftingProbability
+  startDistribution: [0.1, 0.7, 0.2]
+  endDistribution: [0.1, 0.2, 0.7]
+  steps: 1000
+  eventData:
+    - activity: "Reject"
+      transition: "<end>"
+      duration: 1
+    - activity: "Store"
+      transition: "GoodsDelivery"
+      duration:
+        type: gaussian
+        mu: 720
+        sigma: 120
+    - activity: "Pass To Production"
+      transition: "MaterialPreparation"
+      duration:
+        type: uniform
+        lowerBound: 3
+        upperBound: 7
