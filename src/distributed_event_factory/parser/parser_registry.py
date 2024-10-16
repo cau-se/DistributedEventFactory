@@ -12,6 +12,8 @@ from distributed_event_factory.parser.datasource.event.selection.generic_probabi
     GenericProbabilityEventSelectionParser
 from distributed_event_factory.parser.datasource.event.selection.ordered_event_selection_parser import \
     OrderedEventSelectionParser
+from distributed_event_factory.parser.datasource.event.selection.uniform_event_selection import \
+    UniformEventSelectionParser
 from distributed_event_factory.parser.datasource.event.transition.transition_parser import TransitionParser
 from distributed_event_factory.parser.simulation.case.case_id_parser import CaseIdParser
 from distributed_event_factory.parser.datasource.data_source_parser import DataSourceParser
@@ -31,10 +33,6 @@ from distributed_event_factory.parser.sink.print_console_sink_parser import Prin
 from distributed_event_factory.parser.sink.sink_parser import SinkParser
 from distributed_event_factory.parser.sink.ui_sink_parser import UiSinkParser
 from distributed_event_factory.provider.data.case_provider import IncreasingCaseIdProvider
-from distributed_event_factory.provider.eventselection.generic_probability_event_selection_provider import \
-    GenericProbabilityEventSelectionProvider
-from distributed_event_factory.provider.eventselection.ordered_selection_provider import OrderedEventSelectionProvider
-from distributed_event_factory.provider.sink.kafka.partition.case_partition import CaseIdPartitionProvider
 
 
 class ParserRegistry:
@@ -81,6 +79,8 @@ class ParserRegistry:
         # Distribution
         self.distribution_parser = (DistributionParser())
 
+
+        self.uniform_event_selection_parser = (UniformEventSelectionParser())
         self.ordered_event_selection_parser = (OrderedEventSelectionParser())
 
         self.drifting_selection_parser = (DriftingProbabilityEventSelectionParser()
@@ -95,6 +95,7 @@ class ParserRegistry:
         # Event Selection
         self.event_selection_parser = (EventSelectionParser()
                                        .add_dependency("ordered", self.ordered_event_selection_parser)
+                                       .add_dependency("uniform", self.uniform_event_selection_parser)
                                        .add_dependency("genericProbability", self.probability_selection_parser)
                                        .add_dependency("driftingProbability", self.drifting_selection_parser))
 
