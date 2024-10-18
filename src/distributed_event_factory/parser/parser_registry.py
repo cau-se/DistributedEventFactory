@@ -32,7 +32,7 @@ from distributed_event_factory.parser.sink.kafka.partition_parser import Partiti
 from distributed_event_factory.parser.sink.print_console_sink_parser import PrintConsoleSinkParser
 from distributed_event_factory.parser.sink.sink_parser import SinkParser
 from distributed_event_factory.parser.sink.ui_sink_parser import UiSinkParser
-from distributed_event_factory.provider.data.case_provider import IncreasingCaseIdProvider
+from distributed_event_factory.provider.data.increasing_case import IncreasingCaseIdProvider
 
 
 class ParserRegistry:

@@ -1,7 +1,6 @@
 import json
-from queue import Queue
 
-from distributed_event_factory.core.event import AbstractEvent
+from distributed_event_factory.core.event import Event
 from distributed_event_factory.provider.sink.sink_provider import Sink, SinkProvider
 import requests
 
@@ -22,7 +21,8 @@ class TimeFrame:
 
 class HttpSink(Sink):
 
-    def __init__(self, url, frame_duration):
+    def __init__(self, url, frame_duration, data_source_ref):
+        super().__init__(data_source_ref)
         self.url = url
         self.frame_duration = frame_duration
 
@@ -42,9 +42,5 @@ class HttpSink(Sink):
     def start(self):
         requests.post(url=self.url + "/start")
 
-    def send(self, event: AbstractEvent) -> None:
+    def send(self, event: Event) -> None:
         self.timeframe.add_event(event)
-
-class HttpSinkProvider(SinkProvider):
-    def get_sender(self, id) -> Sink:
-        return HttpSink()

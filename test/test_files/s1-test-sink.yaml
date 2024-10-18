@@ -1,0 +1,13 @@
+kind: sink
+name: test
+spec:
+  type: test
+  id: "test"
+  dataSourceRefs:
+    - "GoodsDelivery"
+    - "MaterialPreparation"
+    - "AssemblyLineSetup"
+    - "Assembling"
+    - "QualityControl"
+    - "Packaging"
+    - "Shipping"

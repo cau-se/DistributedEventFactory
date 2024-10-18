@@ -7,4 +7,4 @@ class TestSinkParser(SinkParser):
         pass
 
     def parse(self, config):
-        return TestSink()
+        return TestSink(config["dataSourceRefs"])

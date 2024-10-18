@@ -1,0 +1,10 @@
+kind: simulation
+name: test
+spec:
+  caseId: increasing
+  timeFrameDuration: 10
+  load:
+    loadBehavior: gradual
+    tickCount: 100
+    minimalLoad: 5
+    load: 10
