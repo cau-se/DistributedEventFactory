@@ -78,7 +78,7 @@ The `debug` option should be used for development and produces more verbose stac
 
 The data sources are defined via a Markov chain. The Markov Chain is configured in a distributed fashion.
 Each data source knows its successor. On every edge a duration, a generated activity and the next invoked datasource is
-defined. More details can be found [here](src/distributed_event_factory/provider/datasource/README.md)
+defined. More details can be found [here](distributed_event_factory/provider/datasource/README.md)
 
 ## Installation
 
