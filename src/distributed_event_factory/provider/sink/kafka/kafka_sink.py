@@ -5,9 +5,10 @@ from distributed_event_factory.core.event import Event
 from distributed_event_factory.provider.sink.kafka.partition.partition_provider import PartitionProvider
 from distributed_event_factory.provider.sink.sink_provider import Sink
 
-
 class KafkaSink(Sink):
-    def __init__(self, bootstrap_server_url: string, client_id: string, topic: string, partition_provider: PartitionProvider):
+    def __init__(self, bootstrap_server_url: string, client_id: string, topic: string,
+                 partition_provider: PartitionProvider, data_source_ref):
+        super().__init__(data_source_ref)
         from kafka import KafkaProducer
 
         self.producer = KafkaProducer(

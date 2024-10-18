@@ -4,7 +4,8 @@ from distributed_event_factory.core.event import Event
 from distributed_event_factory.provider.sink.sink_provider import Sink
 
 class TestSink(Sink):
-    def __init__(self):
+    def __init__(self, data_source_ref):
+        super().__init__(data_source_ref)
         self.event_log: List[Event] = []
 
     def send(self, event: Event) -> None:

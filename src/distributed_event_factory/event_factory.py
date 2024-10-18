@@ -39,7 +39,10 @@ class EventFactory:
     def get_datasource(self, datasource_key):
         return self.datasources[datasource_key]
 
-    def run(self, directory):
+    def get_sink(self, sink_key):
+        return self.sinks[sink_key]
+
+    def from_directory(self, directory):
         for filename in os.listdir(directory):
             with open(directory + "/" + filename) as file:
                 configuration = yaml.safe_load(file)
@@ -52,6 +55,8 @@ class EventFactory:
                     self.datasources[name] = parsed_object
                 elif kind == "sink":
                     self.sinks[name] = parsed_object
+        return self
 
+    def run(self):
         for simulation in self.simulations:
             self.simulations[simulation].run_simulation(self.datasources, self.sinks)
