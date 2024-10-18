@@ -9,6 +9,6 @@ class IntegrationTest(unittest.TestCase):
     def test_integration(self):
         event_factory = EventFactory()
         event_factory.add_sink_parser("test", TestSinkParser())
-        event_factory.from_directory(directory="test_files").run()
+        event_factory.from_directory(directory="test/test_files").run()
         sink_mock: TestSink = event_factory.get_sink("test")
         self.assertEqual(100, len(sink_mock.event_log))
