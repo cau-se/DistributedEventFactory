@@ -8,7 +8,7 @@ from distributed_event_factory.core.datasource_id import START_SENSOR_ID, END_DA
 from distributed_event_factory.core.event import Event
 from distributed_event_factory.provider.data.case_provider import CaseIdProvider
 
-class NewProcessSimulator:
+class ProcessSimulator:
     def __init__(
             self,
             data_sources: Dict[str, DataSource],

@@ -1,5 +1,5 @@
 from distributed_event_factory.provider.data.case_provider import CaseIdProvider
-from distributed_event_factory.simulation.new_process_simulation import NewProcessSimulator
+from distributed_event_factory.simulation.process_simulation import ProcessSimulator
 
 
 class CountBasedSimulation:
@@ -20,7 +20,7 @@ class CountBasedSimulation:
         for sink in sinks:
             for data_source in sinks[sink].data_source_ref:
                 self.sinks[data_source] = sinks[sink]
-        process_simulator = NewProcessSimulator(
+        process_simulator = ProcessSimulator(
             case_id_provider=self.case_id_provider,
             data_sources=datasources
         )

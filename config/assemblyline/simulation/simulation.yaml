@@ -1,8 +1,10 @@
 kind: simulation
 name: assembly-line-simulation
 spec:
+  type: stream
+  steps: 100
   caseId: increasing
-  timeFrameDuration: 10
+  timeframe: 10
   load:
     loadBehavior: gradual
     tickCount: 100

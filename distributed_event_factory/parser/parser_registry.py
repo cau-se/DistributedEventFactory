@@ -25,6 +25,9 @@ from distributed_event_factory.parser.simulation.load.constant_load_parser impor
 from distributed_event_factory.parser.simulation.load.gradual_load_parser import GradualLoadParser
 from distributed_event_factory.parser.simulation.load.load_parser import LoadParser
 from distributed_event_factory.parser.simulation.simulation_parser import SimulationParser
+from distributed_event_factory.parser.simulation.variant.countbased_simulation_parser import CountBasedSimulationParser
+from distributed_event_factory.parser.simulation.variant.loadtest_simulation_parser import LoadTestSimulationParser
+from distributed_event_factory.parser.simulation.variant.stream_simulation_parser import StreamSimulationParser
 from distributed_event_factory.parser.sink.kafka.case_partition_parser import CasePartitionParser
 from distributed_event_factory.parser.sink.kafka.constant_partition_parser import ConstantPartitionParser
 from distributed_event_factory.parser.sink.kafka.kafka_sink_parser import KafkaSinkParser
@@ -44,7 +47,6 @@ class ParserRegistry:
         self.partition_parser = (PartitionParser()
                                  .add_dependency("constant", self.constant_partition_parser)
                                  .add_dependency("case", self.case_partition_parser))
-
 
         # Sinks
         self.console_sink_parser = (PrintConsoleSinkParser())
@@ -79,18 +81,16 @@ class ParserRegistry:
         # Distribution
         self.distribution_parser = (DistributionParser())
 
-
         self.uniform_event_selection_parser = (UniformEventSelectionParser())
         self.ordered_event_selection_parser = (OrderedEventSelectionParser())
 
         self.drifting_selection_parser = (DriftingProbabilityEventSelectionParser()
-                                             .add_dependency("distribution", self.distribution_parser)
-                                             .add_dependency("eventData", self.event_data_list_parser))
+                                          .add_dependency("distribution", self.distribution_parser)
+                                          .add_dependency("eventData", self.event_data_list_parser))
 
         self.probability_selection_parser = (GenericProbabilityEventSelectionParser()
                                              .add_dependency("distribution", self.distribution_parser)
                                              .add_dependency("eventData", self.event_data_list_parser))
-
 
         # Event Selection
         self.event_selection_parser = (EventSelectionParser()
@@ -118,13 +118,24 @@ class ParserRegistry:
                                         .add_dependency("gradual", self.gradual_load_parser))
 
         # Simulation
+        self.count_based_simulation: CountBasedSimulationParser = (CountBasedSimulationParser()
+                                                                   .add_dependency("caseId", self.case_id_parser))
+
+        self.load_test_simulation: LoadTestSimulationParser = (LoadTestSimulationParser()
+                                                               .add_dependency("load", self.load_parser)
+                                                               .add_dependency("caseId", self.case_id_parser))
+
+        self.stream_simulation: StreamSimulationParser = (StreamSimulationParser()
+                                                          .add_dependency("load", self.load_parser)
+                                                          .add_dependency("caseId", self.case_id_parser))
+
         self.simulation_parser: SimulationParser = (SimulationParser()
-                                  .add_dependency("load", self.load_parser)
-                                  .add_dependency("caseId", self.case_id_parser))
+                                                    .add_dependency("stream", self.stream_simulation)
+                                                    .add_dependency("countBased", self.count_based_simulation)
+                                                    .add_dependency("loadTest", self.load_test_simulation))
 
         # Kind
         self.kind_parser: KindParser = (KindParser()
-                            .add_dependency("sink", self.sink_parser)
-                            .add_dependency("datasource", self.datasource_parser)
-                            .add_dependency("simulation", self.simulation_parser))
-
+                                        .add_dependency("sink", self.sink_parser)
+                                        .add_dependency("datasource", self.datasource_parser)
+                                        .add_dependency("simulation", self.simulation_parser))
