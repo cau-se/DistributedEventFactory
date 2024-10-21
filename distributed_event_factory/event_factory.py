@@ -42,7 +42,7 @@ class EventFactory:
     def get_sink(self, sink_key):
         return self.sinks[sink_key]
 
-    def from_directory(self, directory):
+    def add_directory(self, directory):
         for filename in os.listdir(directory):
             with open(directory + "/" + filename) as file:
                 configuration = yaml.safe_load(file)
