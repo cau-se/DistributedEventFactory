@@ -26,4 +26,8 @@ class SinusLoadParser(Parser):
 if __name__ == '__main__':
     event_factory = EventFactory()
     event_factory.parser.load_parser.add_dependency("sinus", SinusLoadParser())
-    event_factory.add_directory("config/assemblyline")
+    (event_factory
+     .add_directory("../config/assemblyline/simulation")
+     .add_directory("../config/assemblyline/datasource")
+     .add_directory("../config/assemblyline/sink")
+     ).run()

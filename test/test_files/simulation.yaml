@@ -1,10 +1,6 @@
 kind: simulation
 name: test
 spec:
+  type: countBased
+  steps: 100
   caseId: increasing
-  timeFrameDuration: 10
-  load:
-    loadBehavior: gradual
-    tickCount: 100
-    minimalLoad: 5
-    load: 10

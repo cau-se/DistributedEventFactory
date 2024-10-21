@@ -2,7 +2,6 @@ import abc
 
 from distributed_event_factory.core.event import Event
 
-
 class Sink:
     def __init__(self, data_source_ref):
         self.data_source_ref = data_source_ref
