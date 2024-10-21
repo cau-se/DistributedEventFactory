@@ -24,6 +24,7 @@ from distributed_event_factory.parser.kind_parser import KindParser
 from distributed_event_factory.parser.simulation.load.constant_load_parser import ConstantLoadParser
 from distributed_event_factory.parser.simulation.load.gradual_load_parser import GradualLoadParser
 from distributed_event_factory.parser.simulation.load.load_parser import LoadParser
+from distributed_event_factory.parser.simulation.load.sinus_load_parser import SinusLoadParser
 from distributed_event_factory.parser.simulation.simulation_parser import SimulationParser
 from distributed_event_factory.parser.simulation.variant.countbased_simulation_parser import CountBasedSimulationParser
 from distributed_event_factory.parser.simulation.variant.loadtest_simulation_parser import LoadTestSimulationParser
@@ -116,9 +117,11 @@ class ParserRegistry:
         self.constant_load_parser = ConstantLoadParser()
         self.gradual_load_parser = GradualLoadParser()
         self.gaussian_load_parser = GradualLoadParser()
+        self.sinus_load_parser = SinusLoadParser()
         self.load_parser: LoadParser = (LoadParser()
                                         .add_dependency("constant", self.constant_load_parser)
-                                        .add_dependency("gradual", self.gradual_load_parser))
+                                        .add_dependency("gradual", self.gradual_load_parser)
+                                        .add_dependency("sinus", self.sinus_load_parser))
 
         # Simulation
         self.count_based_simulation: CountBasedSimulationParser = (CountBasedSimulationParser()
