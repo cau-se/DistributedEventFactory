@@ -23,6 +23,7 @@ class HttpSink(Sink):
 
     def __init__(self, url, frame_duration, data_source_ref):
         super().__init__(data_source_ref)
+        self.timeframe = None
         self.url = url
         self.frame_duration = frame_duration
 

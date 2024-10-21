@@ -1,0 +1,15 @@
+kind: sink
+name: http-sink
+spec:
+  type: http
+  id: "Sensor"
+  timeframe: 1000
+  url: "http://localhost:8080/loadgenerator"
+  dataSourceRefs:
+    - "GoodsDelivery"
+    - "MaterialPreparation"
+    - "AssemblyLineSetup"
+    - "Assembling"
+    - "QualityControl"
+    - "Packaging"
+    - "Shipping"

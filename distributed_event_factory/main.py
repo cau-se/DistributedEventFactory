@@ -29,5 +29,5 @@ if __name__ == '__main__':
     (event_factory
      .add_directory("../config/assemblyline/simulation")
      .add_directory("../config/assemblyline/datasource")
-     .add_directory("../config/assemblyline/sink")
+     .add_directory("../config/assemblyline/sink/loadtest")
      ).run()

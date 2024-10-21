@@ -13,6 +13,5 @@ class LoadTestSimulationParser(Parser):
     def parse(self, config):
         return LoadTestSimulation(
             case_id_provider=self.dependencies["caseId"].parse(config["caseId"]),
-            load_provider=self.dependencies["load"].parse(config["load"]),
-            time_frame_duration=config["timeframe"]
+            load_provider=self.dependencies["load"].parse(config["load"])
         )
