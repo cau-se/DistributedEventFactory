@@ -10,12 +10,10 @@ class LoadTestSimulation:
     def __init__(
             self,
             load_provider: LoadProvider,
-            time_frame_duration: int,
             case_id_provider: CaseIdProvider,
     ):
         self.case_id_provider = case_id_provider
         self.load_provider = load_provider
-        self.time_frame_duration = time_frame_duration
 
     def start(self, sinks):
         for sink in sinks:
@@ -25,15 +23,19 @@ class LoadTestSimulation:
         for sink in sinks:
             sinks[sink].end_timeframe()
 
-    def run_simulation(self, sinks: Dict[str, HttpSink], data_sources: Dict[str, DataSource]):
+    def run_simulation(self, data_sources: Dict[str, DataSource], sinks: Dict[str, HttpSink]):
+        mapped_sinks = dict()
+        for sink in sinks:
+            for data_source in sinks[sink].data_source_ref:
+                mapped_sinks[data_source] = sinks[sink]
         process_simulator = ProcessSimulator(
             case_id_provider=self.case_id_provider,
             data_sources=data_sources
         )
         while True:
-            self.start(sinks)
-            for i in range(self.load_provider.get_load_value()):
+            self.start(mapped_sinks)
+            for i in range(int(self.load_provider.get_load_value())):
                 event = process_simulator.simulate()
                 if event:
-                    sinks[event.node].send(event)
-            self.end(sinks)
+                    mapped_sinks[event.node].send(event)
+            self.end(mapped_sinks)

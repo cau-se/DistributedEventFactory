@@ -1,7 +1,7 @@
 kind: simulation
 name: assembly-line-simulation
 spec:
-  type: stream
+  type: loadTest
   steps: 100
   caseId: increasing
   timeframe: 10

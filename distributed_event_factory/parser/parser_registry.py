@@ -28,6 +28,7 @@ from distributed_event_factory.parser.simulation.simulation_parser import Simula
 from distributed_event_factory.parser.simulation.variant.countbased_simulation_parser import CountBasedSimulationParser
 from distributed_event_factory.parser.simulation.variant.loadtest_simulation_parser import LoadTestSimulationParser
 from distributed_event_factory.parser.simulation.variant.stream_simulation_parser import StreamSimulationParser
+from distributed_event_factory.parser.sink.http_sink_parser import HttpSinkParser
 from distributed_event_factory.parser.sink.kafka.case_partition_parser import CasePartitionParser
 from distributed_event_factory.parser.sink.kafka.constant_partition_parser import ConstantPartitionParser
 from distributed_event_factory.parser.sink.kafka.kafka_sink_parser import KafkaSinkParser
@@ -52,9 +53,11 @@ class ParserRegistry:
         self.console_sink_parser = (PrintConsoleSinkParser())
         self.ui_sink_parser = (UiSinkParser())
         self.kafka_sink_parser = (KafkaSinkParser())
+        self.http_sink_parser = (HttpSinkParser())
         self.sink_parser = (SinkParser()
                             .add_dependency("console", self.console_sink_parser)
                             .add_dependency("ui", self.ui_sink_parser)
+                            .add_dependency("http", self.http_sink_parser)
                             .add_dependency("kafka", self.kafka_sink_parser))
         ##########
         # Activity
