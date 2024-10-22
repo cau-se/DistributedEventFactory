@@ -1,5 +1,6 @@
 from abc import ABC, abstractmethod
-from distributed_event_factory.core.event import Event
+
+from process_mining_core.datastructure.core.event import Event
 
 
 class PartitionProvider(ABC):

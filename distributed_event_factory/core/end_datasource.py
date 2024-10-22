@@ -1,8 +1,10 @@
 from typing import List
 
+from process_mining_core.datastructure.core.event import Event
+
 from distributed_event_factory.core.abstract_datasource import DataSource
 from distributed_event_factory.core.datasource_id import END_DATA_SOURCE_ID, DataSourceId
-from distributed_event_factory.core.event import Event, EndEvent
+from distributed_event_factory.core.event import EndEvent
 from distributed_event_factory.provider.event.event_provider import EventDataProvider, EndEventProvider
 
 class EndDataSource(DataSource):
