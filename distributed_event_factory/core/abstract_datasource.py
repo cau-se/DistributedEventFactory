@@ -1,8 +1,9 @@
 from abc import ABC, abstractmethod
 from typing import List
 
+from process_mining_core.datastructure.core.event import Event
+
 from distributed_event_factory.core.datasource_id import DataSourceId
-from distributed_event_factory.core.event import Event
 from distributed_event_factory.provider.event.event_data import EventData
 
 class DataSource(ABC):

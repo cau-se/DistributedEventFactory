@@ -1,6 +1,7 @@
 import abc
 
-from distributed_event_factory.core.event import Event
+from process_mining_core.datastructure.core.event import Event
+
 
 class Sink:
     def __init__(self, data_source_ref):
