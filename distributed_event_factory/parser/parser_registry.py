@@ -51,9 +51,9 @@ class ParserRegistry:
                                  .add_dependency("case", self.case_partition_parser))
 
         # Sinks
+        self.kafka_sink_parser = (KafkaSinkParser()).add_dependency("partition", self.partition_parser)
         self.console_sink_parser = (PrintConsoleSinkParser())
         self.ui_sink_parser = (UiSinkParser())
-        self.kafka_sink_parser = (KafkaSinkParser())
         self.http_sink_parser = (HttpSinkParser())
         self.sink_parser = (SinkParser()
                             .add_dependency("console", self.console_sink_parser)

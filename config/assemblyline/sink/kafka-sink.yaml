@@ -1,0 +1,18 @@
+kind: sink
+name: kafka-sink
+spec:
+  type: kafka
+  bootstrapServer: "kube1-1:30376"
+  clientId: "client1"
+  topic: "assemblyLine"
+  partition:
+    type: "constant"
+    partition: 0
+  dataSourceRefs:
+    - "GoodsDelivery"
+    - "MaterialPreparation"
+    - "AssemblyLineSetup"
+    - "Assembling"
+    - "QualityControl"
+    - "Packaging"
+    - "Shipping"
