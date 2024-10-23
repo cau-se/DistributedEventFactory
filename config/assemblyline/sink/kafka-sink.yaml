@@ -2,7 +2,7 @@ kind: sink
 name: kafka-sink
 spec:
   type: kafka
-  bootstrapServer: "kube1-1:30376"
+  bootstrapServer: "minikube:32389"
   clientId: "client1"
   topic: "assemblyLine"
   partition:
