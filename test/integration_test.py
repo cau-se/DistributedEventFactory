@@ -11,7 +11,8 @@ class IntegrationTest(unittest.TestCase):
         event_factory.add_sink_parser("test", TestSinkParser())
         (event_factory
          .add_directory(directory="config/assemblyline/datasource")
-         .add_directory(directory="test/test_files")
+         .add_file("config/assemblyline/simulation/simulation_countbased.yaml")
+         .add_file("config/assemblyline/sink/test-sink.yaml")
          .run())
         sink_mock: TestSink = event_factory.get_sink("test")
         self.assertEqual(100, len(sink_mock.event_log))

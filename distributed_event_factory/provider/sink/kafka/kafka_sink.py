@@ -25,4 +25,4 @@ class KafkaSink(Sink):
             self.topic,
             value=json.dumps(event.__dict__),
             key=event.get_case(),
-            partition=self.partition_provider.get_partition(event))
+            partition=self.partition_provider.get_partition(event)).add_callback(lambda data: print(data))

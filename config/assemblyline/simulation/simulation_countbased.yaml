@@ -1,5 +1,5 @@
 kind: simulation
-name: test
+name: countBasedSimulation
 spec:
   type: countBased
   steps: 100
