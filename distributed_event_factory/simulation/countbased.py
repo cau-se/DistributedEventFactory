@@ -14,7 +14,10 @@ class CountBasedSimulation:
         self.sinks = dict()
 
     def send_event(self, event):
-        self.sinks[event.node].send(event)
+        if event.node in self.sinks:
+            self.sinks[event.node].send(event)
+        else:
+            print("Skip event. No sink configured")
 
     def run_simulation(self, datasources, sinks):
         for sink in sinks:
