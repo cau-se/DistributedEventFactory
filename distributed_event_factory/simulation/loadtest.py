@@ -3,7 +3,6 @@ from distributed_event_factory.core.datasource import DataSource
 from distributed_event_factory.provider.data.case_provider import CaseIdProvider
 from distributed_event_factory.provider.load.load_provider import LoadProvider
 from distributed_event_factory.provider.sink.http.http_sink import LoadTestHttpSink
-from distributed_event_factory.provider.sink.sink_provider import Sink
 from distributed_event_factory.simulation.abstract_simulation import Simulation
 from distributed_event_factory.simulation.process_simulation import ProcessSimulator
 
@@ -12,20 +11,27 @@ class LoadTestSimulation(Simulation):
             self,
             load_provider: LoadProvider,
             case_id_provider: CaseIdProvider,
+            generated_timeframes_until_start: int
     ):
         super().__init__()
         self.case_id_provider = case_id_provider
         self.load_provider = load_provider
+        self.generated_timeframes_until_start = generated_timeframes_until_start
 
-    def start(self, sinks):
+    def start_timeframe(self, sinks):
         for sink in sinks:
             for s in sinks[sink]:
                 s.start_timeframe()
 
-    def end(self, sinks):
+    def end_timeframe(self, sinks):
         for sink in sinks:
             for s in sinks[sink]:
                 s.end_timeframe()
+
+    def start_simulation(self, sinks):
+        for sink in sinks:
+            for s in sinks[sink]:
+                s.start()
 
     def run_simulation(self, data_sources: Dict[str, DataSource], sinks: Dict[str, LoadTestHttpSink]):
         self.setup_sinks(sinks)
@@ -33,8 +39,12 @@ class LoadTestSimulation(Simulation):
             case_id_provider=self.case_id_provider,
             data_sources=data_sources
         )
+        iteration = 0
         while True:
-            self.start(self.sinks)
-            for i in range(int(self.load_provider.get_load_value())):
+            if iteration == self.generated_timeframes_until_start:
+                self.start_simulation(self.sinks)
+            self.start_timeframe(self.sinks)
+            for _ in range(int(self.load_provider.get_load_value())):
                 self.send_event(process_simulator.simulate())
-            self.end(self.sinks)
+            self.end_timeframe(self.sinks)
+            iteration = iteration + 1

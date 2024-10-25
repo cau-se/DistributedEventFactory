@@ -4,9 +4,8 @@ spec:
   type: loadTest
   steps: 100
   caseId: increasing
-  timeframe: 10
+  genTimeframesTilStart: 10
+  timeframe: 1000
   load:
-    loadBehavior: gradual
-    tickCount: 100
-    minimalLoad: 5
-    load: 10
+    loadBehavior: constant
+    load: 1000

@@ -35,6 +35,18 @@
                  {
                     name: "BOOTSTRAP_SERVER",
                     value: bootstrapServer
+                 },
+                 {
+                    name: "SIMULATION",
+                    value: loadtest
+                 },
+                 {
+                    name: "DATASOURCE",
+                    value: assemblyline
+                 },
+                 {
+                    name: "SINK",
+                    value: loadtest-sink
                  }
                ],
                ports: [
