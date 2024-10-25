@@ -26,6 +26,7 @@
              {
                name: "distributed-event-factory",
                image: "hendrikreiter/distributed_event_factory:0.2.0-SNAPSHOT",
+               imagePullPolicy: "Always",
                env: [
                  {
                     name: "TOPIC",

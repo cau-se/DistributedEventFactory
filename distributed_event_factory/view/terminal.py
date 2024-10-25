@@ -1,10 +1,8 @@
-import tkinter as tk
-from tkinter.scrolledtext import ScrolledText
 import threading
-
 
 class Terminal(threading.Thread):
     def __init__(self, title="Terminal", start_position=0):
+
         self.start_position = start_position
         self.title = title
         self.root = None
@@ -20,6 +18,8 @@ class Terminal(threading.Thread):
         self.scrolled_text = None
 
     def run(self):
+        import tkinter as tk
+        from tkinter.scrolledtext import ScrolledText
         self.root = tk.Tk()
         self.root.protocol("WM_DELETE_WINDOW", self.close)
         self.root.title(self.title)
