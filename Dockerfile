@@ -23,4 +23,4 @@ RUN --mount=type=cache,target=/root/.cache/pip \
 
 USER appuser
 COPY . .
-CMD python3 src/distributed_event_factory/main.py
+CMD python3 distributed_event_factory/main.py
