@@ -1,0 +1,11 @@
+kind: datasource
+name: "B"
+spec:
+  name: "B"
+  group: "line"
+  selection: genericProbability
+  distribution: [1.0]
+  eventData:
+    - activity: "B"
+      transition: "C"
+      duration: 1
