@@ -20,7 +20,7 @@ class TimeFrame:
             sort_keys=True,
             indent=4)
 
-class HttpSink(Sink):
+class LoadTestHttpSink(Sink):
 
     def __init__(self, url, frame_duration, data_source_ref):
         super().__init__(data_source_ref)
@@ -29,7 +29,7 @@ class HttpSink(Sink):
         self.frame_duration = frame_duration
 
     def start_timeframe(self):
-        self.timeframe = TimeFrame(duration=self.frame_duration)
+        self.timeframe = TimeFrame(duration=self.frame_duration*1000) # conversion microseconds to milliseconds
 
     def add_event(self, event):
         self.timeframe.add_event(event)

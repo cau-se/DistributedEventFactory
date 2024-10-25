@@ -1,0 +1,22 @@
+kind: sink
+name: kafka-sink
+spec:
+  type: kafka
+  bootstrapServer: "minikube:32389"
+  clientId: "client1"
+  topic: "line"
+  partition:
+    type: "constant"
+    partition: 0
+  dataSourceRefs:
+    - "A"
+    - "B"
+    - "C"
+    - "D"
+    #- "GoodsDelivery"
+    #- "MaterialPreparation"
+    #- "AssemblyLineSetup"
+    #- "Assembling"
+    #- "QualityControl"
+    #- "Packaging"
+    #- "Shipping"
