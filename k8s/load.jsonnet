@@ -1,9 +1,10 @@
 {
-   loadDeployment(topic, bootstrapServer):: {
+   loadDeployment(namespace, topic, bootstrapServer):: {
      apiVersion: "apps/v1",
      kind: "Deployment",
      metadata: {
        name: "distributed-event-factory",
+       namespace: namespace,
        labels: {
          app: "distributed-event-factory"
        }
@@ -38,15 +39,15 @@
                  },
                  {
                     name: "SIMULATION",
-                    value: loadtest
+                    value: "loadtest"
                  },
                  {
                     name: "DATASOURCE",
-                    value: assemblyline
+                    value: "assemblyline"
                  },
                  {
                     name: "SINK",
-                    value: loadtest-sink
+                    value: "loadtest-sink"
                  }
                ],
                ports: [
