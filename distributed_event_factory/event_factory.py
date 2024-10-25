@@ -44,17 +44,21 @@ class EventFactory:
 
     def add_directory(self, directory):
         for filename in os.listdir(directory):
-            with open(directory + "/" + filename) as file:
-                configuration = yaml.safe_load(file)
-                kind = configuration['kind']
-                name = configuration['name']
-                parsed_object = self.parser.kind_parser.parse(configuration)
-                if kind == "simulation":
-                    self.simulations[name] = parsed_object
-                elif kind == "datasource":
-                    self.datasources[name] = parsed_object
-                elif kind == "sink":
-                    self.sinks[name] = parsed_object
+            self.add_file(directory + "/" + filename)
+        return self
+
+    def add_file(self, filename):
+        with open(filename) as file:
+            configuration = yaml.safe_load(file)
+            kind = configuration['kind']
+            name = configuration['name']
+            parsed_object = self.parser.kind_parser.parse(configuration)
+            if kind == "simulation":
+                self.simulations[name] = parsed_object
+            elif kind == "datasource":
+                self.datasources[name] = parsed_object
+            elif kind == "sink":
+                self.sinks[name] = parsed_object
         return self
 
     def run(self):

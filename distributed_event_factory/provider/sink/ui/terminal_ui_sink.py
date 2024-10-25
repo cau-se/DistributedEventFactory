@@ -1,4 +1,5 @@
-from distributed_event_factory.core.event import Event
+from process_mining_core.datastructure.core.event import Event
+
 from distributed_event_factory.provider.sink.sink_provider import Sink, SinkProvider
 from distributed_event_factory.view.terminal import Terminal
 
