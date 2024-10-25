@@ -1,5 +1,5 @@
 from distributed_event_factory.parser.parser import Parser
-from distributed_event_factory.provider.sink.http.http_sink import HttpSink
+from distributed_event_factory.provider.sink.http.http_sink import LoadTestHttpSink
 from distributed_event_factory.provider.sink.ui.terminal_ui_sink import UiSink
 
 
@@ -8,7 +8,7 @@ class HttpSinkParser(Parser):
         pass
 
     def parse(self, config):
-        return HttpSink(
+        return LoadTestHttpSink(
             url=config["url"],
             data_source_ref=config["dataSourceRefs"],
             frame_duration=config["timeframe"]
