@@ -52,9 +52,9 @@ class ProcessSimulator:
         if hasattr(datasource, "sensor_id"):
             return Event(
                 timestamp=timestamp.strftime("%Y-%m-%d %H:%M:%S"),
-                sensor_value=activity,
+                activity=activity,
                 case_id=case,
-                sensor_name=datasource.sensor_id.get_name(),
+                node=datasource.sensor_id.get_name(),
                 group_id=datasource.group_id
             )
 

@@ -1,5 +1,5 @@
 from distributed_event_factory.parser.parser import Parser
-from distributed_event_factory.simulation.load_test import LoadTestSimulation
+from distributed_event_factory.simulation.loadtest import LoadTestSimulation
 
 
 class LoadTestSimulationParser(Parser):
@@ -13,5 +13,6 @@ class LoadTestSimulationParser(Parser):
     def parse(self, config):
         return LoadTestSimulation(
             case_id_provider=self.dependencies["caseId"].parse(config["caseId"]),
-            load_provider=self.dependencies["load"].parse(config["load"])
+            load_provider=self.dependencies["load"].parse(config["load"]),
+            generated_timeframes_until_start=config["genTimeframesTilStart"]
         )

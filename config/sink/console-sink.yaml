@@ -4,10 +4,10 @@ spec:
   type: console
   id: "Sensor"
   dataSourceRefs:
-    - "A"
-    - "B"
-    - "C"
-    - "D"
-    #- "GoodsDelivery"
-    #- "MaterialPreparation"
-    #- "AssemblyLineSetup"
+    - "GoodsDelivery"
+    - "MaterialPreparation"
+    - "AssemblyLineSetup"
+    - "Assembling"
+    - "QualityControl"
+    - "Packaging"
+    - "Shipping"
