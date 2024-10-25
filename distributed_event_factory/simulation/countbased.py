@@ -1,28 +1,18 @@
 from distributed_event_factory.provider.data.case_provider import CaseIdProvider
+from distributed_event_factory.simulation.abstract_simulation import Simulation
 from distributed_event_factory.simulation.process_simulation import ProcessSimulator
 
 
-class CountBasedSimulation:
+class CountBasedSimulation(Simulation):
 
-    def __init__(
-            self,
-            simulation_steps: int,
-            case_id_provider: CaseIdProvider,
-    ):
+    def __init__(self, simulation_steps: int, case_id_provider: CaseIdProvider):
+        super().__init__()
         self.case_id_provider = case_id_provider
         self.simulation_steps = simulation_steps
         self.sinks = dict()
 
-    def send_event(self, event):
-        if event.node in self.sinks:
-            self.sinks[event.node].send(event)
-        else:
-            print("Skip event. No sink configured")
-
     def run_simulation(self, datasources, sinks):
-        for sink in sinks:
-            for data_source in sinks[sink].data_source_ref:
-                self.sinks[data_source] = sinks[sink]
+        super().setup_sinks(sinks)
         process_simulator = ProcessSimulator(
             case_id_provider=self.case_id_provider,
             data_sources=datasources
