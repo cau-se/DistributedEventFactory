@@ -1,16 +1,10 @@
-from abc import abstractmethod, ABC
 from typing import List
 
-from distributed_event_factory.core.abstract_datasource import DataSource
-from distributed_event_factory.core.datasource_id import DataSourceId, START_SENSOR_ID, END_DATA_SOURCE_ID
-from distributed_event_factory.core.event import StartEvent, EndEvent, Event
-from distributed_event_factory.provider.event.event_data import EventData
-from distributed_event_factory.provider.event.event_provider import EventDataProvider, EndEventProvider, \
-    StartEventProvider
-from distributed_event_factory.provider.eventselection.event_selection_provider import EventSelectionProvider
-from distributed_event_factory.provider.transition.transition.transition_provider import ChoiceTransitionProvider, \
-    TransitionProvider
+from process_mining_core.datastructure.core.event import Event
 
+from distributed_event_factory.core.abstract_datasource import DataSource
+from distributed_event_factory.core.datasource_id import DataSourceId
+from distributed_event_factory.provider.eventselection.event_selection_provider import EventSelectionProvider
 
 class GenericDataSource(DataSource):
     def __init__(

@@ -1,7 +1,7 @@
 import json
 import string
 
-from distributed_event_factory.core.event import Event
+from process_mining_core.datastructure.core.event import Event
 from distributed_event_factory.provider.sink.kafka.partition.partition_provider import PartitionProvider
 from distributed_event_factory.provider.sink.sink_provider import Sink
 
@@ -25,4 +25,4 @@ class KafkaSink(Sink):
             self.topic,
             value=json.dumps(event.__dict__),
             key=event.get_case(),
-            partition=self.partition_provider.get_partition(event))
+            partition=self.partition_provider.get_partition(event)).add_callback(lambda data: print(data))

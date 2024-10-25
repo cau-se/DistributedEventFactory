@@ -1,6 +1,7 @@
 from typing import List
 
-from distributed_event_factory.core.event import Event
+from process_mining_core.datastructure.core.event import Event
+
 from distributed_event_factory.provider.sink.sink_provider import Sink
 
 class TestSink(Sink):
