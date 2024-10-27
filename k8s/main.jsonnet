@@ -1,9 +1,18 @@
 local load = import 'load.jsonnet';
+local kafkaNamespace = "kafka";
 
-local a = load.loadDeployment(
-    namespace="kafka",
+local defDeployment = load.loadDefDeployment(
+    namespace=kafkaNamespace,
     topic="testi",
     bootstrapServer="minikube:1234"
 );
 
-[a]
+local defBackendDeployment = load.loadBackendDeployment(
+    namespace=kafkaNamespace,
+    topic="testi",
+    bootstrapServer="minikube:1234"
+);
+
+local defBackendService = load.loadBackendService(kafkaNamespace);
+
+[defDeployment, defBackendDeployment, defBackendService]
