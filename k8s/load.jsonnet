@@ -48,6 +48,10 @@
                  {
                     name: "SINK",
                     value: "loadtest-sink"
+                 },
+                 {
+                    name: "ROOT",
+                    value: "/app"
                  }
                ],
                ports: [
