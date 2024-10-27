@@ -4,7 +4,7 @@ spec:
   type: http
   id: "Sensor"
   timeframe: 1000
-  url: "http://load-backend.svc:8080/loadgenerator"
+  url: "http://load-backend:8080/loadgenerator"
   dataSourceRefs:
     - "GoodsDelivery"
     - "MaterialPreparation"
