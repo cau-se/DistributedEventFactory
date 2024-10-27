@@ -15,13 +15,17 @@ if __name__ == '__main__':
     datasource = os.environ["DATASOURCE"]
     sink = os.environ["SINK"]
     simulation = os.environ["SIMULATION"]
+    content_root = os.environ["ROOT"]
+
+    print("Running with config:")
+    print(f"datasource directory: {datasource}")
+    print(f"Sink: {sink}")
+    print(f"Simulation: {simulation}")
+    print(f"Content root: {content_root}")
 
     (event_factory
-     .add_directory(f"../config/datasource/{datasource}")
-     .add_file(f"../config/simulation/{simulation}.yaml")
-     .add_file(f"../config/sink/{sink}.yaml")
+     .add_directory(f"{content_root}/config/datasource/{datasource}")
+     .add_file(f"{content_root}/config/simulation/{simulation}.yaml")
+     .add_file(f"{content_root}/config/sink/{sink}.yaml")
      ).run()
     sleep(10)
-    #for sinks in event_factory.sinks:
-    #    for sink in sinks:
-    #        sink.start()

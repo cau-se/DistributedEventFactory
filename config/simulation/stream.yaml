@@ -1,0 +1,10 @@
+kind: simulation
+name: streamSimulation
+spec:
+  type: stream
+  caseId: increasing
+  load:
+    loadBehavior: sinus
+    mean: 100
+    amplitude: 80
+    phase: 10

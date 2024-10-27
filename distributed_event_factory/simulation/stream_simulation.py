@@ -18,7 +18,7 @@ class StreamSimulation(Simulation):
         self.sinks = dict()
 
     def run_simulation(self, datasources, sinks):
-        self.setup_sinks()
+        self.setup_sinks(sinks)
         process_simulator = ProcessSimulator(
             case_id_provider=self.case_id_provider,
             data_sources=datasources
