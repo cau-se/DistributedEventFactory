@@ -1,5 +1,5 @@
 {
-   loadDefDeployment(namespace, topic, bootstrapServer):: {
+   loadDefDeployment(namespace):: {
      apiVersion: "apps/v1",
      kind: "Deployment",
      metadata: {
@@ -29,14 +29,6 @@
                image: "hendrikreiter/distributed_event_factory:0.2.0-SNAPSHOT",
                imagePullPolicy: "Always",
                env: [
-                 {
-                    name: "TOPIC",
-                    value: topic
-                 },
-                 {
-                    name: "BOOTSTRAP_SERVER",
-                    value: bootstrapServer
-                 },
                  {
                     name: "SIMULATION",
                     value: "loadtest"

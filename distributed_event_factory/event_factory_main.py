@@ -5,6 +5,7 @@ from time import sleep
 from dotenv import load_dotenv
 
 from distributed_event_factory.event_factory import EventFactory
+from process_mining_core.datastructure.core.event import Event
 
 if __name__ == '__main__':
     event_factory = EventFactory()
@@ -12,6 +13,14 @@ if __name__ == '__main__':
     if "local" in sys.argv:
         load_dotenv()
 
+    event = Event(
+        timestamp="",
+        case_id="a1",
+        group_id="a3",
+        activity="a",
+        node="n"
+    )
+    print(event.__dict__)
     datasource = os.environ["DATASOURCE"]
     sink = os.environ["SINK"]
     simulation = os.environ["SIMULATION"]
