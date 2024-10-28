@@ -1,3 +1,5 @@
+import os
+
 from distributed_event_factory.parser.parser import Parser
 from distributed_event_factory.provider.load.load_provider import ConstantLoadProvider
 
@@ -8,4 +10,8 @@ class ConstantLoadParser(Parser):
         pass
 
     def parse(self, config):
-        return ConstantLoadProvider(config["load"])
+        if "load" in os.environ:
+            load = int(os.environ["LOAD"])
+        else:
+            load = config["load"]
+        return ConstantLoadProvider(load)
