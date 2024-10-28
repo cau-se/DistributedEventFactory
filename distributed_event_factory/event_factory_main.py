@@ -13,14 +13,6 @@ if __name__ == '__main__':
     if "local" in sys.argv:
         load_dotenv()
 
-    event = Event(
-        timestamp="",
-        case_id="a1",
-        group_id="a3",
-        activity="a",
-        node="n"
-    )
-    print(event.__dict__)
     datasource = os.environ["DATASOURCE"]
     sink = os.environ["SINK"]
     simulation = os.environ["SIMULATION"]
