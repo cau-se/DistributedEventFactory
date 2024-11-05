@@ -3,9 +3,7 @@ import sys
 from time import sleep
 
 from dotenv import load_dotenv
-
 from distributed_event_factory.event_factory import EventFactory
-from process_mining_core.datastructure.core.event import Event
 
 if __name__ == '__main__':
     event_factory = EventFactory()
