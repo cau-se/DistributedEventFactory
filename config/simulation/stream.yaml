@@ -4,7 +4,5 @@ spec:
   type: stream
   caseId: increasing
   load:
-    loadBehavior: sinus
-    mean: 100
-    amplitude: 80
-    phase: 10
+    loadBehavior: constant
+    load: 10

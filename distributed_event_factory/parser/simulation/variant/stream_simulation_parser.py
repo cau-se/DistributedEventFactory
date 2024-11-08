@@ -1,5 +1,5 @@
 from distributed_event_factory.parser.parser import Parser
-from distributed_event_factory.simulation.stream_simulation import StreamSimulation
+from distributed_event_factory.simulation.stream import StreamSimulation
 
 
 class StreamSimulationParser(Parser):

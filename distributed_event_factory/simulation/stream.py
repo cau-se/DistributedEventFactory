@@ -17,7 +17,7 @@ class StreamSimulation(Simulation):
         self.load_provider = load_provider
         self.sinks = dict()
 
-    def run_simulation(self, datasources, sinks):
+    def run_simulation(self, datasources, sinks, hook):
         self.setup_sinks(sinks)
         process_simulator = ProcessSimulator(
             case_id_provider=self.case_id_provider,
@@ -29,5 +29,6 @@ class StreamSimulation(Simulation):
                     lambda: self.send_event(process_simulator.simulate()),
                     period=1/self.load_provider.get_load_value()
                 )
+                hook()
                 time.sleep(1)
                 scheduler.cancel()
