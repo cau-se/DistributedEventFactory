@@ -11,7 +11,7 @@ class CountBasedSimulation(Simulation):
         self.simulation_steps = simulation_steps
         self.sinks = dict()
 
-    def run_simulation(self, datasources, sinks):
+    def run_simulation(self, datasources, sinks, hook=lambda: None):
         super().setup_sinks(sinks)
         process_simulator = ProcessSimulator(
             case_id_provider=self.case_id_provider,
@@ -19,4 +19,7 @@ class CountBasedSimulation(Simulation):
         )
 
         for i in range(self.simulation_steps):
-            self.send_event(process_simulator.simulate())
+            event = process_simulator.simulate()
+            print(event)
+            self.send_event(event)
+            hook()

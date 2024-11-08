@@ -33,7 +33,7 @@ class LoadTestSimulation(Simulation):
             for s in sinks[sink]:
                 s.start()
 
-    def run_simulation(self, data_sources: Dict[str, DataSource], sinks: Dict[str, LoadTestHttpSink]):
+    def run_simulation(self, data_sources: Dict[str, DataSource], sinks: Dict[str, LoadTestHttpSink], hook = lambda: None):
         self.setup_sinks(sinks)
         process_simulator = ProcessSimulator(
             case_id_provider=self.case_id_provider,
@@ -46,5 +46,6 @@ class LoadTestSimulation(Simulation):
             self.start_timeframe(self.sinks)
             for _ in range(int(self.load_provider.get_load_value())):
                 self.send_event(process_simulator.simulate())
+                hook()
             self.end_timeframe(self.sinks)
             iteration = iteration + 1
