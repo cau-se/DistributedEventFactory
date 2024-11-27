@@ -6,7 +6,7 @@ from distributed_event_factory.core.abstract_datasource import DataSource
 from distributed_event_factory.core.datasource_id import DataSourceId
 from distributed_event_factory.provider.eventselection.event_selection_provider import EventSelectionProvider
 
-class GenericDataSource(DataSource):
+class  GenericDataSource(DataSource):
     def __init__(
             self,
             data_source_id: DataSourceId,

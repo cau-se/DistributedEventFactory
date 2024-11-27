@@ -11,10 +11,10 @@ if __name__ == '__main__':
     if "local" in sys.argv:
         load_dotenv()
 
-    datasource = os.environ["DATASOURCE"]
-    sink = os.environ["SINK"]
-    simulation = os.environ["SIMULATION"]
-    content_root = os.environ["ROOT"]
+    datasource = "assemblyline"    #os.environ["DATASOURCE"]
+    sink = "console-sink"          #os.environ["SINK"]
+    simulation = "countbased"      #os.environ["SIMULATION"]
+    content_root = "C:\\Users\Jan Peter Buttgereit\Documents\\Uni\Bachelor2\DistributedEventFactory"   #os.environ["ROOT"]
 
     print("Running with config:")
     print(f"datasource directory: {datasource}")
