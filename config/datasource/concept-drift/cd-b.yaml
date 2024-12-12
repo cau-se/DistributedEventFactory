@@ -1,0 +1,11 @@
+kind: datasource
+name: "B"
+spec:
+  name: "B"
+  group: "concept-drift"
+  selection: genericProbability
+  distribution: [1.0]
+  eventData:
+    - activity: "B"
+      transition: "D"
+      duration: 1

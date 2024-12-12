@@ -15,6 +15,6 @@ jobs:
         username: ${{ secrets.DOCKERHUB_USERNAME }}
         password: ${{ secrets.DOCKERHUB_PASSWORD }}
     - name: Build image
-      run: docker build . --file Dockerfile --tag hendrikreiter/distributed_event_factory:0.2.0
+      run: docker build . --file Dockerfile --tag hendrikreiter/distributed_event_factory:0.2.1
     - name: Push image
-      run: docker push hendrikreiter/distributed_event_factory:0.2.0
+      run: docker push hendrikreiter/distributed_event_factory:0.2.1
