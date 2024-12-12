@@ -1,0 +1,16 @@
+kind: datasource
+name: "A"
+spec:
+  name: "A"
+  group: "concept-drift"
+  selection: driftingProbability
+  startDistribution: [ 0.0, 1.0 ]
+  endDistribution: [ 1.0, 0.0 ]
+  steps: 30
+  eventData:
+    - activity: "A"
+      transition: "B"
+      duration: 1
+    - activity: "A"
+      transition: "C"
+      duration: 1
