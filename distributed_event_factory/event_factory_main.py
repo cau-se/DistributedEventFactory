@@ -1,6 +1,5 @@
 import os
 import sys
-from time import sleep
 
 from dotenv import load_dotenv
 from distributed_event_factory.event_factory import EventFactory
@@ -27,4 +26,3 @@ if __name__ == '__main__':
      .add_file(f"{content_root}/config/simulation/{simulation}.yaml")
      .add_file(f"{content_root}/config/sink/{sink}.yaml")
      ).run()
-    sleep(10)

@@ -24,7 +24,7 @@ class DriftingProbabilityEventSelectionProvider(EventSelectionProvider):
         if r < 1:
             current_probability_distribution = []
             for i in range(len(self.starting_probability_distribution)):
-                current_probability_distribution.append(r * self.starting_probability_distribution[i] + (1-r) * self.end_probability_distribution[i])
+                current_probability_distribution.append((1-r) * self.starting_probability_distribution[i] + r * self.end_probability_distribution[i])
         else:
             current_probability_distribution = self.end_probability_distribution
 
