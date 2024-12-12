@@ -33,6 +33,6 @@ if __name__ == '__main__':
 
     (event_factory
      .add_directory(f"{content_root}/config/datasource/{datasource}")
-     .add_file(f"{content_root}/config/simulation/{simulation}.yaml")
-     .add_file(f"{content_root}/config/sink/{sink}.yaml")
+     .add_file(f"{content_root}/config/simulation/{simulation}")
+     .add_file(f"{content_root}/config/sink/{sink}")
      ).run()

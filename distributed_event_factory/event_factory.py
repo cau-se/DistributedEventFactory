@@ -51,7 +51,8 @@ class EventFactory:
 
     def add_directory(self, directory):
         for filename in os.listdir(directory):
-            self.add_file(directory + "/" + filename)
+            if not filename.startswith(".."):
+                self.add_file(directory + "/" + filename)
         return self
 
     def add_sink(self, name, sink: Sink):
