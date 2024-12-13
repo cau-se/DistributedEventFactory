@@ -5,6 +5,8 @@ from dotenv import load_dotenv
 from distributed_event_factory.event_factory import EventFactory
 
 if __name__ == '__main__':
+    if "local" in sys.argv:
+        load_dotenv()
     datasource = os.environ["DATASOURCE"]
     sink = os.environ["SINK"]
     simulation = os.environ["SIMULATION"]
@@ -12,8 +14,6 @@ if __name__ == '__main__':
 
     event_factory = EventFactory()
 
-    if "local" in sys.argv:
-        load_dotenv()
 
     print("Running with config:")
     print(f"datasource directory: {datasource}")

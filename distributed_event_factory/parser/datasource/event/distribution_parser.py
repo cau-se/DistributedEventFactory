@@ -10,4 +10,4 @@ class DistributionParser(Parser):
         pass
 
     def parse(self, config):
-        return config
+        return [float(element) for element in config]
