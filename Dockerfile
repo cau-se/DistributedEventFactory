@@ -22,5 +22,5 @@ RUN --mount=type=cache,target=/root/.cache/pip \
     python -m pip install -r requirements.txt
 
 USER appuser
-COPY . .
+COPY distributed_event_factory distributed_event_factory
 CMD python3 distributed_event_factory/event_factory_main.py
