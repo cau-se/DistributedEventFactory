@@ -1,3 +1,4 @@
+from distributed_event_factory.parser.base.constant_count_parser import ConstantCountParser
 from distributed_event_factory.parser.datasource.event.activity.activity_parser import ActivityParser
 from distributed_event_factory.parser.datasource.event.duration.constant_duration_parser import \
     ConstantDurationParser
@@ -37,12 +38,16 @@ from distributed_event_factory.parser.sink.kafka.partition_parser import Partiti
 from distributed_event_factory.parser.sink.print_console_sink_parser import PrintConsoleSinkParser
 from distributed_event_factory.parser.sink.sink_parser import SinkParser
 from distributed_event_factory.parser.sink.ui_sink_parser import UiSinkParser
+from distributed_event_factory.provider.data.constant_count_provider import ConstantCountProvider
 from distributed_event_factory.provider.data.increasing_case import IncreasingCaseIdProvider
 
 
 class ParserRegistry:
 
     def __init__(self):
+        # Count
+        self.constant_count_parser = ConstantCountParser()
+
         # Partitioning
         self.constant_partition_parser = ConstantPartitionParser()
         self.case_partition_parser = CasePartitionParser()
@@ -125,15 +130,21 @@ class ParserRegistry:
 
         # Simulation
         self.count_based_simulation: CountBasedSimulationParser = (CountBasedSimulationParser()
-                                                                   .add_dependency("caseId", self.case_id_parser))
+                                                                   .add_dependency("caseId", self.case_id_parser)
+                                                                   .add_dependency("maxConcurrentCases",
+                                                                                   self.constant_count_parser))
 
         self.load_test_simulation: LoadTestSimulationParser = (LoadTestSimulationParser()
                                                                .add_dependency("load", self.load_parser)
-                                                               .add_dependency("caseId", self.case_id_parser))
+                                                               .add_dependency("caseId", self.case_id_parser)
+                                                               .add_dependency("maxConcurrentCases",
+                                                                               self.constant_count_parser))
 
         self.stream_simulation: StreamSimulationParser = (StreamSimulationParser()
                                                           .add_dependency("load", self.load_parser)
-                                                          .add_dependency("caseId", self.case_id_parser))
+                                                          .add_dependency("caseId", self.case_id_parser)
+                                                          .add_dependency("maxConcurrentCases",
+                                                                          self.constant_count_parser))
 
         self.simulation_parser: SimulationParser = (SimulationParser()
                                                     .add_dependency("stream", self.stream_simulation)

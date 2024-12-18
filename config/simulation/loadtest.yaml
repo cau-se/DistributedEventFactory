@@ -6,6 +6,7 @@ spec:
   caseId: increasing
   genTimeframesTilStart: 10
   timeframe: 1000
+  maxConcurrentCases: 5
   load:
     loadBehavior: constant
     load: 1000

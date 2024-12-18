@@ -3,6 +3,7 @@ name: streamSimulation
 spec:
   type: stream
   caseId: increasing
+  maxConcurrentCases: 5
   load:
     loadBehavior: constant
     load: 10

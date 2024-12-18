@@ -10,6 +10,7 @@ class PrintConsole(Sink):
         self.id = id
 
     def send(self, event: Event) -> None:
+        #print(event.timestamp)
         print("Sensor " + event.node + ": " + str(event))
 
     def start_timeframe(self):

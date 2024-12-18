@@ -1,22 +1,26 @@
 from typing import Dict
 from distributed_event_factory.core.datasource import DataSource
 from distributed_event_factory.provider.data.case_provider import CaseIdProvider
+from distributed_event_factory.provider.data.count_provider import CountProvider
 from distributed_event_factory.provider.load.load_provider import LoadProvider
 from distributed_event_factory.provider.sink.http.http_sink import LoadTestHttpSink
 from distributed_event_factory.simulation.abstract_simulation import Simulation
 from distributed_event_factory.simulation.process_simulation import ProcessSimulator
+
 
 class LoadTestSimulation(Simulation):
     def __init__(
             self,
             load_provider: LoadProvider,
             case_id_provider: CaseIdProvider,
-            generated_timeframes_until_start: int
+            generated_timeframes_until_start: int,
+            max_concurrent_cases: CountProvider
     ):
         super().__init__()
         self.case_id_provider = case_id_provider
         self.load_provider = load_provider
         self.generated_timeframes_until_start = generated_timeframes_until_start
+        self.max_concurrent_cases = max_concurrent_cases
 
     def start_timeframe(self, sinks):
         for sink in sinks:
@@ -33,11 +37,13 @@ class LoadTestSimulation(Simulation):
             for s in sinks[sink]:
                 s.start()
 
-    def run_simulation(self, data_sources: Dict[str, DataSource], sinks: Dict[str, LoadTestHttpSink], hook = lambda: None):
+    def run_simulation(self, data_sources: Dict[str, DataSource], sinks: Dict[str, LoadTestHttpSink],
+                       hook=lambda: None):
         self.setup_sinks(sinks)
         process_simulator = ProcessSimulator(
             case_id_provider=self.case_id_provider,
-            data_sources=data_sources
+            data_sources=data_sources,
+            max_concurrent_cases=self.max_concurrent_cases
         )
         iteration = 0
         while True:
