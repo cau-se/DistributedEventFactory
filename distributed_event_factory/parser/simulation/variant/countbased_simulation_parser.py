@@ -13,5 +13,6 @@ class CountBasedSimulationParser(Parser):
     def parse(self, config):
         return CountBasedSimulation(
             simulation_steps=config["steps"],
-            case_id_provider=self.dependencies["caseId"].parse(config["caseId"])
+            case_id_provider=self.dependencies["caseId"].parse(config["caseId"]),
+            max_concurrent_cases=self.dependencies["maxConcurrentCases"].parse(config["maxConcurrentCases"])
         )

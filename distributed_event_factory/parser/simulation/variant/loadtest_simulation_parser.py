@@ -14,5 +14,6 @@ class LoadTestSimulationParser(Parser):
         return LoadTestSimulation(
             case_id_provider=self.dependencies["caseId"].parse(config["caseId"]),
             load_provider=self.dependencies["load"].parse(config["load"]),
-            generated_timeframes_until_start=config["genTimeframesTilStart"]
+            generated_timeframes_until_start=config["genTimeframesTilStart"],
+            max_concurrent_cases=self.dependencies["maxConcurrentCases"].parse(config["maxConcurrentCases"])
         )
