@@ -21,25 +21,26 @@ class LoadTestSimulation(Simulation):
         self.load_provider = load_provider
         self.generated_timeframes_until_start = generated_timeframes_until_start
         self.max_concurrent_cases = max_concurrent_cases
+        self.sink = []
 
     def start_timeframe(self, sinks):
-        for sink in sinks:
-            for s in sinks[sink]:
-                s.start_timeframe()
+        for sink in self.sink:
+           sink.start_timeframe()
 
     def end_timeframe(self, sinks):
-        for sink in sinks:
-            for s in sinks[sink]:
-                s.end_timeframe()
+        for sink in self.sink:
+           sink.end_timeframe()
 
     def start_simulation(self, sinks):
-        for sink in sinks:
-            for s in sinks[sink]:
-                s.start()
+        for sink in self.sink:
+           sink.start()
 
-    def run_simulation(self, data_sources: Dict[str, DataSource], sinks: Dict[str, LoadTestHttpSink],
+    def run_simulation(self, data_sources: Dict[str, DataSource], datasource_sink_mapping: Dict[str, LoadTestHttpSink],
                        hook=lambda: None):
-        self.setup_sinks(sinks)
+        self.setup_datasource_sink_mapping(datasource_sink_mapping)
+        for sink in datasource_sink_mapping:
+            self.sink.append(datasource_sink_mapping[sink])
+
         process_simulator = ProcessSimulator(
             case_id_provider=self.case_id_provider,
             data_sources=data_sources,
@@ -48,10 +49,10 @@ class LoadTestSimulation(Simulation):
         iteration = 0
         while True:
             if iteration == self.generated_timeframes_until_start:
-                self.start_simulation(self.sinks)
-            self.start_timeframe(self.sinks)
+                self.start_simulation(self.datasource_sink_mapping)
+            self.start_timeframe(self.datasource_sink_mapping)
             for _ in range(int(self.load_provider.get_load_value())):
                 self.send_event(process_simulator.simulate())
                 hook()
-            self.end_timeframe(self.sinks)
+            self.end_timeframe(self.datasource_sink_mapping)
             iteration = iteration + 1
