@@ -14,7 +14,7 @@ class CountBasedSimulation(Simulation):
         self.max_concurrent_cases = max_concurrent_cases
 
     def run_simulation(self, datasources, sinks, hook=lambda: None):
-        self.setup_sinks(sinks)
+        self.setup_datasource_sink_mapping(sinks)
         process_simulator = ProcessSimulator(
             case_id_provider=self.case_id_provider,
             data_sources=datasources,

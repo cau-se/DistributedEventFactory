@@ -11,9 +11,7 @@ if __name__ == '__main__':
     sink = os.environ["SINK"]
     simulation = os.environ["SIMULATION"]
     content_root = os.environ["ROOT"]
-
     event_factory = EventFactory()
-
 
     print("Running with config:")
     print(f"datasource directory: {datasource}")

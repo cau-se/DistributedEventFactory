@@ -9,4 +9,4 @@ spec:
   maxConcurrentCases: 5
   load:
     loadBehavior: constant
-    load: 1000
+    load: 10
