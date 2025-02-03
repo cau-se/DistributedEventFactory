@@ -45,7 +45,7 @@ if __name__ == '__main__':
     print(f"Content root: {content_root}")
 
     (event_factory
-     .build_sources_with_var()
+     .build_sources_with_var(10)
      .add_file(f"{content_root}/config/simulation/{simulation}.yaml")
      .add_file(f"{content_root}/config/sink/{sink}.yaml")
      ).run()

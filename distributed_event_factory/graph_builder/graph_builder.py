@@ -15,8 +15,11 @@ class GraphBuilder:
         self.temp_name_list = ["A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","V","W","X","Y","Z","A1","B1","C1","D1","E1","F1","G1","H1","I1","J1","K1","L1","M1","N1","O1","P1","Q1","R1","S1","T1","U1","V1","W1","X1","Y1","Z1"]
         self.end_nodes = []
 
+    # requires the wanted amount of variations as int
     # returns tuple of (graph: {"name":Node}, number of variations: int})
-    def build_graph_var(self):
+    def build_graph_var(self, max_var):
+        self.max_var = max_var
+        self.max_length = -1
         self.graph["<start>"] = Node("<start>", 0, 1)
         possibilities = ["straight", "split", "join"]
         probabilities = [self.probability_straight, self.probability_split, self.probability_join]
@@ -38,8 +41,10 @@ class GraphBuilder:
 
         return self.graph, self.total_var
 
-    #returns tuple of (graph: {"name":Node}, number of variations: int})
-    def build_graph_length(self):
+    #requires the wanted length as int
+    # returns tuple of (graph: {"name":Node}, number of variations: int})
+    def build_graph_length(self, max_length):
+        self.max_length = max_length
         self.active_children.append("<start>")
         self.graph["<start>"] = Node("<start>", 0, 1)
         possibilities = ["straight", "split", "join"]

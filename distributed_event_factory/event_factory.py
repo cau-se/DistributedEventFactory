@@ -90,9 +90,9 @@ class EventFactory:
                 self.add_sink(name, parsed_object)
         return self
 
-    def build_sources_with_var(self):
+    def build_sources_with_var(self, total_var):
         builder = GraphBuilder()
-        graph, variations = builder.build_graph_var()
+        graph, variations = builder.build_graph_var(total_var)
         # prints for development:
         print("The datasources are build like:")
         for node in graph:
@@ -102,9 +102,9 @@ class EventFactory:
         self.graph_to_datasource(graph)
         return self
 
-    def build_sources_with_length(self):
+    def build_sources_with_length(self, max_length):
         builder = GraphBuilder()
-        graph, variations = builder.build_graph_length()
+        graph, variations = builder.build_graph_length(max_length)
 
         #prints for development:
         print("The datasources are build like:")
