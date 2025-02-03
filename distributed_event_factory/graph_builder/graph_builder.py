@@ -7,15 +7,41 @@ class GraphBuilder:
         self.probability_straight = 0.4
         self.probability_split = 0.3
         self.probability_join = 0.3
-        self.max_length = 5
+        self.max_length = -1
+        self.max_var = 10
+        self.total_var = 0
         self.active_children = []
         self.graph = {}
         self.temp_name_list = ["A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","V","W","X","Y","Z","A1","B1","C1","D1","E1","F1","G1","H1","I1","J1","K1","L1","M1","N1","O1","P1","Q1","R1","S1","T1","U1","V1","W1","X1","Y1","Z1"]
         self.end_nodes = []
 
-    def build_graph(self):
-        self.active_children.append("start")
-        self.graph["start"] = Node("start", 0, 1)
+    # returns tuple of (graph: {"name":Node}, number of variations: int})
+    def build_graph_var(self):
+        self.graph["<start>"] = Node("<start>", 0, 1)
+        possibilities = ["straight", "split", "join"]
+        probabilities = [self.probability_straight, self.probability_split, self.probability_join]
+
+        while self.total_var < self.max_var:
+            self.active_children.append("<start>")
+            self.total_var += 1
+            while len(self.active_children) > 0:
+                action = random.choice(possibilities, p=probabilities)
+                match action:
+                    case "straight":
+                        self.straight()
+                    case "split":
+                        self.split()
+                    case "join":
+                        self.join()
+                    case _:
+                        print("Something went horribly wrong in the switch statement of the graph_builder")
+
+        return self.graph, self.total_var
+
+    #returns tuple of (graph: {"name":Node}, number of variations: int})
+    def build_graph_length(self):
+        self.active_children.append("<start>")
+        self.graph["<start>"] = Node("<start>", 0, 1)
         possibilities = ["straight", "split", "join"]
         probabilities = [self.probability_straight, self.probability_split, self.probability_join]
         # print("TEST1:" + self.graph.__str__())
@@ -45,14 +71,28 @@ class GraphBuilder:
     def split (self):
         active_node = self.active_children.pop(0)
 
-        if self.graph[active_node].get_length() > self.max_length:
-            print("Error: Graph too long")
-        elif self.graph[active_node].get_length() == self.max_length:
-            self.end_nodes.append(active_node)
+        #this case is worked on, if the length is restricted
+        if self.max_length > -1:
+            if self.graph[active_node].get_length() > self.max_length:
+                print("Error: Graph too long")
+            elif self.graph[active_node].get_length() == self.max_length:
+                self.end_nodes.append(active_node)
+            else:
+                #in case of allowing more than 2 branches, just loop the spawn child the amount you want
+                self.spawn_child([active_node])
+                self.spawn_child([active_node])
+
+        #this case is worked on, if the variations are restricted
         else:
-            #in case of allowing more than 2 branches, just loop the spawn child the amount you want
-            self.spawn_child([active_node])
-            self.spawn_child([active_node])
+            #in case of allowing more than 2 branches, just multiply the variations by the given number of branches
+            if self.total_var + self.graph[active_node].get_variations() > self.max_var:
+                self.end_nodes.append(active_node)
+            else:
+                self.spawn_child([active_node])
+                self.spawn_child([active_node])
+                self.total_var += self.graph[active_node].get_variations()
+
+
 
     #for now only joins up to 2 nodes, by creating a node they are joining in, if possible
     def join(self):
@@ -62,11 +102,15 @@ class GraphBuilder:
 
         while len(active_nodes) < number_of_joins and len(self.active_children) > 0:
             active_nodes.append(self.active_children.pop(0))
-            if self.graph[active_nodes[len(active_nodes) - 1]].get_length() > self.max_length:
-                print("Error: Graph too long")
-            elif self.graph[active_nodes[len(active_nodes) - 1]].get_length() == self.max_length:
-                self.end_nodes.append(active_nodes[len(active_nodes) - 1])
-                active_nodes.pop()
+            #executed in case of length
+            if self.max_length > -1:
+                if self.graph[active_nodes[len(active_nodes) - 1]].get_length() > self.max_length:
+                    print("Error: Graph too long")
+                elif self.graph[active_nodes[len(active_nodes) - 1]].get_length() == self.max_length:
+                    self.end_nodes.append(active_nodes[len(active_nodes) - 1])
+                    active_nodes.pop()
+
+
 
         if len(active_nodes) < number_of_joins:
             active_nodes.reverse()
@@ -80,10 +124,15 @@ class GraphBuilder:
     def straight(self):
         active_node = self.active_children.pop(0)
 
-        if self.graph[active_node].get_length() > self.max_length:
-            print("Error: Graph too long")
-        elif self.graph[active_node].get_length() == self.max_length:
-            self.end_nodes.append(active_node)
+        #executed in case of length
+        if self.max_length > -1:
+            if self.graph[active_node].get_length() > self.max_length:
+                print("Error: Graph too long")
+            elif self.graph[active_node].get_length() == self.max_length:
+                self.end_nodes.append(active_node)
+            else:
+                self.spawn_child([active_node])
+        #executed in case of var
         else:
             self.spawn_child([active_node])
 

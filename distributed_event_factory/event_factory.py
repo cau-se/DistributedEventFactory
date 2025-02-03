@@ -1,6 +1,8 @@
 import os
 import yaml
 
+from distributed_event_factory.core.datasource import GenericDataSource
+from distributed_event_factory.core.datasource_id import DataSourceId
 from distributed_event_factory.core.end_datasource import EndDataSource
 from distributed_event_factory.parser.datasource.event.activity.activity_parser import ActivityParser
 from distributed_event_factory.parser.datasource.event.transition.transition_parser import TransitionParser
@@ -8,7 +10,15 @@ from distributed_event_factory.parser.parser_registry import ParserRegistry
 from distributed_event_factory.parser.simulation.case.case_id_parser import CaseIdParser
 from distributed_event_factory.parser.simulation.load.load_parser import LoadParser
 from distributed_event_factory.parser.sink.sink_parser import SinkParser
+from distributed_event_factory.provider.activity.activity_provider import ConstantActivityProvider
+from distributed_event_factory.provider.event.event_provider import CustomEventDataProvider
+from distributed_event_factory.provider.eventselection.event_selection_provider import EventSelectionProvider
+from distributed_event_factory.provider.eventselection.generic_probability_event_selection_provider import \
+    GenericProbabilityEventSelectionProvider
 from distributed_event_factory.provider.sink.sink_provider import Sink
+from distributed_event_factory.graph_builder.graph_builder import GraphBuilder
+from distributed_event_factory.provider.transition.duration.constant_duration import ConstantDurationProvider
+from distributed_event_factory.provider.transition.transition.constant_transition import ConstantTransitionProvider
 
 
 class EventFactory:
@@ -78,6 +88,48 @@ class EventFactory:
                 self.add_datasource(name, parsed_object)
             elif kind == "sink":
                 self.add_sink(name, parsed_object)
+        return self
+
+    def build_sources_with_var(self):
+        builder = GraphBuilder()
+        graph, variations = builder.build_graph_var()
+        # prints for development:
+        print("The datasources are build like:")
+        for node in graph:
+            print(graph[node].__str__())
+        print("The Graph has " + str(variations) + " variations")
+
+        self.graph_to_datasource(graph)
+        return self
+
+    def build_sources_with_length(self):
+        builder = GraphBuilder()
+        graph, variations = builder.build_graph_length()
+
+        #prints for development:
+        print("The datasources are build like:")
+        for node in graph:
+            print(graph[node].__str__())
+        print("The Graph has " + str(variations) + " variations")
+
+        self.graph_to_datasource(graph)
+        return self
+
+    def graph_to_datasource(self, graph):
+        for node in graph:
+            child_events = []
+            for child in graph[node].get_children():
+                child_events.append( CustomEventDataProvider(ConstantDurationProvider(3),ConstantActivityProvider("testing"),ConstantTransitionProvider(child)))
+            # creation of event provider
+            if len(child_events) == 0:
+                child_events.append(CustomEventDataProvider(ConstantDurationProvider(3),ConstantActivityProvider("ending"),ConstantTransitionProvider("<end>")))
+            prob = 1 / len(child_events)
+            prob_list = len(child_events) * [prob]
+            event_sel_provider = GenericProbabilityEventSelectionProvider(prob_list, child_events)
+
+
+            new_datasource = GenericDataSource(DataSourceId(node),"Test",event_provider=event_sel_provider)
+            self.add_datasource(node , new_datasource)
         return self
 
     def run(self, hook=lambda: None):
