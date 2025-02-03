@@ -119,7 +119,7 @@ class EventFactory:
         for node in graph:
             child_events = []
             for child in graph[node].get_children():
-                child_events.append( CustomEventDataProvider(ConstantDurationProvider(3),ConstantActivityProvider("testing"),ConstantTransitionProvider(child)))
+                child_events.append( CustomEventDataProvider(ConstantDurationProvider(3),ConstantActivityProvider(node + child),ConstantTransitionProvider(child)))
             # creation of event provider
             if len(child_events) == 0:
                 child_events.append(CustomEventDataProvider(ConstantDurationProvider(3),ConstantActivityProvider("ending"),ConstantTransitionProvider("<end>")))
