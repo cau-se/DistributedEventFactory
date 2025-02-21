@@ -34,9 +34,9 @@ if __name__ == '__main__':
         load_dotenv()
 
     #datasource = "assemblyline"  # os.environ["DATASOURCE"]
-    sink = "console-sink"  # os.environ["SINK"]
+    sink = "kafka-sink"  # os.environ["SINK"]
     simulation = "countbased"  # os.environ["SIMULATION"]
-    content_root = "C:\\Users\Jan Peter Buttgereit\Documents\\Uni\Bachelor2\DistributedEventFactory"  # os.environ["ROOT"]
+    content_root = "." #"C:\\Users\Jan Peter Buttgereit\Documents\\Uni\Bachelor2\DistributedEventFactory"  # os.environ["ROOT"]
 
     print("Running with config:")
     print(f"datasource generated automatically")
