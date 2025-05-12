@@ -35,6 +35,7 @@ from distributed_event_factory.parser.sink.kafka.case_partition_parser import Ca
 from distributed_event_factory.parser.sink.kafka.constant_partition_parser import ConstantPartitionParser
 from distributed_event_factory.parser.sink.kafka.kafka_sink_parser import KafkaSinkParser
 from distributed_event_factory.parser.sink.kafka.partition_parser import PartitionParser
+from distributed_event_factory.parser.sink.load_test_http_sink_parser import LoadTestHttpSinkParser
 from distributed_event_factory.parser.sink.print_console_sink_parser import PrintConsoleSinkParser
 from distributed_event_factory.parser.sink.sink_parser import SinkParser
 from distributed_event_factory.parser.sink.ui_sink_parser import UiSinkParser
@@ -59,10 +60,12 @@ class ParserRegistry:
         self.kafka_sink_parser = (KafkaSinkParser()).add_dependency("partition", self.partition_parser)
         self.console_sink_parser = (PrintConsoleSinkParser())
         self.ui_sink_parser = (UiSinkParser())
+        self.load_test_parser = (LoadTestHttpSinkParser())
         self.http_sink_parser = (HttpSinkParser())
         self.sink_parser = (SinkParser()
                             .add_dependency("console", self.console_sink_parser)
                             .add_dependency("ui", self.ui_sink_parser)
+                            .add_dependency("loadtest", self.load_test_parser)
                             .add_dependency("http", self.http_sink_parser)
                             .add_dependency("kafka", self.kafka_sink_parser))
         ##########

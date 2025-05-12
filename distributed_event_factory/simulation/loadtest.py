@@ -3,7 +3,7 @@ from distributed_event_factory.core.datasource import DataSource
 from distributed_event_factory.provider.data.case_provider import CaseIdProvider
 from distributed_event_factory.provider.data.count_provider import CountProvider
 from distributed_event_factory.provider.load.load_provider import LoadProvider
-from distributed_event_factory.provider.sink.http.http_sink import LoadTestHttpSink
+from distributed_event_factory.provider.sink.loadtest.loadtest_sink import LoadTestHttpSink
 from distributed_event_factory.simulation.abstract_simulation import Simulation
 from distributed_event_factory.simulation.process_simulation import ProcessSimulator
 
