@@ -1,7 +1,7 @@
 kind: datasource
-name: "Order"
+name: "<start>"
 spec:
-  name: "Order"
+  name: "<start>"
   group: "factory"
   selection: genericProbability
   distribution: [1.0]

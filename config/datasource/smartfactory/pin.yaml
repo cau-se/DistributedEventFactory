@@ -1,5 +1,0 @@
-kind: object
-name: "pin"
-spec:
-  type: "smallComponent"
-  input: "[[1,order]]"
