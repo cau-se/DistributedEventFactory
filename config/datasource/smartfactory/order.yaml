@@ -1,0 +1,5 @@
+kind: object
+name: "order"
+spec:
+  type: "order"
+  input: "[[]]"

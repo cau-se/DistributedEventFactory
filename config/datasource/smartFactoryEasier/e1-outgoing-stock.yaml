@@ -1,0 +1,27 @@
+kind: datasource
+name: "OutgoingStock"
+spec:
+  name: "OutgoingStock"
+  group: "factory"
+  selection: genericProbability
+  distribution: [1.0]
+  input:
+    - object:
+      name: "order"
+      number: 1
+  eventData:
+    - activities:
+        - activity: "Sent to sawing machine"
+          transition: "SawingBar"
+          duration: 3
+          output:
+            - object:
+              name: "barResource"
+              number: 1
+        - activity: "Sent to assembly station"
+          transition: "Assembly"
+          duration: 2
+          output:
+            - object:
+              name: "screw"
+              number: 13

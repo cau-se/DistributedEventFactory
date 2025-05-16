@@ -1,0 +1,5 @@
+kind: object
+name: "woodenShelf"
+spec:
+  type: "product"
+  input: "[[10,bar],[5,board],[13,screw],[1,bolt],[10,pin]]"

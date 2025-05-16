@@ -1,0 +1,40 @@
+ind: datasource
+name: "Assembly"
+spec:
+  name: "Assembly"
+  group: "factory"
+  selection: genericProbability
+  distribution: [ 0.8, 0.1, 0.1 ]
+  input:
+    - object:
+      name: "bar"
+      number: 10
+    - object:
+      name: "board"
+      number: 5
+    - object:
+      name: "screw"
+      number: 13
+    - object:
+      name: "bolt"
+      number: 1
+    - object:
+      name: "pin"
+      number: 10
+  eventData:
+    - activities:
+      - activity: "Assembling completed"
+        duration: 10
+        transition: "QualityControl"
+        output:
+          - object:
+            name: "woodShelf"
+            number: 1
+    - activities:
+      - activity: "Overheating"
+        transition: "<end>"
+        duration: 2
+    - activities:
+      - activity: "Item broke"
+        transition: "<end>"
+        duration: 1
