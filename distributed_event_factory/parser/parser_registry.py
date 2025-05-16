@@ -16,6 +16,7 @@ from distributed_event_factory.parser.datasource.event.selection.ordered_event_s
 from distributed_event_factory.parser.datasource.event.selection.uniform_event_selection import \
     UniformEventSelectionParser
 from distributed_event_factory.parser.datasource.event.transition.transition_parser import TransitionParser
+from distributed_event_factory.parser.object.object_source_parser import ObjectSourceParser
 from distributed_event_factory.parser.simulation.case.case_id_parser import CaseIdParser
 from distributed_event_factory.parser.datasource.data_source_parser import DataSourceParser
 from distributed_event_factory.parser.datasource.event.distribution_parser import DistributionParser
@@ -112,6 +113,9 @@ class ParserRegistry:
         self.datasource_parser = (DataSourceParser()
                                   .add_dependency("eventData", self.event_selection_parser))
 
+        # Input
+        self.object_source_parser = ObjectSourceParser()
+
         ##########
         # Case
         self.increasing_case_id_parser = IncreasingCaseIdProvider()
@@ -155,4 +159,5 @@ class ParserRegistry:
         self.kind_parser: KindParser = (KindParser()
                                         .add_dependency("sink", self.sink_parser)
                                         .add_dependency("datasource", self.datasource_parser)
-                                        .add_dependency("simulation", self.simulation_parser))
+                                        .add_dependency("simulation", self.simulation_parser)
+                                        .add_dependency("object", self.object_source_parser))

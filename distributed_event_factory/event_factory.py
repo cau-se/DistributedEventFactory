@@ -4,6 +4,7 @@ import yaml
 from distributed_event_factory.core.end_datasource import EndDataSource
 from distributed_event_factory.parser.datasource.event.activity.activity_parser import ActivityParser
 from distributed_event_factory.parser.datasource.event.transition.transition_parser import TransitionParser
+from distributed_event_factory.parser.object.object_source_parser import ObjectSourceParser
 from distributed_event_factory.parser.parser_registry import ParserRegistry
 from distributed_event_factory.parser.simulation.case.case_id_parser import CaseIdParser
 from distributed_event_factory.parser.simulation.load.load_parser import LoadParser
@@ -16,6 +17,7 @@ class EventFactory:
         self.sinks = dict()
         self.simulations = dict()
         self.datasources = dict()
+        self.objects = dict()
         self.datasources["<end>"] = EndDataSource()
         self.parser = ParserRegistry()
 
@@ -43,11 +45,17 @@ class EventFactory:
         self.parser.probability_selection_parser.add_dependency(key, parser)
         return self
 
+    def add_object_source_parser(self, key: str, parser: ObjectSourceParser):
+        self.parser.object_source_parser.add_dependency(key, parser)
+
     def get_datasource(self, datasource_key):
         return self.datasources[datasource_key]
 
     def get_sink(self, sink_key):
         return self.sinks[sink_key]
+
+    def get_object_source(self, object_key):
+        return self.objects[object_key]
 
     def add_directory(self, directory):
         for filename in os.listdir(directory):
@@ -67,6 +75,10 @@ class EventFactory:
         self.simulations[name] = simulation
         return self
 
+    def add_object(self, name, object_source):
+        self.objects[name] = object_source
+        return self
+
     def add_file(self, filename):
         with open(filename) as file:
             configuration = yaml.safe_load(file)
@@ -79,6 +91,8 @@ class EventFactory:
                 self.add_datasource(name, parsed_object)
             elif kind == "sink":
                 self.add_sink(name, parsed_object)
+            elif kind == "object":
+                self.add_object(name, parsed_object)
         return self
 
     def run(self, hook=lambda: None):
