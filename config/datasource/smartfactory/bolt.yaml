@@ -1,0 +1,5 @@
+kind: object
+name: "bolt"
+spec:
+  type: "smallComponent"
+  input: "[[1,order]]"

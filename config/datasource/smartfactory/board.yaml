@@ -1,0 +1,5 @@
+kind: object
+name: "board"
+spec:
+  type: "resource"
+  input: "[[1,boardResource]]"

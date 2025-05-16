@@ -1,0 +1,20 @@
+kind: datasource
+name: "SandingBoard"
+spec:
+  name: "SandingBoard"
+  group: "factory"
+  selection: genericProbability
+  distribution: [1.0]
+  input:
+    - object:
+      name: "board"
+      number: 1
+  eventData:
+    - activities:
+      - activity: "Sanded Board"
+        transition: "Assembly"
+        duration: 5
+        output:
+          - object:
+            name: "board"
+            number: 1

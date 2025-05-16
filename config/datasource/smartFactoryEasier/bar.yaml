@@ -1,0 +1,5 @@
+kind: object
+name: "bar"
+spec:
+  type: "resource"
+  input: "[[1,barResource]]"

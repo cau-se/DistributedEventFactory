@@ -1,0 +1,7 @@
+kind: object
+name: "boardResource"
+spec:
+  type: "resource"
+  input: "[[1,order]]"
+  length: "5"
+  width: "5"

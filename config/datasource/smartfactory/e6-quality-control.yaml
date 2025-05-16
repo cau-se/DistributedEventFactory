@@ -1,0 +1,35 @@
+kind: datasource
+name: "QualityControl"
+spec:
+  name: "QualityControl"
+  group: "factory"
+  selection: genericProbability
+  distribution: [ 0.3, 0.1, 0.6 ]
+  input:
+    - object:
+      name: "woodShelf"
+      number: 1
+  eventData:
+    - activities:
+      - activity: "Item Needs Corrections"
+        transition: "Assembly"
+        duration: 2
+        output:
+          - object:
+            name: "woodShelf"
+            number: 1
+    - activities:
+      - activity: "Quality Insufficient"
+        transition: "<end>"
+        duration: 2
+    - activities:
+      - activity: "Quality check passed"
+        transition: "Shipping"
+        duration:
+          type: uniform
+          lowerBound: 5
+          upperBound: 10
+        output:
+          - object:
+            name: "woodShelf"
+            number: 1
