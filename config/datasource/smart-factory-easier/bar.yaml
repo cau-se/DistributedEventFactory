@@ -1,5 +1,8 @@
 kind: object
 name: "bar"
 spec:
+  name: "bar"
   type: "resource"
   input: "[[1,barResource]]"
+  length: ""
+  width: ""

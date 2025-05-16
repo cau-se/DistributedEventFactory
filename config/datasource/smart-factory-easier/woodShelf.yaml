@@ -1,5 +1,8 @@
 kind: object
 name: "woodenShelf"
 spec:
+  name: "woodenShelf"
   type: "product"
   input: "[[4,bar],[13,screw]]"
+  length: ""
+  width: ""

@@ -14,7 +14,7 @@ class ObjectSourceParser(Parser):
         return GenericObjectSource(
             object_id=ObjectId(config["name"]),
             object_type=config["type"],
-            input_objects=config["input"],
+            input_objects=config["input"].split(","),
             length=config["length"],
             width=config["width"]
         )
