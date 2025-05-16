@@ -82,7 +82,7 @@ from which datasource the events are emitted. A datasource can be also linked to
 ### Simulation
 A `simulation` runs the process through our datasources and emits their events via the sinks. The `type` `stream` creates
 a datastream. The `caseId` defines how the case-ids are generated. 
-In the `incresing` mode the caseId is an incrementally increased number. The load defines at which speed the simulation is run.
+In the `increasing` mode the caseId is an incrementally increased number. The load defines at which speed the simulation is run.
 In this case constantly 10 events per second are emitted.
 
 ```yaml
