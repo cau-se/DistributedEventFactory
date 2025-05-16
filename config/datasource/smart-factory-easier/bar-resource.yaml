@@ -1,6 +1,7 @@
 kind: object
 name: "barResource"
 spec:
+  name: "barResource"
   type: "resource"
   input: "[[1,order]]"
   length: "5"

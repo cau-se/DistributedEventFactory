@@ -1,5 +1,8 @@
 kind: object
 name: "screw"
 spec:
+  name: "screw"
   type: "smallComponent"
   input: "[[1,order]]"
+  length: ""
+  width: ""
