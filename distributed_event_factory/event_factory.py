@@ -10,6 +10,7 @@ from distributed_event_factory.parser.simulation.case.case_id_parser import Case
 from distributed_event_factory.parser.simulation.load.load_parser import LoadParser
 from distributed_event_factory.parser.sink.sink_parser import SinkParser
 from distributed_event_factory.provider.sink.sink_provider import Sink
+from parser.datasource.event.output.output_parser import OutputParser
 
 
 class EventFactory:
@@ -43,6 +44,10 @@ class EventFactory:
 
     def add_selection_parser(self, key: str, parser: SinkParser):
         self.parser.probability_selection_parser.add_dependency(key, parser)
+        return self
+
+    def add_output_parser(self, key: str, parser: OutputParser):
+        self.parser.output_parser.add_dependency(key, parser)
         return self
 
     def add_object_source_parser(self, key: str, parser: ObjectSourceParser):

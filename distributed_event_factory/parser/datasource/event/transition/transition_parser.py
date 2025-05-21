@@ -1,5 +1,6 @@
 from distributed_event_factory.parser.parser import Parser
-from distributed_event_factory.provider.transition.transition.constant_transition import ConstantTransitionProvider
+from distributed_event_factory.provider.transition.transition.constant_transition import ConstantTransitionProvider, \
+    ConstantTransitionProviderObjectCentric
 
 
 class TransitionParser(Parser):
@@ -13,4 +14,6 @@ class TransitionParser(Parser):
     def parse(self, config):
         if isinstance(config, str):
             return ConstantTransitionProvider(config)
+        elif isinstance(config, dict):
+            return ConstantTransitionProviderObjectCentric(config["name"], self.dependencies["output"].parse(config["output"]))
         return self.dependencies[config["type"]].parse(config)

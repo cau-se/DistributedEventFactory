@@ -39,8 +39,8 @@ from distributed_event_factory.parser.sink.kafka.partition_parser import Partiti
 from distributed_event_factory.parser.sink.print_console_sink_parser import PrintConsoleSinkParser
 from distributed_event_factory.parser.sink.sink_parser import SinkParser
 from distributed_event_factory.parser.sink.ui_sink_parser import UiSinkParser
-from distributed_event_factory.provider.data.constant_count_provider import ConstantCountProvider
 from distributed_event_factory.provider.data.increasing_case import IncreasingCaseIdProvider
+from parser.datasource.event.output.output_parser import OutputParser
 
 
 class ParserRegistry:
@@ -79,8 +79,11 @@ class ParserRegistry:
                                 .add_dependency("uniform", self.uniform_duration_parser)
                                 .add_dependency("gaussian", self.gaussian_duration_parser))
 
+        # Output objects
+        self.output_parser = OutputParser()
+
         # Transition
-        self.transition_parser = TransitionParser()
+        self.transition_parser = (TransitionParser().add_dependency("output", self.output_parser))
 
         # Event Data List
         self.event_data_list_parser = (EventDataListParser()
