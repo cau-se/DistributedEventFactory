@@ -3,6 +3,7 @@ import sys
 
 from dotenv import load_dotenv
 from distributed_event_factory.event_factory import EventFactory
+from hello_algorithm import SayHelloAlgorithm
 
 if __name__ == '__main__':
     if "local" in sys.argv:
@@ -23,4 +24,5 @@ if __name__ == '__main__':
      .add_directory(f"{content_root}/config/datasource/{datasource}")
      .add_file(f"{content_root}/config/simulation/{simulation}")
      .add_file(f"{content_root}/config/sink/{sink}")
+     #.add_sink("hello_algorithm", SayHelloAlgorithm(["GoodsDelivery"]))
      ).run()

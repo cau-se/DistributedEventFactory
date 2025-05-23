@@ -1,5 +1,7 @@
 from distributed_event_factory.parser.base.constant_count_parser import ConstantCountParser
 from distributed_event_factory.parser.datasource.event.activity.activity_parser import ActivityParser
+from distributed_event_factory.parser.datasource.event.activity.constant_activitiy_parser import ConstantActivityParser
+from distributed_event_factory.parser.datasource.event.activity.image_activity_parser import ImageActivityParser
 from distributed_event_factory.parser.datasource.event.duration.constant_duration_parser import \
     ConstantDurationParser
 from distributed_event_factory.parser.datasource.event.duration.duration_parser import DurationParser
@@ -39,7 +41,6 @@ from distributed_event_factory.parser.sink.load_test_http_sink_parser import Loa
 from distributed_event_factory.parser.sink.print_console_sink_parser import PrintConsoleSinkParser
 from distributed_event_factory.parser.sink.sink_parser import SinkParser
 from distributed_event_factory.parser.sink.ui_sink_parser import UiSinkParser
-from distributed_event_factory.provider.data.constant_count_provider import ConstantCountProvider
 from distributed_event_factory.provider.data.increasing_case import IncreasingCaseIdProvider
 
 
@@ -70,7 +71,11 @@ class ParserRegistry:
                             .add_dependency("kafka", self.kafka_sink_parser))
         ##########
         # Activity
-        self.activity_parser = ActivityParser()
+        self.constant_activity_parser = ConstantActivityParser()
+        self.image_activity_parser = ImageActivityParser()
+        self.activity_parser = (ActivityParser()
+                                .add_dependency("constant", self.constant_activity_parser)
+                                .add_dependency("image", self.image_activity_parser))
 
         # Duration
         self.constant_duration_parser = ConstantDurationParser()

@@ -12,6 +12,6 @@ class ActivityParser(Parser):
         return self
 
     def parse(self, config):
-        if isinstance(config, str):
-            return ConstantActivityProvider(config)
-        return self.dependencies[config["type"]].parse(config)
+        if "type" in config:
+            return self.dependencies[config["type"]].parse(config)
+        return ConstantActivityProvider(config)
