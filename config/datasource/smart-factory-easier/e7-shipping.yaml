@@ -3,20 +3,24 @@ name: "Shipping"
 spec:
   name: "Shipping"
   group: "factory"
+  type: objectCentric
   selection: genericProbability
   distribution: [ 0.8, 0.2 ]
   input:
-    - object:
-      name: "woodShelf"
+    - object: "woodShelf"
       number: 1
   eventData:
-    - activity: "Package waits for sending"
+    - activity:
+        name: "Package waits for sending"
+        output:
+          - object: "woodShelf"
+            number: 1
       transition: "Shipping"
       duration: 180
-      output:
-        - object:
-          name: "woodShelf"
-          number: 1
-    - activity: "Package sent"
+    - activity:
+        name: "Package sent"
+        output:
+          - object: "woodShelf"
+            number: 1
       transition: "<end>"
       duration: 1
