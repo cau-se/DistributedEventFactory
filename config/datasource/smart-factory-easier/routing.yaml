@@ -1,0 +1,11 @@
+kind: route
+name: "default"
+spec:
+  routes:
+    - route: "Transfer from o0 - o1"
+      start: "Test1"
+      end: "OutgoingStock"
+      transferObjects:
+        - name: "order"
+          number: 1
+      duration: 3

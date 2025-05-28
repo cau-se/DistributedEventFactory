@@ -42,6 +42,7 @@ from distributed_event_factory.parser.sink.ui_sink_parser import UiSinkParser
 from distributed_event_factory.provider.data.increasing_case import IncreasingCaseIdProvider
 from parser.datasource.event.input.input_parser import InputParser
 from parser.datasource.event.output.output_parser import OutputParser, DummyObjectParser
+from parser.route.route_parser import RouteParser
 
 
 class ParserRegistry:
@@ -125,6 +126,9 @@ class ParserRegistry:
         # Input
         self.object_source_parser = ObjectSourceParser()
 
+        # Route
+        self.route_parser = RouteParser()
+
         ##########
         # Case
         self.increasing_case_id_parser = IncreasingCaseIdProvider()
@@ -169,4 +173,5 @@ class ParserRegistry:
                                         .add_dependency("sink", self.sink_parser)
                                         .add_dependency("datasource", self.datasource_parser)
                                         .add_dependency("simulation", self.simulation_parser)
-                                        .add_dependency("object", self.object_source_parser))
+                                        .add_dependency("object", self.object_source_parser)
+                                        .add_dependency("route", self.route_parser))

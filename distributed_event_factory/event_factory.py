@@ -11,10 +11,12 @@ from distributed_event_factory.parser.simulation.load.load_parser import LoadPar
 from distributed_event_factory.parser.sink.sink_parser import SinkParser
 from distributed_event_factory.provider.sink.sink_provider import Sink
 from parser.datasource.event.output.output_parser import OutputParser
+from parser.route.route_parser import RouteParser
 
 
 class EventFactory:
     def __init__(self):
+        self.routes = dict()
         self.sinks = dict()
         self.simulations = dict()
         self.datasources = dict()
@@ -53,6 +55,9 @@ class EventFactory:
     def add_object_source_parser(self, key: str, parser: ObjectSourceParser):
         self.parser.object_source_parser.add_dependency(key, parser)
 
+    def add_route_parser(self, key: str, parser: RouteParser):
+        self.parser.route_parser.add_dependency(key, parser)
+
     def get_datasource(self, datasource_key):
         return self.datasources[datasource_key]
 
@@ -84,6 +89,10 @@ class EventFactory:
         self.objects[name] = object_source
         return self
 
+    def add_route(self,name, routes):
+        self.routes[name] = routes
+        return self
+
     def add_file(self, filename):
         with open(filename) as file:
             configuration = yaml.safe_load(file)
@@ -98,6 +107,8 @@ class EventFactory:
                 self.add_sink(name, parsed_object)
             elif kind == "object":
                 self.add_object(name, parsed_object)
+            elif kind == "route":
+                self.add_route(name, parsed_object)
         return self
 
     def run(self, hook=lambda: None):
