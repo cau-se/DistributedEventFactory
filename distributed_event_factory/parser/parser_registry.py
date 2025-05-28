@@ -47,6 +47,12 @@ from parser.datasource.event.output.output_parser import OutputParser, DummyObje
 class ParserRegistry:
 
     def __init__(self):
+
+        # Objects
+        self.output_parser = OutputParser()
+        self.dummy_object_parser = DummyObjectParser()
+        self.input_parser = InputParser()
+
         # Count
         self.constant_count_parser = ConstantCountParser()
 
@@ -69,7 +75,7 @@ class ParserRegistry:
                             .add_dependency("kafka", self.kafka_sink_parser))
         ##########
         # Activity
-        self.activity_parser = ActivityParser()
+        self.activity_parser = ActivityParser().add_dependency("output", self.output_parser)
 
         # Duration
         self.constant_duration_parser = ConstantDurationParser()
@@ -79,11 +85,6 @@ class ParserRegistry:
                                 .add_dependency("constant", self.constant_duration_parser)
                                 .add_dependency("uniform", self.uniform_duration_parser)
                                 .add_dependency("gaussian", self.gaussian_duration_parser))
-
-        # Objects
-        self.output_parser = OutputParser()
-        self.dummy_object_parser = DummyObjectParser()
-        self.input_parser = InputParser()
 
         # Transition
         self.transition_parser = TransitionParser()
