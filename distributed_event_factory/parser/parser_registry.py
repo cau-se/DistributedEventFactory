@@ -40,7 +40,8 @@ from distributed_event_factory.parser.sink.print_console_sink_parser import Prin
 from distributed_event_factory.parser.sink.sink_parser import SinkParser
 from distributed_event_factory.parser.sink.ui_sink_parser import UiSinkParser
 from distributed_event_factory.provider.data.increasing_case import IncreasingCaseIdProvider
-from parser.datasource.event.output.output_parser import OutputParser
+from parser.datasource.event.input.input_parser import InputParser
+from parser.datasource.event.output.output_parser import OutputParser, DummyObjectParser
 
 
 class ParserRegistry:
@@ -79,11 +80,13 @@ class ParserRegistry:
                                 .add_dependency("uniform", self.uniform_duration_parser)
                                 .add_dependency("gaussian", self.gaussian_duration_parser))
 
-        # Output objects
+        # Objects
         self.output_parser = OutputParser()
+        self.dummy_object_parser = DummyObjectParser()
+        self.input_parser = InputParser()
 
         # Transition
-        self.transition_parser = (TransitionParser().add_dependency("output", self.output_parser))
+        self.transition_parser = TransitionParser()
 
         # Event Data List
         self.event_data_list_parser = (EventDataListParser()
@@ -110,7 +113,9 @@ class ParserRegistry:
                                        .add_dependency("ordered", self.ordered_event_selection_parser)
                                        .add_dependency("uniform", self.uniform_event_selection_parser)
                                        .add_dependency("genericProbability", self.probability_selection_parser)
-                                       .add_dependency("driftingProbability", self.drifting_selection_parser))
+                                       .add_dependency("driftingProbability", self.drifting_selection_parser)
+                                       .add_dependency("objectCentric", self.input_parser)
+                                       .add_dependency("default", self.dummy_object_parser))
 
         # DataSource
         self.datasource_parser = (DataSourceParser()
