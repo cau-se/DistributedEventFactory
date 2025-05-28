@@ -3,14 +3,17 @@ name: "<start>"
 spec:
   name: "<start>"
   group: "factory"
+  type: objectCentric
   selection: genericProbability
   distribution: [1.0]
+  input:
+    - object: "order"
+      number: 1
   eventData:
-    -activities:
-      - activity: ""
-        transition: "OutgoingStock"
-        duration: 0
+    - activity:
+        name: ""
         output:
-          - object:
-            name: "order"
+          - object: "order"
             number: "1"
+      transition: "OutgoingStock"
+      duration: 0

@@ -3,18 +3,17 @@ name: "SawingBar"
 spec:
   name: "SawingBar"
   group: "factory"
+  type: objectCentric
   selection: genericProbability
   distribution: [1.0]
   input:
-    - object:
-      name: "barResource"
+    - object: "barResource"
       number: 1
   eventData:
-    - activities:
-      - activity: "Sawed"
-        transition: "DrillingBar"
-        duration: 5
+    - activity:
+        name: "Sawed"
         output:
-          - object:
-            name: "bar"
+          - object: "bar"
             number: 4
+      transition: "DrillingBar"
+      duration: 5
