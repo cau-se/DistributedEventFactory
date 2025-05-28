@@ -43,8 +43,8 @@ class CustomEventDataProvider(EventDataProvider):
             self.transition_provider
         )
 
-    def get_activity(self):
-        return self.activity_provider.get_activity()
+    def get_activity_provider(self):
+        return self.activity_provider
 
     def get_duration(self):
         return self.duration_provider.get_duration()
