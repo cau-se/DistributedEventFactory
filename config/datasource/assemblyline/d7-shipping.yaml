@@ -3,6 +3,7 @@ name: "Shipping"
 spec:
   name: "Shipping"
   group: "factory"
+  type: default
   selection: genericProbability
   distribution: [ 0.8, 0.2 ]
   eventData:
