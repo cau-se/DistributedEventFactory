@@ -23,3 +23,7 @@ class DataSource(ABC):
     @abstractmethod
     def get_event_log(self) -> List[Event]:
         pass
+
+    @abstractmethod
+    def get_input_objects(self):
+        pass

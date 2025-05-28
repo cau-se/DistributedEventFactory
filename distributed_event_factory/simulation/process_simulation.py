@@ -23,6 +23,7 @@ class ProcessSimulator:
         self.datasources: Dict[str, DataSource] = data_sources
         self.case_id_provider = case_id_provider
         self.last_timestamp = datetime.now()
+        self.object_store: Dict[str, int] = {}
 
     def simulate(self) -> Event:
         emit_event = None
@@ -42,7 +43,12 @@ class ProcessSimulator:
             current_data_source = self._get_sensor_with_id(token.data_source_id)
             event = current_data_source.get_event_data()
             next_datasource = event.get_transition()
-            activity = event.get_activity()
+            next_input_necessary = current_data_source
+            activity = event.get_activity_provider().get_activity()
+            output = event.get_activity_provider().get_output()
+            if output is not None:
+                for element in output :
+                    self.object_store[element.objectName] = element.numberOfObject
             token.add_to_last_timestamp(event.get_duration())
             token.set_data_source_id(self.datasources[next_datasource].get_id())
             self.last_timestamp = token.last_timestamp
