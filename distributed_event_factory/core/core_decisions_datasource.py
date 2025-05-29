@@ -9,3 +9,6 @@ class GenericDecisions:
 
     def get_event_data(self):
         return self.simulation_provider.get_event_data()
+    
+    def get_input_data(self):
+        return self.type_parser
