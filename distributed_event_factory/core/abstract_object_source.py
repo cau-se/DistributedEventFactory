@@ -16,6 +16,6 @@ class ObjectSource(ABC):
     def get_object_type(self) -> str:
         pass
 
-    @abstractmethod
-    def get_input_objects(self) -> []:
-        pass
+    #@abstractmethod
+    #def get_input_objects(self) -> []:
+    #    pass
