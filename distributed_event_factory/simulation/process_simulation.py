@@ -39,13 +39,22 @@ class ProcessSimulator:
 
             if token.data_source_id == START_SENSOR_ID:
                 token.data_source_id = DataSourceId(self._get_sensor_with_id(START_SENSOR_ID).get_event_data().get_transition())
-
+                self.object_store["order"] = 1
+                self.object_store["bar"] = 100
+                self.object_store["screw"] = 100
             current_data_source = self._get_sensor_with_id(token.data_source_id)
             event = current_data_source.get_event_data()
+            necessary_input = current_data_source.event_provider.type_parser
+            if not self.check_input_in_object_store(necessary_input):
+                raise ValueError("Input not found")
             next_datasource = event.get_transition()
-            next_input_necessary = current_data_source
             activity = event.get_activity_provider().get_activity()
             output = event.get_activity_provider().get_output()
+            if necessary_input is not None:
+                for element in necessary_input:
+                    self.object_store[element.objectName] = self.object_store.get(element.objectName)-element.numberOfObject
+                    if self.object_store.get(element.objectName) == 0:
+                        self.object_store.pop(element.objectName)
             if output is not None:
                 for element in output :
                     self.object_store[element.objectName] = element.numberOfObject
@@ -77,6 +86,12 @@ class ProcessSimulator:
             if self.datasources[sensor].get_id() == data_source_id:
                 return self.datasources[sensor]
         raise ValueError("Sensor not found")
+    
+    def check_input_in_object_store(self, input_objects):
+        for obj in input_objects:
+            if not self.object_store.__contains__(obj.objectName) or self.object_store.get(obj.objectName) is not obj.numberOfObject :
+                return False
+        return True
 
 
 class Token:
