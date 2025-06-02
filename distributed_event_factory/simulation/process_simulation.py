@@ -39,9 +39,7 @@ class ProcessSimulator:
 
             if token.data_source_id == START_SENSOR_ID:
                 token.data_source_id = DataSourceId(self._get_sensor_with_id(START_SENSOR_ID).get_event_data().get_transition())
-                self.object_store["order"] = 1
-                self.object_store["bar"] = 100
-                self.object_store["screw"] = 100
+                self.add_start_supplies_in_warehouse()
             current_data_source = self._get_sensor_with_id(token.data_source_id)
             event = current_data_source.get_event_data()
             necessary_input = current_data_source.event_provider.type_parser
@@ -50,14 +48,8 @@ class ProcessSimulator:
             next_datasource = event.get_transition()
             activity = event.get_activity_provider().get_activity()
             output = event.get_activity_provider().get_output()
-            if necessary_input is not None:
-                for element in necessary_input:
-                    self.object_store[element.objectName] = self.object_store.get(element.objectName)-element.numberOfObject
-                    if self.object_store.get(element.objectName) == 0:
-                        self.object_store.pop(element.objectName)
-            if output is not None:
-                for element in output :
-                    self.object_store[element.objectName] = element.numberOfObject
+            self.remove_used_input(necessary_input)
+            self.add_produced_output(output)
             token.add_to_last_timestamp(event.get_duration())
             token.set_data_source_id(self.datasources[next_datasource].get_id())
             self.last_timestamp = token.last_timestamp
@@ -65,6 +57,28 @@ class ProcessSimulator:
             self.tokens.put(token)
 
         return emit_event
+
+    def add_start_supplies_in_warehouse(self):
+        self.object_store["order"] = 100
+        self.object_store["bar"] = 1000
+        self.object_store["screw"] = 1000
+
+    def add_produced_output(self, output):
+        if output is not None:
+            for element in output:
+                if self.object_store.get(element.objectName) is None:
+                    self.object_store[element.objectName] = element.numberOfObject
+                else:
+                    self.object_store[element.objectName] = self.object_store.get(
+                        element.objectName) + element.numberOfObject
+
+    def remove_used_input(self, necessary_input):
+        if necessary_input is not None:
+            for element in necessary_input:
+                self.object_store[element.objectName] = self.object_store.get(
+                    element.objectName) - element.numberOfObject
+                if self.object_store.get(element.objectName) == 0:
+                    self.object_store.pop(element.objectName)
 
     def start_new_case(self):
         case_id = self.case_id_provider.get()
@@ -89,7 +103,7 @@ class ProcessSimulator:
     
     def check_input_in_object_store(self, input_objects):
         for obj in input_objects:
-            if not self.object_store.__contains__(obj.objectName) or self.object_store.get(obj.objectName) is not obj.numberOfObject :
+            if not self.object_store.__contains__(obj.objectName) or self.object_store.get(obj.objectName) < obj.numberOfObject :
                 return False
         return True
 
