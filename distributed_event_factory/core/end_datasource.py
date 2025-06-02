@@ -29,5 +29,5 @@ class EndDataSource(DataSource):
     def get_event_log(self) -> List[Event]:
         return self.event_log
 
-    def get_input_objects(self):
-        return InputObjectProvider().get_input_objects()
+    #def get_input_objects(self):
+    #    return InputObjectProvider().get_input_objects()

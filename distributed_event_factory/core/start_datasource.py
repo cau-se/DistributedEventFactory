@@ -28,5 +28,5 @@ class StartDataSource(DataSource):
     def get_event_log(self) -> List[AbstractEvent]:
         return self.event_log
 
-    def get_input_objects(self):
-        return None
+    #def get_input_objects(self):
+    #    return None
