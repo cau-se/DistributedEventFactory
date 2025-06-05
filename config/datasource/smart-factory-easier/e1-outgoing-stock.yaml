@@ -16,11 +16,11 @@ spec:
           - object: "barResource"
             number: 1
       duration: 3
-      transition: "SawingBar"
+      transition: "<routing>"
     - activity:
         name: "Sent to assembly station"
         output:
           - object: "screw"
             number: 13
       duration: 2
-      transition: "Assembly"
+      transition: "<routing>"
