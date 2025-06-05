@@ -16,7 +16,7 @@ class RouteParser(Parser):
         route_list = []
         for route in config["routes"]:
             route_list.append(Route(
-                route_name=route["route"],
+                route_for_activity=route["routeForActivity"],
                 start=route["start"],
                 end=route["end"],
                 transfer_objects=route["transferObjects"],

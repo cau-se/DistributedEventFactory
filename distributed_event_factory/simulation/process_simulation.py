@@ -3,7 +3,9 @@ from datetime import datetime, timedelta
 from queue import PriorityQueue
 from typing import Dict, List
 
+from core.datasource_id import ROUTING_ID
 from core.object import Object
+from core.route import Route
 from distributed_event_factory.provider.data.count_provider import CountProvider
 from process_mining_core.datastructure.core.event import Event
 
@@ -19,7 +21,8 @@ class ProcessSimulator:
             data_sources: Dict[str, DataSource],
             case_id_provider: CaseIdProvider,
             max_concurrent_cases: CountProvider,
-            objects: Dict[str, Object]
+            objects: Dict[str, Object],
+            routes: Dict[str, Route]
     ):
 
         self.max_concurrent_cases = max_concurrent_cases
@@ -30,6 +33,7 @@ class ProcessSimulator:
         self.object_store: Dict[str, int] = {}
         self.object_store_objects: List[Object] = []
         self.objects = objects
+        self.routes = routes
 
     def simulate(self) -> Event:
         emit_event = None
@@ -57,8 +61,8 @@ class ProcessSimulator:
             output = event.get_activity_provider().get_output()
             self.remove_used_input(necessary_input)
             self.add_produced_output(output)
+            self.set_next_datasource_token(activity, current_data_source, next_datasource, token)
             token.add_to_last_timestamp(event.get_duration())
-            token.set_data_source_id(self.datasources[next_datasource].get_id())
             self.last_timestamp = token.last_timestamp
             if (necessary_input is not None and necessary_input) or output is not None:
                 token.event = self._build_event(token.case, activity, self.last_timestamp, current_data_source,
@@ -68,6 +72,18 @@ class ProcessSimulator:
             self.tokens.put(token)
 
         return emit_event
+
+    def set_next_datasource_token(self, activity, current_data_source, next_datasource, token):
+        if next_datasource == ROUTING_ID.get_name():
+            start_point = current_data_source.sensor_id.id
+            for route in self.routes.get("default"):
+                if route.get_route_for_activity() == activity and route.get_start() == start_point:
+                    token.add_to_last_timestamp(route.get_duration())
+                    next_datasource = route.get_end()
+                    token.set_data_source_id(self.datasources[next_datasource].get_id())
+                    return
+        else:
+            token.set_data_source_id(self.datasources[next_datasource].get_id())
 
     def add_start_supplies_in_warehouse(self):
         self.object_store["order"] = 100
