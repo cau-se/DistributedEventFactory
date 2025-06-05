@@ -113,4 +113,4 @@ class EventFactory:
 
     def run(self, hook=lambda: None):
         for simulation in self.simulations:
-            self.simulations[simulation].run_simulation(self.datasources, self.sinks, hook)
+            self.simulations[simulation].run_simulation(self.datasources, self.sinks, self.objects, hook)

@@ -1,4 +1,6 @@
 from typing import Dict
+
+from core.object import Object
 from distributed_event_factory.core.datasource import DataSource
 from distributed_event_factory.provider.data.case_provider import CaseIdProvider
 from distributed_event_factory.provider.data.count_provider import CountProvider
@@ -35,7 +37,7 @@ class LoadTestSimulation(Simulation):
         for sink in self.sink:
            sink.start()
 
-    def run_simulation(self, data_sources: Dict[str, DataSource], datasource_sink_mapping: Dict[str, LoadTestHttpSink],
+    def run_simulation(self, data_sources: Dict[str, DataSource], datasource_sink_mapping: Dict[str, LoadTestHttpSink], objects: Dict[str, Object],
                        hook=lambda: None):
         self.setup_datasource_sink_mapping(datasource_sink_mapping)
         for sink in datasource_sink_mapping:
@@ -44,7 +46,8 @@ class LoadTestSimulation(Simulation):
         process_simulator = ProcessSimulator(
             case_id_provider=self.case_id_provider,
             data_sources=data_sources,
-            max_concurrent_cases=self.max_concurrent_cases
+            max_concurrent_cases=self.max_concurrent_cases,
+            objects=objects
         )
         iteration = 0
         while True:
