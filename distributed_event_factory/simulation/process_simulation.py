@@ -184,29 +184,32 @@ class ProcessSimulator:
                 else:
                     self.object_store[element.get(OBJECT_NAME)] = self.object_store.get(
                         element.get(OBJECT_NAME)) + element.get(NUMBER_OF_OBJECT)
-                for i in range(0, element.get(NUMBER_OF_OBJECT)):
-                    input_for_element = self.find_in_list_input_list(input_objects, element.get(OBJECT_NAME))
-                    if input_for_element:
-                        if (element.get(CHANGE)):
-                            input_info = self.find_in_necessary_input(necessary_input, element.get(OBJECT_NAME))
-                            output_object = self.find_in_list_with_change_state(input_objects, element.get(OBJECT_NAME),
-                                                                         input_info.lastState)
-                            output_object.add_change(
-                                Object(timestamp=timestamp.strftime(Y_M_D_H_M_S), object_state=element.get(CHANGE),
-                                       object_id=output_object.object_id))
-                            self.object_store_objects.append(
-                                output_object)
-                        else:
-                            self.object_store_objects.append(input_objects.get(input_objects.index(element.get(OBJECT_NAME))))
-                    else:
-                        if (element.get(CHANGE)):
-                            output_object = self.objects.get(element.get(OBJECT_NAME)).clone()
-                            output_object.add_change(
-                                Object(timestamp=timestamp.strftime(Y_M_D_H_M_S), object_state=element.get(CHANGE),
-                                       object_id=output_object.object_id))
-                            self.object_store_objects.append(output_object)
-                        else:
-                            self.object_store_objects.append(self.objects.get(element.get(OBJECT_NAME)))
+                self.add_output_to_object_store_objects(element, input_objects, necessary_input, timestamp)
+
+    def add_output_to_object_store_objects(self, element, input_objects, necessary_input, timestamp):
+        for i in range(0, element.get(NUMBER_OF_OBJECT)):
+            input_for_element = self.find_in_list_input_list(input_objects, element.get(OBJECT_NAME))
+            if input_for_element:
+                if (element.get(CHANGE)):
+                    input_info = self.find_in_necessary_input(necessary_input, element.get(OBJECT_NAME))
+                    output_object = self.find_in_list_with_change_state(input_objects, element.get(OBJECT_NAME),
+                                                                        input_info.lastState)
+                    self.add_object_to_object_store_objects_with_change(element, output_object, timestamp)
+                else:
+                    self.object_store_objects.append(input_objects.get(input_objects.index(element.get(OBJECT_NAME))))
+            else:
+                if (element.get(CHANGE)):
+                    output_object = self.objects.get(element.get(OBJECT_NAME)).clone()
+                    self.add_object_to_object_store_objects_with_change(element, output_object, timestamp)
+                else:
+                    self.object_store_objects.append(self.objects.get(element.get(OBJECT_NAME)))
+
+    def add_object_to_object_store_objects_with_change(self, element, output_object, timestamp):
+        output_object.add_change(
+            Object(timestamp=timestamp.strftime(Y_M_D_H_M_S), object_state=element.get(CHANGE),
+                   object_id=output_object.object_id))
+        self.object_store_objects.append(
+            output_object)
 
     def remove_used_input(self, necessary_input):
         if necessary_input is not None:
@@ -219,18 +222,21 @@ class ProcessSimulator:
                 if self.object_store.get(element.get(OBJECT_NAME)) == 0:
                     self.object_store.pop(element.get(OBJECT_NAME))
 
-                for i in range(0, element.get(NUMBER_OF_OBJECT)):
-                    if (element.get(LAST_STATE)):
-                        object_from_store_index = self.object_store_objects.index(
-                            self.find_in_list_with_change_state(self.object_store_objects, element.get(OBJECT_NAME), element.get(LAST_STATE)))
-                        input_obj =self.object_store_objects.pop(object_from_store_index)
-                        input_objects.append(input_obj)
-                    else:
-                        object_from_store_index = self.object_store_objects.index(self.find_in_list_without_changed_value(self.object_store_objects, element.get(OBJECT_NAME)))
-                        input_obj = self.object_store_objects.pop(object_from_store_index)
-                        input_objects.append(input_obj)
+                self.remove_input_from_object_store_objects(element, input_objects)
             return input_objects
         return None
+
+    def remove_input_from_object_store_objects(self, element, input_objects):
+        for i in range(0, element.get(NUMBER_OF_OBJECT)):
+            if (element.get(LAST_STATE)):
+                object_from_store_index = self.object_store_objects.index(
+                    self.find_in_list_with_change_state(self.object_store_objects, element.get(OBJECT_NAME),
+                                                        element.get(LAST_STATE)))
+            else:
+                object_from_store_index = self.object_store_objects.index(
+                    self.find_in_list_without_changed_value(self.object_store_objects, element.get(OBJECT_NAME)))
+            input_obj = self.object_store_objects.pop(object_from_store_index)
+            input_objects.append(input_obj)
 
     def find_in_necessary_input(self, necessary_input, key):
         return next((item for item in necessary_input if item.objectName == key), None)
