@@ -14,6 +14,12 @@ from distributed_event_factory.core.datasource_id import START_SENSOR_ID, END_DA
 from distributed_event_factory.provider.data.case_provider import CaseIdProvider
 from simulation.object_event import ObjectEvent
 
+CHANGE = "change"
+LAST_STATE = "lastState"
+NUMBER_OF_OBJECT = "numberOfObject"
+OBJECT_NAME = "objectName"
+Y_M_D_H_M_S = "%Y-%m-%d %H:%M:%S"
+
 
 class ProcessSimulator:
     def __init__(
@@ -55,17 +61,8 @@ class ProcessSimulator:
             event = current_data_source.get_event_data()
             necessary_input = current_data_source.event_provider.type_parser
             if not self.check_input_in_object_store(necessary_input):
-                next_datasource = token.event.node
-                activity = token.event.activity
-                output = eval(token.event.output)
-                if str(output).count("objectName") ==1:
-                    output = [output]
-                necessary_input = eval(token.event.input)
-                if str(necessary_input).count("objectName") == 1:
-                    necessary_input = [necessary_input]
-                current_data_source = self.datasources.get(token.event.node)
-                if not self.check_input_in_object_store(necessary_input):
-                    raise ValueError("Input not found")
+                activity, current_data_source, necessary_input, next_datasource, output = self.set_parameters_for_previous_event(
+                    current_data_source, necessary_input, token)
             else:
                 next_datasource = event.get_transition()
                 activity = event.get_activity_provider().get_activity()
@@ -78,116 +75,11 @@ class ProcessSimulator:
             if (necessary_input is not None and necessary_input) or output is not None:
                 token.event = self._build_event(token.case, activity, self.last_timestamp, current_data_source,
                                                 necessary_input, output)
-
             else:
                 token.event = self._build_event(token.case, activity, self.last_timestamp, current_data_source)
             self.tokens.put(token)
 
         return emit_event
-
-    def set_next_datasource_token(self, activity, current_data_source, next_datasource, token):
-        if next_datasource == ROUTING_ID.get_name():
-            start_point = current_data_source.sensor_id.id
-            for route in self.routes.get("default"):
-                if route.get_route_for_activity() == activity and route.get_start() == start_point:
-                    token.add_to_last_timestamp(route.get_duration())
-                    next_datasource = route.get_end()
-                    token.set_data_source_id(self.datasources[next_datasource].get_id())
-                    return
-        else:
-            token.set_data_source_id(self.datasources[next_datasource].get_id())
-
-    def add_start_supplies_in_warehouse(self, timestamp):
-        self.object_store["order"] = 100
-        self.object_store["barResource"] = 100
-        self.object_store["screw"] = 500
-        self.object_store["bar"] = 150
-        for i in range(100):
-            self.object_store_objects.append(self.objects.get("order").clone())
-            self.object_store_objects.append(self.objects.get("barResource").clone())
-
-        for i in range(150):
-            obj = self.objects.get("bar").clone()
-            obj.add_change(Object(timestamp=timestamp.strftime("%Y-%m-%d %H:%M:%S"), object_state="sanded",
-                                  object_id=obj.object_id))
-            self.object_store_objects.append(obj)
-
-        for i in range(500):
-            self.object_store_objects.append(self.objects.get("screw").clone())
-
-    def add_produced_output(self, output, necessary_input, input_objects, timestamp):
-        if output is not None:
-            for element in output:
-                if type(element) is not Dict:
-                    element = eval(str(element))
-                if self.object_store.get(element.get("objectName")) is None:
-                    self.object_store[element.get("objectName")] = element.get("numberOfObject")
-                else:
-                    self.object_store[element.get("objectName")] = self.object_store.get(
-                        element.get("objectName")) + element.get("numberOfObject")
-                for i in range(0, element.get("numberOfObject")):
-                    input_for_element = self.find_in_list_input_list(input_objects, element.get("objectName"))
-                    if input_for_element:
-                        if (element.get("change")):
-                            input_info = self.find_in_necessary_input(necessary_input, element.get("objectName"))
-                            output_object = self.find_in_list_input_list_with_state(input_objects, element.get("objectName"),
-                                                                         input_info.lastState)
-                            output_object.add_change(
-                                Object(timestamp=timestamp.strftime("%Y-%m-%d %H:%M:%S"), object_state=element.get("change"),
-                                       object_id=output_object.object_id))
-                            self.object_store_objects.append(
-                                output_object)
-                        else:
-                            self.object_store_objects.append(input_objects.get(input_objects.index(element.get("objectName"))))
-                    else:
-                        if (element.get("change")):
-                            output_object = self.objects.get(element.get("objectName")).clone()
-                            output_object.add_change(
-                                Object(timestamp=timestamp.strftime("%Y-%m-%d %H:%M:%S"), object_state=element.get("change"),
-                                       object_id=output_object.object_id))
-                            self.object_store_objects.append(output_object)
-                        else:
-                            self.object_store_objects.append(self.objects.get(element.get("objectName")))
-
-    def find_in_list_input_list_with_state(self, data, key, change_value):
-        return next((item for item in data if item.object_id.id == key and item.get_last_changed_value() == change_value), None)
-
-    def find_in_necessary_input(self, necessary_input, key):
-        return next((item for item in necessary_input if item.objectName == key), None)
-
-    def find_in_list_input_list(self, data, key):
-        return next((item for item in data if item.object_id.id == key), None)
-
-    def find_in_list_without_changed_value(self, data, key):
-        return next((item for item in data if item.object_id.id == key and not item.values_changed), None)
-
-    def find_in_list(self, data, key, change_value):
-        return next(
-            (item for item in data if item.object_id.id == key and item.get_last_changed_value() == change_value), None)
-
-    def remove_used_input(self, necessary_input):
-        if necessary_input is not None:
-            input_objects = []
-            for element in necessary_input:
-                if type(element) is not Dict:
-                    element = eval(str(element))
-                self.object_store[element.get("objectName")] = self.object_store.get(
-                    element.get("objectName")) - element.get("numberOfObject")
-                if self.object_store.get(element.get("objectName")) == 0:
-                    self.object_store.pop(element.get("objectName"))
-
-                for i in range(0, element.get("numberOfObject")):
-                    if (element.get("lastState")):
-                        object_from_store_index = self.object_store_objects.index(
-                            self.find_in_list(self.object_store_objects, element.get("objectName"), element.get("lastState")))
-                        input_obj =self.object_store_objects.pop(object_from_store_index)
-                        input_objects.append(input_obj)
-                    else:
-                        object_from_store_index = self.object_store_objects.index(self.find_in_list_without_changed_value(self.object_store_objects, element.get("objectName")))
-                        input_obj = self.object_store_objects.pop(object_from_store_index)
-                        input_objects.append(input_obj)
-            return input_objects
-        return None
 
     def start_new_case(self):
         case_id = self.case_id_provider.get()
@@ -198,7 +90,7 @@ class ProcessSimulator:
         if hasattr(datasource, "sensor_id"):
             if input and output:
                 return ObjectEvent(
-                    timestamp=timestamp.strftime("%Y-%m-%d %H:%M:%S"),
+                    timestamp=timestamp.strftime(Y_M_D_H_M_S),
                     activity=activity,
                     case_id=case,
                     node=datasource.sensor_id.get_name(),
@@ -208,7 +100,7 @@ class ProcessSimulator:
                 )
             else:
                 return Event(
-                    timestamp=timestamp.strftime("%Y-%m-%d %H:%M:%S"),
+                    timestamp=timestamp.strftime(Y_M_D_H_M_S),
                     activity=activity,
                     case_id=case,
                     node=datasource.sensor_id.get_name(),
@@ -226,17 +118,132 @@ class ProcessSimulator:
         for obj in necessary_inputs:
             if type(obj) is not Dict:
                 obj = eval(str(obj))
-            if obj.get("lastState"):
-                if not self.object_store.__contains__(obj.get("objectName")) or self.object_store.get(
-                        obj.get("objectName")) < obj.get("numberOfObject") or sum(1 for stored_obj in self.object_store_objects if
-                                                                    stored_obj.object_id.id == obj.get("objectName") and stored_obj.get_last_changed_value() == obj.get("lastState")) < obj.get("numberOfObject"):
+            if obj.get(LAST_STATE):
+                if not self.object_store.__contains__(obj.get(OBJECT_NAME)) or self.object_store.get(
+                        obj.get(OBJECT_NAME)) < obj.get(NUMBER_OF_OBJECT) or sum(1 for stored_obj in self.object_store_objects if
+                                                                    stored_obj.object_id.id == obj.get(OBJECT_NAME) and stored_obj.get_last_changed_value() == obj.get(
+                                                                        LAST_STATE)) < obj.get(NUMBER_OF_OBJECT):
                     return False
-            elif not self.object_store.__contains__(obj.get("objectName")) or self.object_store.get(
-                    obj.get("objectName")) < obj.get("numberOfObject") or sum(1 for stored_obj in self.object_store_objects if
-                                                                stored_obj.object_id.id == obj.get("objectName") and not stored_obj.values_changed) < obj.get("numberOfObject"):
+            elif not self.object_store.__contains__(obj.get(OBJECT_NAME)) or self.object_store.get(
+                    obj.get(OBJECT_NAME)) < obj.get(NUMBER_OF_OBJECT) or sum(1 for stored_obj in self.object_store_objects if
+                                                                stored_obj.object_id.id == obj.get(OBJECT_NAME) and not stored_obj.values_changed) < obj.get(NUMBER_OF_OBJECT):
                 return False
         return True
 
+    def add_start_supplies_in_warehouse(self, timestamp):
+        self.object_store["order"] = 100
+        self.object_store["barResource"] = 100
+        self.object_store["screw"] = 500
+        self.object_store["bar"] = 200
+        for i in range(100):
+            self.object_store_objects.append(self.objects.get("order").clone())
+            self.object_store_objects.append(self.objects.get("barResource").clone())
+
+        for i in range(200):
+            obj = self.objects.get("bar").clone()
+            obj.add_change(Object(timestamp=timestamp.strftime(Y_M_D_H_M_S), object_state="sanded",
+                                  object_id=obj.object_id))
+            self.object_store_objects.append(obj)
+
+        for i in range(500):
+            self.object_store_objects.append(self.objects.get("screw").clone())
+
+    def set_parameters_for_previous_event(self, current_data_source, necessary_input, token):
+        next_datasource = token.event.node
+        activity = token.event.activity
+        output = eval(token.event.output)
+        if str(output).count(OBJECT_NAME) == 1:
+            output = [output]
+        necessary_input = eval(token.event.input)
+        if str(necessary_input).count(OBJECT_NAME) == 1:
+            necessary_input = [necessary_input]
+        current_data_source = self.datasources.get(token.event.node)
+        if not self.check_input_in_object_store(necessary_input):
+            raise ValueError("Input not found")
+        return activity, current_data_source, necessary_input, next_datasource, output
+
+    def set_next_datasource_token(self, activity, current_data_source, next_datasource, token):
+        if next_datasource == ROUTING_ID.get_name():
+            start_point = current_data_source.sensor_id.id
+            for route in self.routes.get("default"):
+                if route.get_route_for_activity() == activity and route.get_start() == start_point:
+                    token.add_to_last_timestamp(route.get_duration())
+                    next_datasource = route.get_end()
+                    token.set_data_source_id(self.datasources[next_datasource].get_id())
+                    return
+        else:
+            token.set_data_source_id(self.datasources[next_datasource].get_id())
+
+    def add_produced_output(self, output, necessary_input, input_objects, timestamp):
+        if output is not None:
+            for element in output:
+                if type(element) is not Dict:
+                    element = eval(str(element))
+                if self.object_store.get(element.get(OBJECT_NAME)) is None:
+                    self.object_store[element.get(OBJECT_NAME)] = element.get(NUMBER_OF_OBJECT)
+                else:
+                    self.object_store[element.get(OBJECT_NAME)] = self.object_store.get(
+                        element.get(OBJECT_NAME)) + element.get(NUMBER_OF_OBJECT)
+                for i in range(0, element.get(NUMBER_OF_OBJECT)):
+                    input_for_element = self.find_in_list_input_list(input_objects, element.get(OBJECT_NAME))
+                    if input_for_element:
+                        if (element.get(CHANGE)):
+                            input_info = self.find_in_necessary_input(necessary_input, element.get(OBJECT_NAME))
+                            output_object = self.find_in_list_with_change_state(input_objects, element.get(OBJECT_NAME),
+                                                                         input_info.lastState)
+                            output_object.add_change(
+                                Object(timestamp=timestamp.strftime(Y_M_D_H_M_S), object_state=element.get(CHANGE),
+                                       object_id=output_object.object_id))
+                            self.object_store_objects.append(
+                                output_object)
+                        else:
+                            self.object_store_objects.append(input_objects.get(input_objects.index(element.get(OBJECT_NAME))))
+                    else:
+                        if (element.get(CHANGE)):
+                            output_object = self.objects.get(element.get(OBJECT_NAME)).clone()
+                            output_object.add_change(
+                                Object(timestamp=timestamp.strftime(Y_M_D_H_M_S), object_state=element.get(CHANGE),
+                                       object_id=output_object.object_id))
+                            self.object_store_objects.append(output_object)
+                        else:
+                            self.object_store_objects.append(self.objects.get(element.get(OBJECT_NAME)))
+
+    def remove_used_input(self, necessary_input):
+        if necessary_input is not None:
+            input_objects = []
+            for element in necessary_input:
+                if type(element) is not Dict:
+                    element = eval(str(element))
+                self.object_store[element.get(OBJECT_NAME)] = self.object_store.get(
+                    element.get(OBJECT_NAME)) - element.get(NUMBER_OF_OBJECT)
+                if self.object_store.get(element.get(OBJECT_NAME)) == 0:
+                    self.object_store.pop(element.get(OBJECT_NAME))
+
+                for i in range(0, element.get(NUMBER_OF_OBJECT)):
+                    if (element.get(LAST_STATE)):
+                        object_from_store_index = self.object_store_objects.index(
+                            self.find_in_list_with_change_state(self.object_store_objects, element.get(OBJECT_NAME), element.get(LAST_STATE)))
+                        input_obj =self.object_store_objects.pop(object_from_store_index)
+                        input_objects.append(input_obj)
+                    else:
+                        object_from_store_index = self.object_store_objects.index(self.find_in_list_without_changed_value(self.object_store_objects, element.get(OBJECT_NAME)))
+                        input_obj = self.object_store_objects.pop(object_from_store_index)
+                        input_objects.append(input_obj)
+            return input_objects
+        return None
+
+    def find_in_necessary_input(self, necessary_input, key):
+        return next((item for item in necessary_input if item.objectName == key), None)
+
+    def find_in_list_input_list(self, data, key):
+        return next((item for item in data if item.object_id.id == key), None)
+
+    def find_in_list_without_changed_value(self, data, key):
+        return next((item for item in data if item.object_id.id == key and not item.values_changed), None)
+
+    def find_in_list_with_change_state(self, data, key, change_value):
+        return next(
+            (item for item in data if item.object_id.id == key and item.get_last_changed_value() == change_value), None)
 
 class Token:
     def __init__(
