@@ -5,4 +5,7 @@ class InputObjectProvider:
         self.lastState = lastState
 
     def __str__(self):
-        return str(self.__dict__)
+        if self.lastState:
+            return str(self.__dict__)
+        else:
+            return str({key: value for key, value in self.__dict__.items() if value})
