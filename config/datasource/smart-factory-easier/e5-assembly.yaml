@@ -9,14 +9,17 @@ spec:
   input:
     - object: "bar"
       number: 4
+      lastState: "sanded"
     - object: "screw"
       number: 13
+      lastState: ""
   eventData:
     - activity:
         name: "Assembling completed"
         output:
           - object: "woodShelf"
             number: 1
+            change: "assembled"
       duration: 10
       transition: "Shipping"
     - activity:
@@ -24,6 +27,7 @@ spec:
         output:
           - object: "woodShelf"
             number: 1
+            change: "overheated"
       transition: "<end>"
       duration: 2
     - activity:
@@ -31,5 +35,6 @@ spec:
         output:
           - object: "woodShelf"
             number: 1
+            change: "broke"
       transition: "<end>"
       duration: 1

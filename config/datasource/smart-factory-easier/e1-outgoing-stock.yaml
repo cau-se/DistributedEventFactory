@@ -9,12 +9,14 @@ spec:
   input:
     - object: "order"
       number: 1
+      lastState: ""
   eventData:
     - activity:
         name: "Sent to sawing machine"
         output:
           - object: "barResource"
             number: 1
+            change: ""
       duration: 3
       transition: "<routing>"
     - activity:
@@ -22,5 +24,6 @@ spec:
         output:
           - object: "screw"
             number: 13
+            change: ""
       duration: 2
       transition: "<routing>"

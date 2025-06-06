@@ -9,12 +9,14 @@ spec:
   input:
     - object: "woodShelf"
       number: 1
+      lastState: ""
   eventData:
     - activity:
         name: "Package waits for sending"
         output:
           - object: "woodShelf"
             number: 1
+            change: ""
       transition: "Shipping"
       duration: 180
     - activity:
@@ -22,5 +24,6 @@ spec:
         output:
           - object: "woodShelf"
             number: 1
+            change: ""
       transition: "<end>"
       duration: 1
