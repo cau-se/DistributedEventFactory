@@ -3,16 +3,18 @@ from typing import List
 from distributed_event_factory.core.abstract_object_source import ObjectSource
 from distributed_event_factory.core.object_id import ObjectId
 
+
 class Object:
     def __init__(
             self,
             timestamp,
-            object_type: str,
+            object_state: str,
             object_id: ObjectId
     ):
         self.timestamp = timestamp
-        self.object_type = object_type
+        self.object_state = object_state
         self.object_id = object_id
+
 
 class GenericObjectSource(ObjectSource):
 
@@ -25,7 +27,7 @@ class GenericObjectSource(ObjectSource):
             width: int
 
     ):
-        self.values_changed : List[Object] = []
+        self.values_changed: List[Object] = []
         self.object_id = object_id
         self.object_type = object_type
         self.input_objects = input_objects
@@ -56,3 +58,15 @@ class GenericObjectSource(ObjectSource):
     def get_width(self) -> int:
         return self.width
 
+    def get_last_changed_value(self):
+        return self.values_changed[-1].object_state
+
+    def add_change(self, change):
+        self.values_changed.append(change)
+
+    def clone(self):
+        return GenericObjectSource(self.object_id,
+                                   self.object_type,
+                                   self.input_objects,
+                                   self.length,
+                                   self.width)

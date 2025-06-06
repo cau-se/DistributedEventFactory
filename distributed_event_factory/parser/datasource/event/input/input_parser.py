@@ -13,5 +13,5 @@ class InputParser(Parser):
     def parse(self, config):
         object_list = []
         for object_element in config["input"]:
-            object_list.append(InputObjectProvider(object_element["object"], object_element["number"]))
+            object_list.append(InputObjectProvider(object_element["object"], object_element["number"], object_element["lastState"]))
         return object_list

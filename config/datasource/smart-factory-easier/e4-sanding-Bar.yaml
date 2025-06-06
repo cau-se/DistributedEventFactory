@@ -9,11 +9,13 @@ spec:
   input:
     - object: "bar"
       number: 1
+      lastState: "drilled"
   eventData:
     - activity:
         name: "Sanded bar"
         output:
           - object: "bar"
             number: 1
+            change: "sanded"
       transition: "Assembly"
       duration: 5

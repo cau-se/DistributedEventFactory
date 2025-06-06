@@ -9,11 +9,13 @@ spec:
   input:
     - object: "bar"
       number: 1
+      lastState: "divided Resource"
   eventData:
     - activity:
         name: "Drilled"
         output:
           - object: "bar"
             number: 1
+            change: "drilled"
       transition: "SandingBar"
       duration: 5

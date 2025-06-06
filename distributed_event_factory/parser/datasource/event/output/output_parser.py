@@ -13,7 +13,7 @@ class OutputParser(Parser):
     def parse(self, config):
         object_list = []
         for object_element in config:
-            object_list.append(OutputObjectProvider(object_element["object"], object_element["number"]))
+            object_list.append(OutputObjectProvider(object_element["object"], object_element["number"], object_element["change"]))
         return object_list
 
 class DummyObjectParser(Parser):
