@@ -43,6 +43,7 @@ from distributed_event_factory.provider.data.increasing_case import IncreasingCa
 from parser.datasource.event.input.input_parser import InputParser
 from parser.datasource.event.output.output_parser import OutputParser, DummyObjectParser
 from parser.route.route_parser import RouteParser
+from parser.stock.stock_parser import StockParser
 
 
 class ParserRegistry:
@@ -129,6 +130,9 @@ class ParserRegistry:
         # Route
         self.route_parser = RouteParser()
 
+        # Warehouse Stocks
+        self.warehouse_stock_parser = StockParser()
+
         ##########
         # Case
         self.increasing_case_id_parser = IncreasingCaseIdProvider()
@@ -174,4 +178,5 @@ class ParserRegistry:
                                         .add_dependency("datasource", self.datasource_parser)
                                         .add_dependency("simulation", self.simulation_parser)
                                         .add_dependency("object", self.object_source_parser)
-                                        .add_dependency("route", self.route_parser))
+                                        .add_dependency("route", self.route_parser)
+                                        .add_dependency("stock", self.warehouse_stock_parser))

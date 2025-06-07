@@ -12,11 +12,13 @@ from distributed_event_factory.parser.sink.sink_parser import SinkParser
 from distributed_event_factory.provider.sink.sink_provider import Sink
 from parser.datasource.event.output.output_parser import OutputParser
 from parser.route.route_parser import RouteParser
+from parser.stock.stock_parser import StockParser
 
 
 class EventFactory:
     def __init__(self):
         self.routes = dict()
+        self.stocks = dict()
         self.sinks = dict()
         self.simulations = dict()
         self.datasources = dict()
@@ -58,6 +60,9 @@ class EventFactory:
     def add_route_parser(self, key: str, parser: RouteParser):
         self.parser.route_parser.add_dependency(key, parser)
 
+    def add_stock_parser(self, key: str, parser: StockParser):
+        self.parser.warehouse_stock_parser.add_dependency(key, parser)
+
     def get_datasource(self, datasource_key):
         return self.datasources[datasource_key]
 
@@ -93,6 +98,10 @@ class EventFactory:
         self.routes[name] = routes
         return self
 
+    def add_stock(self,name, routes):
+        self.stocks[name] = routes
+        return self
+
     def add_file(self, filename):
         with open(filename) as file:
             configuration = yaml.safe_load(file)
@@ -109,8 +118,10 @@ class EventFactory:
                 self.add_object(name, parsed_object)
             elif kind == "route":
                 self.add_route(name, parsed_object)
+            elif kind == "stock":
+                self.add_stock(name, parsed_object)
         return self
 
     def run(self, hook=lambda: None):
         for simulation in self.simulations:
-            self.simulations[simulation].run_simulation(self.datasources, self.sinks, self.objects, self.routes, hook)
+            self.simulations[simulation].run_simulation(self.datasources, self.sinks, self.objects, self.routes, self.stocks, hook)

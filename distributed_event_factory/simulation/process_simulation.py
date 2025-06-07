@@ -12,6 +12,7 @@ from process_mining_core.datastructure.core.event import Event
 from distributed_event_factory.core.datasource import DataSource
 from distributed_event_factory.core.datasource_id import START_SENSOR_ID, END_DATA_SOURCE_ID, DataSourceId
 from distributed_event_factory.provider.data.case_provider import CaseIdProvider
+from provider.object.input.input_provider import InputObjectProvider
 from simulation.object_event import ObjectEvent
 
 CHANGE = "change"
@@ -28,7 +29,8 @@ class ProcessSimulator:
             case_id_provider: CaseIdProvider,
             max_concurrent_cases: CountProvider,
             objects: Dict[str, Object],
-            routes: Dict[str, Route]
+            routes: Dict[str, Route],
+            stocks: Dict[str, InputObjectProvider]
     ):
 
         self.max_concurrent_cases = max_concurrent_cases
@@ -40,7 +42,8 @@ class ProcessSimulator:
         self.object_store_objects: List[Object] = []
         self.objects = objects
         self.routes = routes
-        self.add_start_supplies_in_warehouse(self.last_timestamp)
+        self.stocks = stocks
+        self.add_configured_stocks_in_warehouse(self.last_timestamp)
 
     def simulate(self) -> Event:
         emit_event = None
@@ -130,23 +133,19 @@ class ProcessSimulator:
                 return False
         return True
 
-    def add_start_supplies_in_warehouse(self, timestamp):
-        self.object_store["order"] = 100
-        self.object_store["barResource"] = 100
-        self.object_store["screw"] = 500
-        self.object_store["bar"] = 200
-        for i in range(100):
-            self.object_store_objects.append(self.objects.get("order").clone())
-            self.object_store_objects.append(self.objects.get("barResource").clone())
-
-        for i in range(200):
-            obj = self.objects.get("bar").clone()
-            obj.add_change(Object(timestamp=timestamp.strftime(Y_M_D_H_M_S), object_state="sanded",
-                                  object_id=obj.object_id))
-            self.object_store_objects.append(obj)
-
-        for i in range(500):
-            self.object_store_objects.append(self.objects.get("screw").clone())
+    def add_configured_stocks_in_warehouse(self, timestamp):
+        if not self.stocks:
+            return
+        for stock in self.stocks.get("default"):
+            for i in range(stock.numberOfObject):
+                if stock.lastState:
+                    obj = self.objects.get(stock.objectName).clone()
+                    obj.add_change(Object(timestamp=timestamp.strftime(Y_M_D_H_M_S), object_state=stock.lastState,
+                                          object_id=obj.object_id))
+                    self.object_store_objects.append(obj)
+                else:
+                    self.object_store_objects.append(self.objects.get(stock.objectName).clone())
+            self.object_store[stock.objectName] = stock.numberOfObject
 
     def set_parameters_for_previous_event(self, current_data_source, necessary_input, token):
         next_datasource = token.event.node
@@ -168,7 +167,7 @@ class ProcessSimulator:
             for route in self.routes.get("default"):
                 if route.get_route_for_activity() == activity and route.get_start() == start_point:
                     token.add_to_last_timestamp(route.get_duration())
-                    next_datasource = route.get_end()
+                    next_datasource = route.get_end() #mehrere enden möglich machen in route (Liste) und datasource dann auch zu einer Liste machen
                     token.set_data_source_id(self.datasources[next_datasource].get_id())
                     return
         else:
