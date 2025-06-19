@@ -3,6 +3,9 @@ name: "barResource"
 spec:
   name: "barResource"
   type: "resource"
-  input: "[[1,order]]"
+  input:
+    - object: "order"
+      number: 1
+      lastState: ""
   length: "5"
   width: ""

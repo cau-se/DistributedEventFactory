@@ -2,7 +2,10 @@ kind: object
 name: "bar"
 spec:
   name: "bar"
-  type: "resource"
-  input: "[[1,barResource]]"
+  type: "processedResource"
+  input: 
+    - object: "barResource"
+      number: 1
+      lastState: ""
   length: ""
   width: ""
