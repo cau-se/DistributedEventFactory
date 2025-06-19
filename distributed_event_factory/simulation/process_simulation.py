@@ -14,6 +14,7 @@ from process_mining_core.datastructure.core.event import Event
 from distributed_event_factory.core.datasource import DataSource
 from distributed_event_factory.core.datasource_id import START_SENSOR_ID, END_DATA_SOURCE_ID, DataSourceId
 from distributed_event_factory.provider.data.case_provider import CaseIdProvider
+from provider.event.event_provider import EventDataProvider
 from provider.object.input.input_provider import InputObjectProvider
 from simulation.object_event import ObjectEvent
 
@@ -45,8 +46,7 @@ class ProcessSimulator:
         self.objects = objects
         self.routes = routes
         self.stocks = stocks
-        self.processes : Dict[str, datetime] = {}
-        self.orders : List[str] = []
+        self.orders: List[str] = []
         self.add_configured_stocks_in_warehouse(self.last_timestamp)
 
     def simulate(self) -> Event:
@@ -62,75 +62,51 @@ class ProcessSimulator:
                 copy_of_data_sources = token.data_source_id
                 for data_source_id in copy_of_data_sources:
                     token.data_source_id = data_source_id
-                    self.tokens.put(token.clone()) 
+                    self.tokens.put(token.clone())
                 self.tokens.get()
             if token.data_source_id == END_DATA_SOURCE_ID:
                 token = self.start_new_case()
 
             if token.data_source_id == START_SENSOR_ID:
+                # Only one start allowed
                 token.data_source_id = DataSourceId(
                     self._get_sensor_with_id(START_SENSOR_ID).get_event_data()[0].get_transition())
-                #TODO create different product orders
+                # TODO create different product orders (at the moment not used)
                 orderObject = self.objects.get("woodShelf")
                 self.orders.append(orderObject)
                 self.append_order(orderObject)
             current_data_source = self._get_sensor_with_id(token.data_source_id)
-            self.processes[current_data_source.sensor_id.id] = token.last_timestamp
             event = current_data_source.get_event_data()
             if type(event) is list:
-                first = True
                 for e in event:
-                    if first:
-                        first = False
-                    else:
-                        pass
-                        # handling unsure because of the need to put a builded event into tokens
-                        #new_token = token.clone()
-                        #token.event = e
-                        #self.tokens.put(new_token)
-                event = event[0]
-            necessary_input = current_data_source.event_provider.type_parser
-            if not self.check_input_in_object_store(necessary_input):
-                activity, current_data_source, necessary_input, next_datasource, output = self.set_parameters_for_previous_event(
-                    current_data_source, necessary_input, token)
+                    self.inner_simulation_per_event(current_data_source, e, token)
             else:
-                next_datasource = event.get_transition()
-                activity = event.get_activity_provider().get_activity()
-                output = event.get_activity_provider().get_output()
-            input_objects = self.remove_used_input(necessary_input)
-            token.add_to_last_timestamp(event.get_duration())
-            self.last_timestamp = token.last_timestamp
-            self.add_produced_output(output, necessary_input, input_objects, self.last_timestamp)
-            if (necessary_input is not None and necessary_input) or output is not None:
-                token.event = self._build_event(token.case, activity, self.last_timestamp, current_data_source,
-                                                necessary_input, output)
-            else:
-                token.event = self._build_event(token.case, activity, self.last_timestamp, current_data_source)
-            self.set_next_datasource_token(activity, current_data_source, next_datasource, token)
-            if self.objects:
-                numberOfTokens = self.tokens.qsize()
-                input_of_following_event = self._get_sensor_with_id(token.data_source_id)
-                first_output = output[0]
-                if type(first_output) is not Dict:
-                            first_output = eval(str(first_output))
-                if not isinstance(input_of_following_event, EndDataSource) and str(first_output.get(OBJECT_NAME)) != "order": 
-                    input_of_following_event = input_of_following_event.event_provider.type_parser
-                    for output_elem in output:
-                        if type(output_elem) is not Dict:
-                            output_elem = eval(str(output_elem))
-                        if self.find_in_necessary_input(input_of_following_event, output_elem.get(OBJECT_NAME)):
-                            num_of_input_following_event = self.find_in_necessary_input(input_of_following_event, output_elem.get(OBJECT_NAME)).numberOfObject
-                            if output_elem.get(NUMBER_OF_OBJECT) > num_of_input_following_event:
-                                self.set_next_datasource_token(activity, current_data_source, next_datasource, token)
-                                loop_times = math.ceil(output_elem.get(NUMBER_OF_OBJECT)/num_of_input_following_event)
-                                for x in range(loop_times):
-                                    self.tokens.put(token.clone())
-                if numberOfTokens == self.tokens.qsize():
-                    self.tokens.put(token)
-            else:
-                self.tokens.put(token)
+                self.inner_simulation_per_event(current_data_source, event, token)
 
         return emit_event
+
+    def inner_simulation_per_event(self, current_data_source, event, token):
+        if True:
+            pass
+        necessary_input = current_data_source.event_provider.type_parser
+        if not self.check_input_in_object_store(necessary_input):
+            activity, current_data_source, necessary_input, next_datasource, output = self.set_parameters_for_previous_event(
+                current_data_source, necessary_input, token)
+        else:
+            next_datasource = event.get_transition()
+            activity = event.get_activity_provider().get_activity()
+            output = event.get_activity_provider().get_output()
+        input_objects = self.remove_used_input(necessary_input)
+        token.add_to_last_timestamp(event.get_duration())
+        self.last_timestamp = token.last_timestamp
+        self.add_produced_output(output, necessary_input, input_objects, self.last_timestamp)
+        if (necessary_input is not None and necessary_input) or output is not None:
+            token.event = self._build_event(token.case, activity, self.last_timestamp, current_data_source,
+                                            necessary_input, output)
+        else:
+            token.event = self._build_event(token.case, activity, self.last_timestamp, current_data_source)
+        self.set_next_datasource_token(activity, current_data_source, next_datasource, token)
+        self.add_tokens(activity, current_data_source, next_datasource, output, token)
 
     def start_new_case(self):
         case_id = self.case_id_provider.get()
@@ -164,11 +140,11 @@ class ProcessSimulator:
             if self.datasources[sensor].get_id() == data_source_id:
                 return self.datasources[sensor]
         raise ValueError("Sensor not found")
-    
+
     def append_order(self, orderObject):
         if orderObject.input_objects:
             for input in orderObject.input_objects:
-                for i in range (0, input.numberOfObject):
+                for i in range(0, input.numberOfObject):
                     self.orders.append(self.objects.get(input.objectName))
                 self.append_order(self.objects.get(input.objectName))
 
@@ -178,13 +154,16 @@ class ProcessSimulator:
                 obj = eval(str(obj))
             if obj.get(LAST_STATE):
                 if not self.object_store.__contains__(obj.get(OBJECT_NAME)) or self.object_store.get(
-                        obj.get(OBJECT_NAME)) < obj.get(NUMBER_OF_OBJECT) or sum(1 for stored_obj in self.object_store_objects if
-                                                                    stored_obj.object_id.id == obj.get(OBJECT_NAME) and stored_obj.get_last_changed_value() == obj.get(
-                                                                        LAST_STATE)) < obj.get(NUMBER_OF_OBJECT):
+                        obj.get(OBJECT_NAME)) < obj.get(NUMBER_OF_OBJECT) or sum(
+                    1 for stored_obj in self.object_store_objects if
+                    stored_obj.object_id.id == obj.get(OBJECT_NAME) and stored_obj.get_last_changed_value() == obj.get(
+                        LAST_STATE)) < obj.get(NUMBER_OF_OBJECT):
                     return False
             elif not self.object_store.__contains__(obj.get(OBJECT_NAME)) or self.object_store.get(
-                    obj.get(OBJECT_NAME)) < obj.get(NUMBER_OF_OBJECT) or sum(1 for stored_obj in self.object_store_objects if
-                                                                stored_obj.object_id.id == obj.get(OBJECT_NAME) and not stored_obj.values_changed) < obj.get(NUMBER_OF_OBJECT):
+                    obj.get(OBJECT_NAME)) < obj.get(NUMBER_OF_OBJECT) or sum(
+                1 for stored_obj in self.object_store_objects if
+                stored_obj.object_id.id == obj.get(OBJECT_NAME) and not stored_obj.values_changed) < obj.get(
+                NUMBER_OF_OBJECT):
                 return False
         return True
 
@@ -213,7 +192,7 @@ class ProcessSimulator:
             necessary_input = [necessary_input]
         current_data_source = self.datasources.get(token.event.node)
         if not self.check_input_in_object_store(necessary_input):
-            raise ValueError("Input not found")
+            raise ValueError("Input not found", necessary_input)
         return activity, current_data_source, necessary_input, next_datasource, output
 
     def set_next_datasource_token(self, activity, current_data_source, next_datasource, token):
@@ -222,7 +201,7 @@ class ProcessSimulator:
             for route in self.routes.get("default"):
                 if route.get_route_for_activity() == activity and route.get_start() == start_point:
                     token.add_to_last_timestamp(route.get_duration())
-                    next_datasource = route.get_end() 
+                    next_datasource = route.get_end()
                     token.set_data_source_id(self.datasources[next_datasource].get_id())
                     return
         else:
@@ -292,6 +271,46 @@ class ProcessSimulator:
             input_obj = self.object_store_objects.pop(object_from_store_index)
             input_objects.append(input_obj)
 
+    def add_tokens(self, activity, current_data_source, next_datasource, output, token):
+        if self.objects:
+            number_of_tokens = self.tokens.qsize()
+            input_of_following_event = self._get_sensor_with_id(token.data_source_id)
+            first_output = output[0]
+            if type(first_output) is not Dict:
+                first_output = eval(str(first_output))
+
+            if not isinstance(input_of_following_event, EndDataSource) and str(
+                    first_output.get(OBJECT_NAME)) != "order":
+                input_of_following_event = input_of_following_event.event_provider.type_parser
+                for output_elem in output:
+                    if type(output_elem) is not Dict:
+                        output_elem = eval(str(output_elem))
+                    if self.find_in_necessary_input(input_of_following_event, output_elem.get(OBJECT_NAME)):
+                        num_of_input_following_event = self.find_in_necessary_input(input_of_following_event,
+                                                                                    output_elem.get(
+                                                                                        OBJECT_NAME)).numberOfObject
+
+                        if output_elem.get(NUMBER_OF_OBJECT) > num_of_input_following_event:
+                            self.set_next_datasource_token(activity, current_data_source, next_datasource, token)
+                            output_input_factor = math.ceil(
+                                output_elem.get(NUMBER_OF_OBJECT) / num_of_input_following_event)
+                            event_data = self.datasources[next_datasource].get_event_data()
+                            if type(event_data) is list and len(event_data) == 1:
+                                duration_following_activity = event_data[0].get_duration()
+                            elif type(event_data) is EventDataProvider:
+                                duration_following_activity = event_data.get_duration()
+                            else:
+                                raise ValueError("Duration not known, multiple events after loop of events")
+                            for x in range(output_input_factor):
+                                if x != 0:
+                                    token.event = None
+                                token.add_to_last_timestamp(x * duration_following_activity)
+                                self.tokens.put(token.clone())
+            if number_of_tokens == self.tokens.qsize():
+                self.tokens.put(token)
+        else:
+            self.tokens.put(token)
+
     def find_in_necessary_input(self, necessary_input, key):
         return next((item for item in necessary_input if item.objectName == key), None)
 
@@ -304,6 +323,7 @@ class ProcessSimulator:
     def find_in_list_with_change_state(self, data, key, change_value):
         return next(
             (item for item in data if item.object_id.id == key and item.get_last_changed_value() == change_value), None)
+
 
 class Token:
     def __init__(
@@ -326,9 +346,9 @@ class Token:
 
     def __lt__(self, other):
         return self.last_timestamp < other.last_timestamp
-    
+
     def clone(self):
         return Token(self.case,
-                                   self.data_source_id,
-                                   self.last_timestamp,
-                                   self.event)
+                     self.data_source_id,
+                     self.last_timestamp,
+                     self.event)
