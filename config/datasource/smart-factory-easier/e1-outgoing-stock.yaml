@@ -4,8 +4,7 @@ spec:
   name: "OutgoingStock"
   group: "factory"
   type: objectCentric
-  selection: genericProbability
-  distribution: [0.5, 0.5]
+  selection: parallel
   input:
     - object: "order"
       number: 1

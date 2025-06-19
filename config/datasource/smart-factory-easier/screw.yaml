@@ -3,6 +3,9 @@ name: "screw"
 spec:
   name: "screw"
   type: "smallComponent"
-  input: "[[1,order]]"
+  input: 
+    - object: "order"
+      number: 1
+      lastState: ""
   length: ""
   width: ""
