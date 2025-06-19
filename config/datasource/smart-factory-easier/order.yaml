@@ -3,6 +3,6 @@ name: "order"
 spec:
   name: "order"
   type: "order"
-  input: "[[]]"
+  input:
   length: ""
   width: ""

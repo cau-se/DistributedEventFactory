@@ -3,6 +3,12 @@ name: "woodShelf"
 spec:
   name: "woodShelf"
   type: "product"
-  input: "[[4,bar],[13,screw]]"
+  input: 
+    - object: "bar"
+      number: 4
+      lastState: "sanded"
+    - object: "screw"
+      number: 13
+      lastState: ""
   length: ""
   width: ""
