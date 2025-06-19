@@ -13,6 +13,6 @@ spec:
       start: "OutgoingStock"
       end: "Assembly"
       transferObjects:
-        - name: "barResource"
-          number: 1
+        - name: "screw"
+          number: 13
       duration: 3

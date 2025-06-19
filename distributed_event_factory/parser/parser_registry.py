@@ -13,6 +13,7 @@ from distributed_event_factory.parser.datasource.event.selection.generic_probabi
     GenericProbabilityEventSelectionParser
 from distributed_event_factory.parser.datasource.event.selection.ordered_event_selection_parser import \
     OrderedEventSelectionParser
+from distributed_event_factory.parser.datasource.event.selection.parallel_event_selection_parser import ParallelEventSelectionParser
 from distributed_event_factory.parser.datasource.event.selection.uniform_event_selection import \
     UniformEventSelectionParser
 from distributed_event_factory.parser.datasource.event.transition.transition_parser import TransitionParser
@@ -102,6 +103,8 @@ class ParserRegistry:
 
         self.uniform_event_selection_parser = (UniformEventSelectionParser())
         self.ordered_event_selection_parser = (OrderedEventSelectionParser())
+        self.parallel_event_selection_parser = (ParallelEventSelectionParser()
+                                                .add_dependency("eventData", self.event_data_list_parser))
 
         self.drifting_selection_parser = (DriftingProbabilityEventSelectionParser()
                                           .add_dependency("distribution", self.distribution_parser)
@@ -117,6 +120,7 @@ class ParserRegistry:
                                        .add_dependency("uniform", self.uniform_event_selection_parser)
                                        .add_dependency("genericProbability", self.probability_selection_parser)
                                        .add_dependency("driftingProbability", self.drifting_selection_parser)
+                                       .add_dependency("parallel", self.parallel_event_selection_parser)
                                        .add_dependency("objectCentric", self.input_parser)
                                        .add_dependency("default", self.dummy_object_parser))
 
