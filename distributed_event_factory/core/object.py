@@ -13,6 +13,7 @@ class Object:
     ):
         self.timestamp = timestamp
         self.object_state = object_state
+        # Maybe call that object type
         self.object_id = object_id
 
 
