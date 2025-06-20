@@ -14,7 +14,7 @@ class DataSourceParser(Parser):
     def parse(self, config):
         return GenericDataSource(
             data_source_id=DataSourceId(config["name"]),
-            group_id=config["group"],
+            group_id=config["group_id"],
             event_provider=self.dependencies["eventData"].parse(config)
         )
 

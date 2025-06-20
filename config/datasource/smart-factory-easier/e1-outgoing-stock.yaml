@@ -11,18 +11,13 @@ spec:
       lastState: ""
   eventData:
     - activity:
-        name: "Sent to sawing machine"
+        name: "retrieve resources"
         output:
           - object: "barResource"
             number: 1
             change: ""
-      duration: 3
-      transition: "<routing>"
-    - activity:
-        name: "Sent to assembly station"
-        output:
           - object: "screw"
             number: 13
             change: ""
-      duration: 2
+      duration: 3
       transition: "<routing>"
