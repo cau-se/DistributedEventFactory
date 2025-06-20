@@ -2,7 +2,7 @@ kind: datasource
 name: "Assembling"
 spec:
   name: "Assembling"
-  group: "factory"
+  group: "Assembling"
   selection: genericProbability
   distribution: [ 0.8, 0.1, 0.08, 0.02 ]
   eventData:

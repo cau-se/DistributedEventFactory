@@ -1,8 +1,11 @@
+import sys
+import time
+from threading import Thread
+
 from distributed_event_factory.provider.data.case_provider import CaseIdProvider
 from distributed_event_factory.provider.data.count_provider import CountProvider
+from distributed_event_factory.simulation.abstract_process_simulator import ProcessSimulator
 from distributed_event_factory.simulation.abstract_simulation import Simulation
-from distributed_event_factory.simulation.process_simulation import ProcessSimulator
-
 
 class CountBasedSimulation(Simulation):
 
@@ -13,15 +16,16 @@ class CountBasedSimulation(Simulation):
         self.sinks = dict()
         self.max_concurrent_cases = max_concurrent_cases
 
-    def run_simulation(self, datasources, sinks, hook=lambda: None):
-        self.setup_datasource_sink_mapping(sinks)
-        process_simulator = ProcessSimulator(
-            case_id_provider=self.case_id_provider,
-            data_sources=datasources,
-            max_concurrent_cases=self.max_concurrent_cases
-        )
+    def run(self, process_simulator, steps, hook):
+        for i in range(steps):
+            self.send_event(process_simulator.simulate())
+            #hook(i+1)
+        return
 
-        for i in range(self.simulation_steps):
-            event = process_simulator.simulate()
-            self.send_event(event)
-            hook()
+    def run_simulation(self, process_simulator: ProcessSimulator, data_sources, sinks, hook=lambda: None):
+        self.setup_datasource_sink_mapping(sinks)
+        for data_source in data_sources:
+            process_simulator.add_datasource(name=data_source, data_source=data_sources[data_source])
+        self.run(process_simulator, int(self.simulation_steps), hook)
+
+

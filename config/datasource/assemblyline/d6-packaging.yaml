@@ -2,7 +2,7 @@ kind: datasource
 name: "Packaging"
 spec:
   name: "Packaging"
-  group: "factory"
+  group: "Packaging"
   selection: genericProbability
   distribution: [ 1.0 ]
   eventData:

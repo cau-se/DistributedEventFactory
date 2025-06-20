@@ -29,6 +29,9 @@ from distributed_event_factory.parser.simulation.load.gradual_load_parser import
 from distributed_event_factory.parser.simulation.load.load_parser import LoadParser
 from distributed_event_factory.parser.simulation.load.sinus_load_parser import SinusLoadParser
 from distributed_event_factory.parser.simulation.simulation_parser import SimulationParser
+from distributed_event_factory.parser.simulation.simulator.def_simulator_parser import DefSimulationParser
+from distributed_event_factory.parser.simulation.simulator.process_simulation_parser import ProcessSimulationParser
+from distributed_event_factory.parser.simulation.simulator.xes_simulator_parser import XesSimulationParser
 from distributed_event_factory.parser.simulation.variant.countbased_simulation_parser import CountBasedSimulationParser
 from distributed_event_factory.parser.simulation.variant.loadtest_simulation_parser import LoadTestSimulationParser
 from distributed_event_factory.parser.simulation.variant.stream_simulation_parser import StreamSimulationParser
@@ -120,11 +123,20 @@ class ParserRegistry:
         self.datasource_parser = (DataSourceParser()
                                   .add_dependency("eventData", self.event_selection_parser))
 
+
         ##########
         # Case
         self.increasing_case_id_parser = IncreasingCaseIdProvider()
         self.case_id_parser: CaseIdParser = (CaseIdParser()
                                              .add_dependency("increasing", self.increasing_case_id_parser))
+
+        # Process Simulation
+        self.xes_simulation_parser = XesSimulationParser()
+        self.def_simulation_parser = DefSimulationParser()
+        self.process_simulation_parser = (ProcessSimulationParser()
+            .add_dependency("xes", self.xes_simulation_parser)
+            .add_dependency("def", self.def_simulation_parser)
+        )
 
         # Load
         self.constant_load_parser = ConstantLoadParser()
@@ -163,4 +175,5 @@ class ParserRegistry:
         self.kind_parser: KindParser = (KindParser()
                                         .add_dependency("sink", self.sink_parser)
                                         .add_dependency("datasource", self.datasource_parser)
-                                        .add_dependency("simulation", self.simulation_parser))
+                                        .add_dependency("simulation", self.simulation_parser)
+                                        .add_dependency("process_simulation", self.process_simulation_parser))

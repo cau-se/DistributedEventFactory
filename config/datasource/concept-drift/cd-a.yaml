@@ -2,7 +2,7 @@ kind: datasource
 name: "A"
 spec:
   name: "A"
-  group: "concept-drift"
+  group: "A"
   selection: driftingProbability
   startDistribution: [ 0.0, 1.0 ]
   endDistribution: [ 1.0, 0.0 ]

@@ -2,7 +2,7 @@ kind: datasource
 name: "QualityControl"
 spec:
   name: "QualityControl"
-  group: "factory"
+  group: "QualityControl"
   selection: genericProbability
   distribution: [ 0.3, 0.1, 0.6 ]
   eventData:

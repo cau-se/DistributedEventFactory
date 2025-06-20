@@ -1,0 +1,14 @@
+kind: sink
+name: http-sink
+spec:
+  type: http
+  id: "Sensor"
+  url: "http://localhost:8082/event"
+  dataSourceRefs:
+    - "GoodsDelivery"
+    - "MaterialPreparation"
+    - "AssemblyLineSetup"
+    - "Assembling"
+    - "QualityControl"
+    - "Packaging"
+    - "Shipping"

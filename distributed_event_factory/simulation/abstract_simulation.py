@@ -2,6 +2,7 @@ from abc import ABC
 
 
 class Simulation(ABC):
+
     def __init__(self):
         self.datasource_sink_mapping = dict()
 

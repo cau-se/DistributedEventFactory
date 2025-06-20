@@ -1,0 +1,17 @@
+kind: sink
+name: console-sink
+spec:
+  type: console
+  id: "Sensor"
+  dataSourceRefs:
+    - "Create Fine"
+    - "Send Fine"
+    - "Appeal to Judge"
+    - "Insert Fine Notification"
+    - "Send Appeal to Prefecture"
+    - "Insert Date Appeal to Prefecture"
+    - "Receive Result Appeal from Prefecture"
+    - "Payment"
+    - "Notify Result Appeal to Offender"
+    - "Send for Credit Collection"
+    - "Add penalty"

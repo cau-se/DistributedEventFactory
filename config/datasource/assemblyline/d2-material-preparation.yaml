@@ -2,7 +2,7 @@ kind: datasource
 name: "MaterialPreparation"
 spec:
   name: "MaterialPreparation"
-  group: "factory"
+  group: "MaterialPreparation"
   selection: genericProbability
   distribution: [ 0.25, 0.7, 0.05 ]
   eventData:
