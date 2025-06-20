@@ -2,13 +2,13 @@ class GenericDecisions:
     def __init__(
             self,
             simulation_provider,
-            type_parser
+            input_objects
     ):
         self.simulation_provider = simulation_provider
-        self.type_parser= type_parser
+        self.input_objects= input_objects
 
     def get_event_data(self):
         return self.simulation_provider.get_event_data()
     
     def get_input_data(self):
-        return self.type_parser
+        return self.input_objects

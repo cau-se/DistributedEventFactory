@@ -14,7 +14,6 @@ from parser.datasource.event.output.output_parser import OutputParser
 from parser.route.route_parser import RouteParser
 from parser.stock.stock_parser import StockParser
 
-
 class EventFactory:
     def __init__(self):
         self.routes = dict()

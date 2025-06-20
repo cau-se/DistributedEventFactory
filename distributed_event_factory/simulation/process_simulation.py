@@ -37,33 +37,44 @@ class ProcessSimulator:
     ):
 
         self.max_concurrent_cases = max_concurrent_cases
+        # Add all interactions with token to the token class
         self.tokens: PriorityQueue[Token] = PriorityQueue()
         self.datasources: Dict[str, DataSource] = data_sources
-        self.case_id_provider = case_id_provider
+        self.case_id_provider: CaseIdProvider = case_id_provider
         self.last_timestamp = datetime.now()
+
+        # Refactor to one own class, two methods get_objects, get_object_count
         self.object_store: Dict[str, int] = {}
         self.object_store_objects: List[Object] = []
-        self.objects = objects
-        self.routes = routes
-        self.stocks = stocks
+
+        self.objects: Dict[str, Object] = objects
+        self.routes: Dict[str, Route] = routes
+        self.stocks: Dict[str, InputObjectProvider] = stocks
+
+        # Are that also objects?
         self.orders: List[str] = []
         self.add_configured_stocks_in_warehouse(self.last_timestamp)
+        self.buffered_events = []
 
     def simulate(self) -> Event:
-        emit_event = None
+        if not self.buffered_events:
+            new_events = self.simulate_next_steps()
+            self.buffered_events = new_events
+        return self.buffered_events.pop()
+
+    def simulate_next_steps(self) -> List[Event]:
+        emit_event = []
+
+        # Potentially get stuck if no emit_event found
         while not emit_event:
             if len(self.tokens.queue) < self.max_concurrent_cases.get():
                 token = self.start_new_case()
             else:
                 token = self.tokens.get()
 
-            emit_event = token.event
-            if type(token.data_source_id) is List:
-                copy_of_data_sources = token.data_source_id
-                for data_source_id in copy_of_data_sources:
-                    token.data_source_id = data_source_id
-                    self.tokens.put(token.clone())
-                self.tokens.get()
+            if token.event:
+                emit_event.append(token.event)
+
             if token.data_source_id == END_DATA_SOURCE_ID:
                 token = self.start_new_case()
 
@@ -85,24 +96,27 @@ class ProcessSimulator:
 
         return emit_event
 
+    #
     def inner_simulation_per_event(self, current_data_source, event, token):
-        if True:
-            pass
-        necessary_input = current_data_source.event_provider.type_parser
-        if not self.check_input_in_object_store(necessary_input):
-            activity, current_data_source, necessary_input, next_datasource, output = self.set_parameters_for_previous_event(
-                current_data_source, necessary_input, token)
+        required_input_objects = current_data_source.event_provider.input_objects # type parser is a weird word
+
+        # This line can be nicer after the refactoring to an object class
+        if not self.check_input_in_object_store(required_input_objects):
+            activity, current_data_source, required_input_objects, next_datasource, output = self.set_parameters_for_previous_event(
+                current_data_source, required_input_objects, token)
         else:
             next_datasource = event.get_transition()
             activity = event.get_activity_provider().get_activity()
             output = event.get_activity_provider().get_output()
-        input_objects = self.remove_used_input(necessary_input)
+
+        # to object store class
+        input_objects = self.remove_used_input(required_input_objects)
         token.add_to_last_timestamp(event.get_duration())
         self.last_timestamp = token.last_timestamp
-        self.add_produced_output(output, necessary_input, input_objects, self.last_timestamp)
-        if (necessary_input is not None and necessary_input) or output is not None:
+        self.add_produced_output(output, required_input_objects, input_objects, self.last_timestamp)
+        if (required_input_objects is not None and required_input_objects) or output is not None:
             token.event = self._build_event(token.case, activity, self.last_timestamp, current_data_source,
-                                            necessary_input, output)
+                                            required_input_objects, output)
         else:
             token.event = self._build_event(token.case, activity, self.last_timestamp, current_data_source)
         self.set_next_datasource_token(activity, current_data_source, next_datasource, token)
@@ -198,7 +212,10 @@ class ProcessSimulator:
     def set_next_datasource_token(self, activity, current_data_source, next_datasource, token):
         if next_datasource == ROUTING_ID.get_name():
             start_point = current_data_source.sensor_id.id
+
+            # This is for many route files, currently only one route is configured
             for route in self.routes.get("default"):
+                # Consider using a dictionary where activity
                 if route.get_route_for_activity() == activity and route.get_start() == start_point:
                     token.add_to_last_timestamp(route.get_duration())
                     next_datasource = route.get_end()
@@ -239,8 +256,11 @@ class ProcessSimulator:
 
     def add_object_to_object_store_objects_with_change(self, element, output_object, timestamp):
         output_object.add_change(
-            Object(timestamp=timestamp.strftime(Y_M_D_H_M_S), object_state=element.get(CHANGE),
-                   object_id=output_object.object_id))
+            Object(
+                timestamp=timestamp.strftime(Y_M_D_H_M_S),
+                object_state=element.get(CHANGE),
+                object_id=output_object.object_id)
+        )
         self.object_store_objects.append(
             output_object)
 
@@ -281,7 +301,7 @@ class ProcessSimulator:
 
             if not isinstance(input_of_following_event, EndDataSource) and str(
                     first_output.get(OBJECT_NAME)) != "order":
-                input_of_following_event = input_of_following_event.event_provider.type_parser
+                input_of_following_event = input_of_following_event.event_provider.input_objects
                 for output_elem in output:
                     if type(output_elem) is not Dict:
                         output_elem = eval(str(output_elem))

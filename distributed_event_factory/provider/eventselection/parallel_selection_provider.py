@@ -10,4 +10,4 @@ class ParallelEventSelectionProvider(EventSelectionProvider):
         self.potential_events = potential_events
 
     def get_event_data(self):
-        return self.potential_events[0]
+        return self.potential_events

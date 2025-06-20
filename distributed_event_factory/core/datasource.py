@@ -15,7 +15,7 @@ class GenericDataSource(DataSource):
     ):
         self.sensor_id: DataSourceId = data_source_id
         self.group_id: str = group_id
-        self.event_provider = event_provider
+        self.event_provider: EventSelectionProvider = event_provider
         self.event_log: List[Event] = []
 
     def get_id(self) -> DataSourceId:
