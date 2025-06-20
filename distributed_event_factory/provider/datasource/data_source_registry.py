@@ -22,7 +22,7 @@ class DataSourceRegistry:
             data_sources.append(
                 GenericDataSource(
                     data_source_id=DataSourceId(sensor_id),
-                    group_id=definition.get("groupId", "default group"),
+                    group_id=definition.get("groupId", "default group_id"),
                     event_provider=EventSelectionProviderRegistry().get(config=definition["eventGeneration"]),
                     sink=self.get_sink(definition, sensor_id, default_sink)
                 )

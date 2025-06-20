@@ -2,7 +2,7 @@ kind: route
 name: "default"
 spec:
   routes:
-    - routeForActivity: "Sent to sawing machine"
+    - routeForActivity: "retrieve resources"
       start: "OutgoingStock"
       end: "SawingBar"
       transferObjects:
