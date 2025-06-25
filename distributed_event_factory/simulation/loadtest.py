@@ -1,6 +1,6 @@
 from typing import Dict
 
-from core.object import Object
+from core.object import ObjectData
 from core.route import Route
 from distributed_event_factory.core.datasource import DataSource
 from distributed_event_factory.provider.data.case_provider import CaseIdProvider
@@ -39,7 +39,7 @@ class LoadTestSimulation(Simulation):
         for sink in self.sink:
            sink.start()
 
-    def run_simulation(self, data_sources: Dict[str, DataSource], datasource_sink_mapping: Dict[str, LoadTestHttpSink], objects: Dict[str, Object], routes: Dict[str, Route], stocks: Dict[str, InputObjectProvider],
+    def run_simulation(self, data_sources: Dict[str, DataSource], datasource_sink_mapping: Dict[str, LoadTestHttpSink], objects: Dict[str, ObjectData], routes: Dict[str, Route], stocks: Dict[str, InputObjectProvider],
                        hook=lambda: None):
         self.setup_datasource_sink_mapping(datasource_sink_mapping)
         for sink in datasource_sink_mapping:

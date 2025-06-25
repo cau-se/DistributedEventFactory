@@ -30,7 +30,10 @@ if __name__ == '__main__':
                 output_objects=[],
                 duration=10,
             )
-        ]
+        ],
+        data_sources=None,
+        objects=None,
+        stocks=None
     )
     for i in range(10):
         print(simulator.simulate())

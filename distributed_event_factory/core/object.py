@@ -4,7 +4,7 @@ from distributed_event_factory.core.abstract_object_source import ObjectSource
 from distributed_event_factory.core.object_id import ObjectId
 
 
-class Object:
+class ObjectData:
     def __init__(
             self,
             timestamp,
@@ -28,15 +28,15 @@ class GenericObjectSource(ObjectSource):
             width: int
 
     ):
-        self.values_changed: List[Object] = []
+        self.values_changed: List[ObjectData] = []
         self.object_id = object_id
         self.object_type = object_type
         self.input_objects = input_objects
         self.length = length
         self.width = width
 
-    def emit_object(self, id, object_name, timestamp) -> Object:
-        object = Object(
+    def emit_object(self, id, object_name, timestamp) -> ObjectData:
+        object = ObjectData(
             timestamp=timestamp.strftime("%Y-%m-%d %H:%M:%S"),
             object_type=self.object_type,
             object_id=self.object_id

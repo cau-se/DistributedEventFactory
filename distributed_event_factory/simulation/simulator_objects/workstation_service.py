@@ -11,7 +11,7 @@ class WorkstationService:
         activatable_workstations = []
 
         for workstation in workstations:
-            if object_storage.contains_all_objects(workstation.input_objects):
+            if object_storage.contains_all_object_of_data(workstation.input_objects):
                 activatable_workstations.append(workstation)
 
         return activatable_workstations
