@@ -5,7 +5,7 @@ from typing import Dict, List
 import math
 
 from core.datasource_id import ROUTING_ID
-from core.object import Object
+from core.object import ObjectData
 from core.route import Route
 from distributed_event_factory.core.end_datasource import EndDataSource
 from distributed_event_factory.provider.data.count_provider import CountProvider
@@ -31,7 +31,7 @@ class ProcessSimulator:
             data_sources: Dict[str, DataSource],
             case_id_provider: CaseIdProvider,
             max_concurrent_cases: CountProvider,
-            objects: Dict[str, Object],
+            objects: Dict[str, ObjectData],
             routes: Dict[str, Route],
             stocks: Dict[str, InputObjectProvider]
     ):
@@ -45,9 +45,9 @@ class ProcessSimulator:
 
         # Refactor to one own class, two methods get_objects, get_object_count
         self.object_store: Dict[str, int] = {}
-        self.object_store_objects: List[Object] = []
+        self.object_store_objects: List[ObjectData] = []
 
-        self.objects: Dict[str, Object] = objects
+        self.objects: Dict[str, ObjectData] = objects
         self.routes: Dict[str, Route] = routes
         self.stocks: Dict[str, InputObjectProvider] = stocks
 
@@ -188,8 +188,8 @@ class ProcessSimulator:
             for i in range(stock.numberOfObject):
                 if stock.lastState:
                     obj = self.objects.get(stock.objectName).clone()
-                    obj.add_change(Object(timestamp=timestamp.strftime(Y_M_D_H_M_S), object_state=stock.lastState,
-                                          object_id=obj.object_id))
+                    obj.add_change(ObjectData(timestamp=timestamp.strftime(Y_M_D_H_M_S), object_state=stock.lastState,
+                                              object_id=obj.object_id))
                     self.object_store_objects.append(obj)
                 else:
                     self.object_store_objects.append(self.objects.get(stock.objectName).clone())
@@ -256,7 +256,7 @@ class ProcessSimulator:
 
     def add_object_to_object_store_objects_with_change(self, element, output_object, timestamp):
         output_object.add_change(
-            Object(
+            ObjectData(
                 timestamp=timestamp.strftime(Y_M_D_H_M_S),
                 object_state=element.get(CHANGE),
                 object_id=output_object.object_id)

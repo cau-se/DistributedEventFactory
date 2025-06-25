@@ -4,6 +4,7 @@ from process_mining_core.datastructure.core.event import Event
 
 from simulation.object_event import ObjectEvent
 
+Y_M_D_H_M_S = "%Y-%m-%d %H:%M:%S"
 
 class WorkProcessStep:
 
@@ -25,12 +26,12 @@ class WorkProcessStep:
 
     def produce_event(self, current_timestamp) -> ObjectEvent:
         return ObjectEvent(
-            timestamp=self.add_to_last_timestamp(current_timestamp, self.duration),
+            timestamp=self.add_to_last_timestamp(current_timestamp, self.duration).strftime(Y_M_D_H_M_S),
             activity=self.activity,
             node=self.node,
             group_id=self.group_id,
-            input=self.input_objects,
-            output=self.output_objects
+            input=", ".join(str(obj) for obj in self.input_objects),
+            output=", ".join(str(obj) for obj in self.output_objects)
         )
 
     def add_to_last_timestamp(self, current_timestamp, duration):
