@@ -36,24 +36,31 @@ class ProcessSimulationObjectCentric:
             self.workstation_service.get_activatable_workstations(self.workstation_steps, self.object_storage))
         next_step: WorkProcessStep = self.workstation_service.get_workstation(available_steps)
         event = next_step.produce_event(self.current_timestamp)
-        self.object_storage.add_object(event.output)
+        self.object_storage.manage_input_and_output_of_steps(next_step.input_objects, next_step.output_objects,
+                                                             self.objects, self.current_timestamp)
         return event
 
     def add_configured_stocks_in_warehouse(self):
         for stock in self.stocks.get("default"):
-            self.object_storage.add_objects(ObjectUtility().convert_object_data_to_generic_objects(generic_objects_possible=self.objects, object_data=stock))
+            self.object_storage.add_objects(
+                ObjectUtility().convert_object_data_to_generic_objects(generic_objects_possible=self.objects,
+                                                                       object_data=stock,
+                                                                       timestamp=self.current_timestamp))
 
     def configureWorkStationsAndSteps(self):
         for data_source in self.data_sources:
             if data_source != "<start>" and data_source != "<end>":
                 data_source_id = DataSourceId(data_source)
-                events = self._get_sensor_with_id(DataSourceId("Assembly")).get_event_data()
-                input_objects = self._get_sensor_with_id(DataSourceId("Assembly")).event_provider.input_objects
+                events = self._get_sensor_with_id(DataSourceId(data_source)).get_event_data()
+                input_objects = self._get_sensor_with_id(DataSourceId(data_source)).event_provider.input_objects
                 for e in events:
-                    self.workstation_steps.append(WorkProcessStep(activity=e.get_activity_provider().get_activity(), node=data_source_id.get_name(),
-                                    group_id=self._get_sensor_with_id(data_source_id).group_id,
-                                    input_objects=input_objects, output_objects=e.get_activity_provider().get_output(),
-                                    duration=e.get_duration()))
+                    self.workstation_steps.append(WorkProcessStep(activity=e.get_activity_provider().get_activity(),
+                                                                  node=data_source_id.get_name(),
+                                                                  group_id=self._get_sensor_with_id(
+                                                                      data_source_id).group_id,
+                                                                  input_objects=input_objects,
+                                                                  output_objects=e.get_activity_provider().get_output(),
+                                                                  duration=e.get_duration()))
 
     def _get_sensor_with_id(self, data_source_id) -> DataSource:
         for sensor in self.data_sources:
