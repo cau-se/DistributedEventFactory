@@ -13,6 +13,12 @@ spec:
     - object: "screw"
       number: 13
       lastState: ""
+    - object: "handover"
+      number: 1
+      lastState: ""
+    - object: "handoverStock"
+      number: 1
+      lastState: ""
   eventData:
     - activity:
         name: "Assembling completed"
