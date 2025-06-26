@@ -17,5 +17,5 @@ spec:
           - object: "bar"
             number: 1
             change: "sanded"
-      transition: "Assembly"
+      transition: "TransportM1A"
       duration: 5

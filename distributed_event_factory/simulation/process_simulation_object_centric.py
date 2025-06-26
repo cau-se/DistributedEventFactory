@@ -30,23 +30,54 @@ class ProcessSimulationObjectCentric:
         self.stocks: Dict[str, InputObjectProvider] = stocks
         self.configureWorkStationsAndSteps()
         self.add_configured_stocks_in_warehouse()
+        self.prior_step : str = ""
 
     def simulate(self) -> Event:
         available_steps: List[WorkProcessStep] = (
             self.workstation_service.get_activatable_workstations(self.workstation_steps, self.object_storage))
-        next_step: WorkProcessStep = self.workstation_service.get_workstation(available_steps)
+        next_step = self.get_next_step(available_steps)
+        self.prior_step = next_step.node
         event = next_step.produce_event(self.current_timestamp)
         self.object_storage.manage_input_and_output_of_steps(next_step.input_objects, next_step.output_objects,
                                                              self.objects, self.current_timestamp)
         return event
 
+    def _get_next_step_by_event_provider(self, data_source) -> List[str]:
+        events = self._get_sensor_with_id(DataSourceId(data_source)).get_event_data()
+        if len(events) == 1:
+            return [events[0].transition_provider.next_sensor_index]
+        elif len(events) > 1:
+            next_sensors = []
+            for e in events:
+                next_sensors.append(e.transition_provider.next_sensor_index)
+            return next_sensors
+        return None
+
+    def get_next_step(self, available_steps):
+        if self.prior_step:
+            next_available_steps = self._get_next_step_by_event_provider(self.prior_step)
+            if next_available_steps:
+                next_step: WorkProcessStep = self.workstation_service.get_workstation_preselected(available_steps,
+                                                                                                  next_available_steps)
+            else:
+                next_step: WorkProcessStep = self.workstation_service.get_random_workstation(available_steps)
+        else:
+            next_step: WorkProcessStep = self.workstation_service.get_random_workstation(available_steps)
+        return next_step
+
+    def _get_sensor_with_id(self, data_source_id) -> DataSource:
+        for sensor in self.data_sources:
+            if self.data_sources[sensor].get_id() == data_source_id:
+                return self.data_sources[sensor]
+        raise ValueError("Sensor not found")
+
+    ### preparing methods ###
     def add_configured_stocks_in_warehouse(self):
         for stock in self.stocks.get("default"):
             self.object_storage.add_objects(
                 ObjectUtility().convert_object_data_to_generic_objects(generic_objects_possible=self.objects,
                                                                        object_data=stock,
                                                                        timestamp=self.current_timestamp))
-
     def configureWorkStationsAndSteps(self):
         for data_source in self.data_sources:
             if data_source != "<start>" and data_source != "<end>":
@@ -62,8 +93,3 @@ class ProcessSimulationObjectCentric:
                                                                   output_objects=e.get_activity_provider().get_output(),
                                                                   duration=e.get_duration()))
 
-    def _get_sensor_with_id(self, data_source_id) -> DataSource:
-        for sensor in self.data_sources:
-            if self.data_sources[sensor].get_id() == data_source_id:
-                return self.data_sources[sensor]
-        raise ValueError("Sensor not found")
