@@ -20,4 +20,4 @@ spec:
             number: 13
             change: ""
       duration: 3
-      transition: "<routing>"
+      transition: ""

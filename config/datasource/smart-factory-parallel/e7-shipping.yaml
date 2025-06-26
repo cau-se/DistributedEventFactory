@@ -25,5 +25,5 @@ spec:
           - object: "woodShelf"
             number: 1
             change: ""
-      transition: "<end>"
+      transition: ""
       duration: 1

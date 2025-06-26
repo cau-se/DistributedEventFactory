@@ -16,6 +16,16 @@ class WorkstationService:
 
         return activatable_workstations
 
-    def get_workstation(self, workstations: List[WorkProcessStep]) -> WorkProcessStep:
-        # vielleicht irgendwas mit der transition
+    def get_random_workstation(self, workstations: List[WorkProcessStep]) -> WorkProcessStep:
+        return workstations[random.randint(0, len(workstations) - 1)]
+
+    def get_workstation_preselected(self, workstations: List[WorkProcessStep], prefered_workstations: List[str]):
+        workstations_selected = []
+        for workstation in workstations:
+            if workstation.node in prefered_workstations:
+                workstations_selected.append(workstation)
+        if len(workstations_selected) ==1:
+            return workstations_selected[0]
+        elif len(workstations_selected) > 1:
+            return random.choice(workstations_selected)
         return workstations[random.randint(0, len(workstations) - 1)]

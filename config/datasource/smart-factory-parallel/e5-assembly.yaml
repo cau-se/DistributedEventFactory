@@ -34,7 +34,7 @@ spec:
           - object: "woodShelf"
             number: 1
             change: "overheated"
-      transition: "<end>"
+      transition: ""
       duration: 2
     - activity:
         name: "Item broke"
@@ -42,5 +42,5 @@ spec:
           - object: "woodShelf"
             number: 1
             change: "broke"
-      transition: "<end>"
+      transition: ""
       duration: 1
