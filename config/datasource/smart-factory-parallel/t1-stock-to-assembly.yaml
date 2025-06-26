@@ -1,0 +1,24 @@
+kind: datasource
+name: "TransportSA"
+spec:
+  name: "TransportSA"
+  group: "transport"
+  type: objectCentric
+  selection: genericProbability
+  distribution: [1.0]
+  input:
+    - object: "screw"
+      number: 13
+      lastState: ""
+  eventData:
+    - activity:
+        name: "transport from stock to assembly"
+        output:
+          - object: "screw"
+            number: 13
+            change: ""
+          - object: "handoverStock"
+            number: 1
+            change: ""
+      transition: "Assembly"
+      duration: 10

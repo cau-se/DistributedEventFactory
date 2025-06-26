@@ -28,10 +28,10 @@ class ProcessSimulationObjectCentric:
         self.objects = objects
         self.data_sources = data_sources
         self.stocks: Dict[str, InputObjectProvider] = stocks
-
-    def simulate(self) -> Event:
         self.configureWorkStationsAndSteps()
         self.add_configured_stocks_in_warehouse()
+
+    def simulate(self) -> Event:
         available_steps: List[WorkProcessStep] = (
             self.workstation_service.get_activatable_workstations(self.workstation_steps, self.object_storage))
         next_step: WorkProcessStep = self.workstation_service.get_workstation(available_steps)
