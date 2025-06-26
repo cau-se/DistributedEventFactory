@@ -16,6 +16,7 @@ spec:
     - "SawingBar"
     - "DrillingBar"
     - "SandingBar"
+    - "OrderPlacement"
     - "A"
     - "B"
     - "C"
