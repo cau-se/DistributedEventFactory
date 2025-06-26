@@ -17,4 +17,5 @@ class WorkstationService:
         return activatable_workstations
 
     def get_workstation(self, workstations: List[WorkProcessStep]) -> WorkProcessStep:
+        # vielleicht irgendwas mit der transition
         return workstations[random.randint(0, len(workstations) - 1)]

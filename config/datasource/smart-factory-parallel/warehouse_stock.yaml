@@ -1,0 +1,7 @@
+kind: stock
+name: "default"
+spec:
+  stocks:
+    - object: "order"
+      number: 100
+      lastState:

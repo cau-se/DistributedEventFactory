@@ -47,7 +47,7 @@ class ObjectStorage:
 
     def find_object_in_input_objects(self, obj, objects):
         return next((item for item in objects if
-                     item.objectName == obj.objectName), None)
+                     item.object_id.id == obj.objectName), None)
 
     def manage_input_and_output_of_steps(self, input_objects: List[InputObjectProvider],
                                          output_objects: List[OutputObjectProvider],
@@ -58,12 +58,12 @@ class ObjectStorage:
                 obj = self.find_object_of_data_in_storage(input_object)
                 objects.append(obj)
                 self.objects.remove(obj)
-        self.add_output_changed_objects_to_store(input_objects, object_templates, output_objects, timestamp)
+        self.add_output_changed_objects_to_store(objects, object_templates, output_objects, timestamp)
 
-    def add_output_changed_objects_to_store(self, input_objects, object_templates, output_objects, timestamp):
+    def add_output_changed_objects_to_store(self, objects, object_templates, output_objects, timestamp):
         for output_object in output_objects:
             for i in range(output_object.numberOfObject):
-                obj = self.find_object_in_input_objects(output_object, input_objects)
+                obj = self.find_object_in_input_objects(output_object, objects)
                 if obj:
                     if output_object.change:
                         obj.add_change(ObjectData(timestamp=timestamp.strftime("%Y-%m-%d %H:%M:%S"),

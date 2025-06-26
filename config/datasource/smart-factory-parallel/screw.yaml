@@ -1,0 +1,11 @@
+kind: object
+name: "screw"
+spec:
+  name: "screw"
+  type: "smallComponent"
+  input: 
+    - object: "order"
+      number: 1
+      lastState: ""
+  length: ""
+  width: ""
