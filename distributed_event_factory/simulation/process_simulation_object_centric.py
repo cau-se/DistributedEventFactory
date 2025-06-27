@@ -24,7 +24,7 @@ class ProcessSimulationObjectCentric:
     ):
         self.workstations = []
         self.workstation_service = WorkstationService()
-        self.current_timestamp = datetime.now()
+        self.timestamp_history = [datetime.now()]
         self.object_storage = object_storage
         self.objects = objects
         self.data_sources = data_sources
@@ -36,12 +36,12 @@ class ProcessSimulationObjectCentric:
     def simulate(self) -> Event:
         available_workstations: List[WorkStation] = (
             self.workstation_service.get_activatable_workstations(self.workstations, self.object_storage))
-        next_step, next_workstation = self.get_next_workstation(available_workstations)
+        next_step, next_workstation = self.get_next_workstation_and_step(available_workstations)
         self.prior_step = next_step.node
-        event = next_step.produce_event(self.current_timestamp, next_workstation.work_station_name)
+        self.timestamp_history.append(next_workstation.add_to_last_timestamp(self.timestamp_history[len(self.timestamp_history)-1], next_step.duration))
+        event = next_step.produce_event(self.timestamp_history[len(self.timestamp_history)-1], next_workstation.work_station_name)
         self.object_storage.manage_input_and_output_of_steps(next_step.input_objects, next_step.output_objects,
-                                                             self.objects, self.current_timestamp)
-        self.current_timestamp = next_step.last_event_end_timestamp
+                                                             self.objects, self.timestamp_history[len(self.timestamp_history)-1])
         return event
 
     def _get_next_step_by_event_provider(self, data_source) -> List[str]:
@@ -55,7 +55,7 @@ class ProcessSimulationObjectCentric:
             return next_sensors
         return None
 
-    def get_next_workstation(self, available_workstations):
+    def get_next_workstation_and_step(self, available_workstations):
         if self.prior_step:
             next_available_steps = self._get_next_step_by_event_provider(self.prior_step)
             if next_available_steps:
@@ -82,7 +82,7 @@ class ProcessSimulationObjectCentric:
             self.object_storage.add_objects(
                 ObjectUtility().convert_object_data_to_generic_objects(generic_objects_possible=self.objects,
                                                                        object_data=stock,
-                                                                       timestamp=self.current_timestamp))
+                                                                       timestamp=self.timestamp_history))
     def configureWorkStationsAndSteps(self):
         for data_source in self.data_sources:
             if data_source != "<start>" and data_source != "<end>":

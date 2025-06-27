@@ -1,6 +1,6 @@
 import random
 from typing import List
-
+from datetime import timedelta
 from simulation.simulator_objects.object_storage import ObjectStorage
 from simulation.simulator_objects.workprocessstep import WorkProcessStep
 
@@ -8,6 +8,7 @@ class WorkStation:
     def __init__(self, work_station_name:str, work_process_steps: List[WorkProcessStep]):
         self.work_station_name = work_station_name
         self.work_process_steps = work_process_steps
+        self.last_event_end_timestamp = None
 
     def _is_activatable(self, object_storage: ObjectStorage):
         for workstation_step in self.work_process_steps:
@@ -60,3 +61,7 @@ class WorkStation:
 
         all_possible_steps = self.get_activatable_work_steps(object_storage)
         return all_possible_steps[random.randint(0, len(all_possible_steps) - 1)]
+
+    def add_to_last_timestamp(self, current_timestamp, duration):
+        self.last_event_end_timestamp = current_timestamp + timedelta(seconds=duration)
+        return self.last_event_end_timestamp
