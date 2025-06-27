@@ -4,6 +4,7 @@ spec:
   name: "TransportSA"
   group: "transport"
   type: objectCentric
+  workstation: "groupname"
   selection: genericProbability
   distribution: [1.0]
   input:
