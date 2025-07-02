@@ -21,11 +21,11 @@ class ObjectStorage:
         for obj in objects:
             if not obj.lastState:
                 if sum(1 for item in self.objects if
-                       item.object_id.id == obj.objectName and not item.values_changed) < obj.numberOfObject:
+                       item.object_id.id.id == obj.objectName and not item.values_changed) < obj.numberOfObject:
                     return False
             else:
                 if (sum(1 for item in self.objects if
-                        item.object_id.id == obj.objectName and item.get_last_changed_value() == obj.lastState)
+                        item.object_id.id.id == obj.objectName and item.get_last_changed_value() == obj.lastState)
                         < obj.numberOfObject):
                     return False
         return True
@@ -40,27 +40,29 @@ class ObjectStorage:
     def find_object_of_data_in_storage(self, obj):
         if obj.lastState:
             return next((item for item in self.objects if
-                         item.object_id.id == obj.objectName and item.get_last_changed_value() == obj.lastState), None)
+                         item.object_id.id.id == obj.objectName and item.get_last_changed_value() == obj.lastState), None)
         else:
             return next((item for item in self.objects if
-                         item.object_id.id == obj.objectName and not item.values_changed), None)
+                         item.object_id.id.id == obj.objectName and not item.values_changed), None)
 
     def find_object_in_input_objects(self, obj, objects):
         return next((item for item in objects if
-                     item.object_id.id == obj.objectName), None)
+                     item.object_id.id.id == obj.objectName), None)
 
     def manage_input_and_output_of_steps(self, input_objects: List[InputObjectProvider],
                                          output_objects: List[OutputObjectProvider],
                                          object_templates: Dict[str, ObjectData], timestamp):
-        objects = []
+        ingoing_objects = []
         for input_object in input_objects:
             for i in range(input_object.numberOfObject):
                 obj = self.find_object_of_data_in_storage(input_object)
-                objects.append(obj)
+                ingoing_objects.append(obj)
                 self.objects.remove(obj)
-        self.add_output_changed_objects_to_store(objects, object_templates, output_objects, timestamp)
+        outgoing_objects = self.add_output_changed_objects_to_store(ingoing_objects, object_templates, output_objects, timestamp)
+        return ingoing_objects, outgoing_objects
 
     def add_output_changed_objects_to_store(self, objects, object_templates, output_objects, timestamp):
+        outgoing_objects = []
         for output_object in output_objects:
             for i in range(output_object.numberOfObject):
                 obj = self.find_object_in_input_objects(output_object, objects)
@@ -70,6 +72,8 @@ class ObjectStorage:
                                                   object_state=output_object.change,
                                                   object_id=obj.object_id))
                     self.add_object(obj)
+                    outgoing_objects.append(obj)
+                    objects.remove(obj)
                 else:
                     obj = ObjectUtility().convert_object_name_to_generic_object(object_templates,
                                                                                 output_object.objectName).clone()
@@ -78,3 +82,5 @@ class ObjectStorage:
                                                   object_state=output_object.change,
                                                   object_id=obj.object_id))
                     self.add_object(obj)
+                    outgoing_objects.append(obj)
+        return outgoing_objects

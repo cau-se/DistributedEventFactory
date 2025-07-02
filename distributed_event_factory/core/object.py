@@ -21,7 +21,7 @@ class GenericObjectSource(ObjectSource):
 
     def __init__(
             self,
-            object_id: ObjectId,
+            object_id_name: str,
             object_type: str,
             input_objects: [],
             length: int,
@@ -29,7 +29,8 @@ class GenericObjectSource(ObjectSource):
 
     ):
         self.values_changed: List[ObjectData] = []
-        self.object_id = object_id
+        self.object_id_name = object_id_name
+        self.object_id = ObjectId(object_id_name)
         self.object_type = object_type
         self.input_objects = input_objects
         self.length = length
@@ -66,7 +67,7 @@ class GenericObjectSource(ObjectSource):
         self.values_changed.append(change)
 
     def clone(self):
-        return GenericObjectSource(self.object_id,
+        return GenericObjectSource(self.object_id_name,
                                    self.object_type,
                                    self.input_objects,
                                    self.length,

@@ -39,9 +39,10 @@ class ProcessSimulationObjectCentric:
         next_step, next_workstation = self.get_next_workstation_and_step(available_workstations)
         self.prior_step = next_step.node
         self.timestamp_history.append(next_workstation.add_to_last_timestamp(self.timestamp_history[len(self.timestamp_history)-1], next_step.duration))
-        event = next_step.produce_event(self.timestamp_history[len(self.timestamp_history)-1], next_workstation.work_station_name)
-        self.object_storage.manage_input_and_output_of_steps(next_step.input_objects, next_step.output_objects,
+        ingoing_objects, outgoing_objects = self.object_storage.manage_input_and_output_of_steps(next_step.input_objects, next_step.output_objects,
                                                              self.objects, self.timestamp_history[len(self.timestamp_history)-1])
+        event = next_step.produce_event(self.timestamp_history[len(self.timestamp_history) - 1],
+                                        next_workstation.work_station_name, ingoing_objects, outgoing_objects)
         return event
 
     def _get_next_step_by_event_provider(self, data_source) -> List[str]:

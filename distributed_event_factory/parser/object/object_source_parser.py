@@ -21,7 +21,7 @@ class ObjectSourceParser(Parser):
                     lastState=input["lastState"]
                 ))
         return GenericObjectSource(
-            object_id=ObjectId(config["name"]),
+            object_id_name=ObjectId(config["name"]),
             object_type=config["type"],
             input_objects=input_list,
             length=config["length"],
