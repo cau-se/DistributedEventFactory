@@ -24,7 +24,7 @@ class ProcessSimulationObjectCentric:
     ):
         self.workstations = []
         self.workstation_service = WorkstationService()
-        self.timestamp_history = [datetime.now()]
+        self.last_timestamp = datetime.now()
         self.object_storage = object_storage
         self.objects = objects
         self.data_sources = data_sources
@@ -32,16 +32,20 @@ class ProcessSimulationObjectCentric:
         self.configureWorkStationsAndSteps()
         self.add_configured_stocks_in_warehouse()
         self.prior_step : str = ""
+        self.parallel_workstation_step_start_time = []
 
     def simulate(self) -> Event:
-        available_workstations: List[WorkStation] = (
+        if self.parallel_workstation_step_start_time:
+            next_step, next_workstation, self.last_timestamp = self.parallel_workstation_step_start_time[0]
+        else:
+            available_workstations: List[WorkStation] = (
             self.workstation_service.get_activatable_workstations(self.workstations, self.object_storage))
-        next_step, next_workstation = self.get_next_workstation_and_step(available_workstations)
+            next_step, next_workstation = self.get_next_workstation_and_step(available_workstations)
         self.prior_step = next_step.node
-        self.timestamp_history.append(next_workstation.add_to_last_timestamp(self.timestamp_history[len(self.timestamp_history)-1], next_step.duration))
+        self.last_timestamp = next_workstation.add_to_last_timestamp(self.last_timestamp, next_step.duration)
         ingoing_objects, outgoing_objects = self.object_storage.manage_input_and_output_of_steps(next_step.input_objects, next_step.output_objects,
-                                                             self.objects, self.timestamp_history[len(self.timestamp_history)-1])
-        event = next_step.produce_event(self.timestamp_history[len(self.timestamp_history) - 1],
+                                                             self.objects, self.last_timestamp)
+        event = next_step.produce_event(self.last_timestamp,
                                         next_workstation.work_station_name, ingoing_objects, outgoing_objects)
         return event
 
@@ -57,18 +61,40 @@ class ProcessSimulationObjectCentric:
         return None
 
     def get_next_workstation_and_step(self, available_workstations):
+        parallel_workstations = self.workstation_service.get_next_workstations_sorted_duration_ascending(object_storage=self.object_storage, workstations=available_workstations)
+
         if self.prior_step:
             next_available_steps = self._get_next_step_by_event_provider(self.prior_step)
             if next_available_steps:
-                next_workstation: WorkStation = self.workstation_service.get_workstation_preselected(available_workstations,
+                next_workstation = self.workstation_service.get_workstations_preselected(available_workstations,
                                                                                                   next_available_steps, self.object_storage)
+                if not next_workstation:
+                    next_workstation : WorkStation = self.workstation_service.get_random_workstation(available_workstations)
+                elif type(next_workstation) is not WorkStation:
+                    parallel_workstations = self.workstation_service.get_next_workstations_sorted_duration_ascending(object_storage=self.object_storage, workstations=next_workstation)
+                    next_workstation = parallel_workstations[0]
+                    for workstation in parallel_workstations:
+                        step = workstation.get_workstation_preselected(object_storage=self.object_storage, prefered_workstation_steps=next_available_steps)
+                        self.parallel_workstation_step_start_time.append((workstation, step, self.last_timestamp))
                 next_step = next_workstation.get_workstation_preselected(object_storage=self.object_storage, prefered_workstation_steps=next_available_steps)
             else:
-                next_workstation: WorkStation = self.workstation_service.get_random_workstation(available_workstations)
-                next_step = next_workstation.get_random_workstation_step()
+                next_step, next_workstation = self.get_random_workstation_step_or_parallel_start(available_workstations,
+                                                                                                 parallel_workstations)
+        else:
+            next_step, next_workstation = self.get_random_workstation_step_or_parallel_start(available_workstations,
+                                                                                             parallel_workstations)
+        return next_step, next_workstation
+
+    def get_random_workstation_step_or_parallel_start(self, available_workstations, parallel_workstations):
+        if len(parallel_workstations) > 1:
+            next_workstation = parallel_workstations[0]
+            for workstation in parallel_workstations:
+                step = workstation.get_fastest_available_step(object_storage=ObjectStorage)
+                self.parallel_workstation_step_start_time.append(
+                    (workstation, step, self.last_timestamp))
         else:
             next_workstation: WorkStation = self.workstation_service.get_random_workstation(available_workstations)
-            next_step = next_workstation.get_random_workstation_step()
+            next_step = next_workstation.get_random_workstation_step(object_storage=self.object_storage)
         return next_step, next_workstation
 
     def _get_sensor_with_id(self, data_source_id) -> DataSource:
@@ -83,7 +109,7 @@ class ProcessSimulationObjectCentric:
             self.object_storage.add_objects(
                 ObjectUtility().convert_object_data_to_generic_objects(generic_objects_possible=self.objects,
                                                                        object_data=stock,
-                                                                       timestamp=self.timestamp_history))
+                                                                       timestamp=self.last_timestamp))
     def configureWorkStationsAndSteps(self):
         for data_source in self.data_sources:
             if data_source != "<start>" and data_source != "<end>":
