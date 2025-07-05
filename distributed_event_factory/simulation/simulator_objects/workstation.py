@@ -28,13 +28,13 @@ class WorkStation:
 
     def get_prefered_activatable_work_steps(self, object_storage: ObjectStorage, prefered_workstation_steps: List[str]):
         activatable_steps = self.get_activatable_work_steps(object_storage)
-        workstation_selected = []
+        work_step_selected = []
 
         for workstation_step in activatable_steps:
             if workstation_step.node in prefered_workstation_steps:
-                workstation_selected.append(workstation_step)
+                work_step_selected.append(workstation_step)
 
-        return workstation_selected
+        return work_step_selected[random.randint(0, len(work_step_selected) - 1)]
 
     def workstation_has_preselected_activatable_steps(self, object_storage: ObjectStorage, prefered_workstation_steps: List[str]) -> bool:
         activatable_steps = self.get_activatable_work_steps(object_storage)
