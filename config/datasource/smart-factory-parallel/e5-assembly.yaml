@@ -4,7 +4,7 @@ spec:
   name: "Assembly"
   group: "factory"
   type: objectCentric
-  workstation: "groupname"
+  workstation: "A"
   selection: genericProbability
   distribution: [ 0.8, 0.1, 0.1 ]
   input:

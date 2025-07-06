@@ -4,7 +4,7 @@ spec:
   name: "TransportM1"
   group: "transport"
   type: objectCentric
-  workstation: "groupname"
+  workstation: "R"
   selection: genericProbability
   distribution: [1.0]
   input:

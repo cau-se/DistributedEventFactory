@@ -66,11 +66,17 @@ class WorkStation:
 
         minimal_duration = activatable_steps[0].duration
         step = activatable_steps[0]
+        steps_with_same_duration = []
 
         for workstation_step in activatable_steps:
             if workstation_step.duration < minimal_duration:
                 minimal_duration = workstation_step.duration
                 step = workstation_step
+                steps_with_same_duration.append(step)
+            if workstation_step.duration == minimal_duration:
+                steps_with_same_duration.append(workstation_step)
+        if len(steps_with_same_duration) > 1:
+            return random.choice(steps_with_same_duration)
         return step
 
     def get_random_workstation_step(self, object_storage: ObjectStorage) -> WorkProcessStep:
@@ -94,3 +100,7 @@ class WorkStation:
     def add_to_last_timestamp(self, current_timestamp, duration):
         self.last_event_end_timestamp = current_timestamp + timedelta(seconds=duration)
         return self.last_event_end_timestamp
+
+    def add_steps_to_workstation(self, steps):
+        for step in steps:
+            self.work_process_steps.append(step)

@@ -4,7 +4,7 @@ spec:
   name: "OutgoingStock"
   group: "factory"
   type: objectCentric
-  workstation: "groupname"
+  workstation: "ST"
   selection: parallel
   input:
     - object: "resourceOrder"

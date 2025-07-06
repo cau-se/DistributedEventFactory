@@ -95,7 +95,7 @@ class ProcessSimulationObjectCentric:
                 step = workstation.get_fastest_available_step(object_storage=self.object_storage)
                 forecast_workstations_steps.append((workstation, step))
 
-            possible_step = self.object_storage.contains_all_object_of_data_for_steps([(workstation, step)])
+            possible_step = self.object_storage.contains_all_object_of_data_for_steps(forecast_workstations_steps)
             if possible_step:
                 for workstation, step in possible_step:
                     multiple_workstations.append(
@@ -137,6 +137,9 @@ class ProcessSimulationObjectCentric:
                                                              input_objects=input_objects,
                                                              output_objects=e.get_activity_provider().get_output(),
                                                              duration=e.get_duration()))
-
-                self.workstations.append(
-                    WorkStation(work_station_name=workstation, work_process_steps=workstation_steps))
+                matching_workstation = self.workstation_service.get_workstation_by_name(workstation, self.workstations)
+                if matching_workstation:
+                    matching_workstation.add_steps_to_workstation(workstation_steps)
+                else:
+                    self.workstations.append(
+                         WorkStation(work_station_name=workstation, work_process_steps=workstation_steps))

@@ -2,6 +2,7 @@ import random
 from typing import List
 
 from simulation.simulator_objects.object_storage import ObjectStorage
+from simulation.simulator_objects.workprocessstep import WorkProcessStep
 from simulation.simulator_objects.workstation import WorkStation
 
 
@@ -15,6 +16,12 @@ class WorkstationService:
                 activatable_workstations.append(workstation)
 
         return activatable_workstations
+
+    def get_workstation_by_name(self, workstation_name, workstations: List[WorkStation]):
+        for workstation in workstations:
+            if workstation.work_station_name == workstation_name:
+                return workstation
+        return None
 
     def get_next_workstation_step_pair_parallel(self, next_available_steps, workstations: List[WorkStation],
                                                 object_storage: ObjectStorage):

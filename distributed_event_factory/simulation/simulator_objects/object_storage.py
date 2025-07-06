@@ -49,7 +49,6 @@ class ObjectStorage:
                     if not (sum(1 for item in object_forecast if
                                 item.object_id.id.id == obj.objectName and item.get_last_changed_value() == obj.lastState)
                             < obj.numberOfObject):
-                        possible_steps.append((workstation, step))
                         for i in range(obj.numberOfObject):
                             obj_to_remove = self.find_object_of_data_in_storage(obj, object_forecast)
                             object_forecast.remove(obj_to_remove)

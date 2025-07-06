@@ -4,7 +4,7 @@ spec:
   name: "SawingBar"
   group: "factory"
   type: objectCentric
-  workstation: "groupname"
+  workstation: "M"
   selection: genericProbability
   distribution: [1.0]
   input:

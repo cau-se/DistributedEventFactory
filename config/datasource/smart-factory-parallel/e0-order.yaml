@@ -4,7 +4,7 @@ spec:
   name: "OrderPlacement"
   group: "factory"
   type: objectCentric
-  workstation: "groupname"
+  workstation: "O"
   selection: genericProbability
   distribution: [1.0]
   input:

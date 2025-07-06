@@ -4,7 +4,7 @@ spec:
   name: "DrillingBar"
   group: "factory"
   type: objectCentric
-  workstation: "groupname"
+  workstation: "D"
   selection: genericProbability
   distribution: [1.0]
   input:
