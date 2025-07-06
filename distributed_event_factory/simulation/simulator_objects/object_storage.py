@@ -27,30 +27,40 @@ class ObjectStorage:
 
     def contains_all_object_of_data_for_steps(self, steps: List[WorkProcessStep]):
         object_forecast = self.objects.copy()
-        possible_steps = []
+        possible_workstation_step_pairs = []
         for workstation, step in steps:
             all_objects_possible = True
             for obj in step.input_objects:
                 if not obj.lastState:
-                    if not sum(1 for item in object_forecast if
-                               item.object_id.id.id == obj.objectName and not item.values_changed) < obj.numberOfObject:
-                        for i in range(obj.numberOfObject):
-                            obj_to_remove = self.find_object_of_data_in_storage(obj, object_forecast)
-                            object_forecast.remove(obj_to_remove)
-                    else:
-                        all_objects_possible = False
+                    all_objects_possible = self.contains_objects_with_last_state_for_steps(all_objects_possible, obj,
+                                                                                           object_forecast)
                 else:
-                    if not (sum(1 for item in object_forecast if
-                                item.object_id.id.id == obj.objectName and item.get_last_changed_value() == obj.lastState)
-                            < obj.numberOfObject):
-                        for i in range(obj.numberOfObject):
-                            obj_to_remove = self.find_object_of_data_in_storage(obj, object_forecast)
-                            object_forecast.remove(obj_to_remove)
-                    else:
-                        all_objects_possible = False
+                    all_objects_possible = self.contains_objects_without_last_state_for_steps(all_objects_possible, obj,
+                                                                                              object_forecast)
             if all_objects_possible:
-                possible_steps.append((workstation, step))
-        return possible_steps
+                possible_workstation_step_pairs.append((workstation, step))
+        return possible_workstation_step_pairs
+
+    def contains_objects_without_last_state_for_steps(self, all_objects_possible, obj, object_forecast):
+        if not (sum(1 for item in object_forecast if
+                    item.object_id.id.id == obj.objectName and item.get_last_changed_value() == obj.lastState)
+                < obj.numberOfObject):
+            for i in range(obj.numberOfObject):
+                obj_to_remove = self.find_object_of_data_in_storage(obj, object_forecast)
+                object_forecast.remove(obj_to_remove)
+        else:
+            all_objects_possible = False
+        return all_objects_possible
+
+    def contains_objects_with_last_state_for_steps(self, all_objects_possible, obj, object_forecast):
+        if not sum(1 for item in object_forecast if
+                   item.object_id.id.id == obj.objectName and not item.values_changed) < obj.numberOfObject:
+            for i in range(obj.numberOfObject):
+                obj_to_remove = self.find_object_of_data_in_storage(obj, object_forecast)
+                object_forecast.remove(obj_to_remove)
+        else:
+            all_objects_possible = False
+        return all_objects_possible
 
     def add_object(self, obj: GenericObjectSource):
         self.objects.append(obj)

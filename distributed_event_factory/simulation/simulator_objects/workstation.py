@@ -45,7 +45,7 @@ class WorkStation:
 
         return False
 
-    def get_random_workstation_step(self, object_storage: ObjectStorage) -> WorkProcessStep:
+    def get_random_activatable_workstation_step(self, object_storage: ObjectStorage) -> WorkProcessStep:
         work_process_steps_possible = self.get_activatable_work_steps(object_storage)
         return work_process_steps_possible[random.randint(0, len(work_process_steps_possible) - 1)]
 

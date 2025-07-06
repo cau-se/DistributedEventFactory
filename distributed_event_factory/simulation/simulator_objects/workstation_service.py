@@ -27,6 +27,19 @@ class WorkstationService:
         steps_in_priority = []
         workstations_preselected = self.get_workstations_preselected([item[0] for item in workstation_steps_ascending],
                                                                      next_available_steps, object_storage)
+        self.append_possible_preselected_workstation_step_pairs(next_available_steps, object_storage, steps_in_priority,
+                                                                workstations_preselected)
+        for workstation, step in workstation_steps_ascending:
+            if ((type(workstations_preselected) is WorkStation and workstation != workstations_preselected) or
+                    (type(
+                        workstations_preselected) is list and workstation not in workstations_preselected) or not workstations_preselected):
+                steps_in_priority.append((workstation, step))
+        possible_steps = object_storage.contains_all_object_of_data_for_steps(steps_in_priority)
+        possible_steps.sort(key=lambda x: x[1].duration)
+        return possible_steps
+
+    def append_possible_preselected_workstation_step_pairs(self, next_available_steps, object_storage,
+                                                           steps_in_priority, workstations_preselected):
         if workstations_preselected:
             if type(workstations_preselected) is WorkStation:
                 steps_in_priority.append((workstations_preselected,
@@ -37,20 +50,12 @@ class WorkstationService:
                     steps_in_priority.append((workstation,
                                               workstation.get_prefered_activatable_work_steps(object_storage,
                                                                                               next_available_steps)))
-        for workstation, step in workstation_steps_ascending:
-            if ((type(workstations_preselected) is WorkStation and workstation != workstations_preselected) or
-                    (type(
-                        workstations_preselected) is list and workstation not in workstations_preselected) or not workstations_preselected):
-                steps_in_priority.append((workstation, step))
-        possible_steps = object_storage.contains_all_object_of_data_for_steps(steps_in_priority)
-        possible_steps.sort(key=lambda x: x[1].duration)
-        return possible_steps
 
     def get_next_workstations_and_step_sorted_duration_ascending(self, object_storage: ObjectStorage,
                                                                  workstations: List[WorkStation]):
         workstations_step_pair = []
         for workstation in workstations:
-            step = workstation.get_random_workstation_step(object_storage=object_storage)
+            step = workstation.get_random_activatable_workstation_step(object_storage=object_storage)
             workstations_step_pair.append((workstation, step))
         workstations_step_pair.sort(key=lambda x: x[1].duration)
         return workstations_step_pair

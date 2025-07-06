@@ -63,41 +63,41 @@ class ProcessSimulationObjectCentric:
         return None
 
     def get_next_workstation_and_step(self, available_workstations):
-        workstation_steps_ascending = self.workstation_service.get_next_workstations_and_step_sorted_duration_ascending(
+        workstation_step_pairs_ascending = self.workstation_service.get_next_workstations_and_step_sorted_duration_ascending(
             object_storage=self.object_storage, workstations=available_workstations)
 
         if self.prior_step:
             next_available_steps = self._get_next_step_by_event_provider(self.prior_step)
             if next_available_steps[0]:
-                next_workstation_and_step = self.workstation_service.get_next_workstation_step_pair_parallel(
-                    next_available_steps, workstation_steps_ascending, self.object_storage)
+                next_workstation_step_pairs = self.workstation_service.get_next_workstation_step_pair_parallel(
+                    next_available_steps, workstation_step_pairs_ascending, self.object_storage)
 
-                if not next_workstation_and_step:
+                if not next_workstation_step_pairs:
                     return ValueError("No available workstations")
-                elif len(next_workstation_and_step) == 1:
-                    next_workstation, next_step = next_workstation_and_step[0]
+                elif len(next_workstation_step_pairs) == 1:
+                    next_workstation, next_step = next_workstation_step_pairs[0]
                     return next_step, next_workstation
-                elif len(next_workstation_and_step) > 1:
-                    next_workstation, next_step = next_workstation_and_step[0]
-                    next_workstation_and_step.remove((next_workstation, next_step))
-                    for workstation, step in next_workstation_and_step:
+                elif len(next_workstation_step_pairs) > 1:
+                    next_workstation, next_step = next_workstation_step_pairs[0]
+                    next_workstation_step_pairs.remove((next_workstation, next_step))
+                    for workstation, step in next_workstation_step_pairs:
                         self.parallel_workstation_step_start_time.append((workstation, step, self.last_timestamp))
                     return next_step, next_workstation
 
-        next_step, next_workstation = self.get_random_workstation_step_or_parallel_start(workstation_steps_ascending)
+        next_step, next_workstation = self.get_random_workstation_step_or_parallel_start(workstation_step_pairs_ascending)
         return next_step, next_workstation
 
     def get_random_workstation_step_or_parallel_start(self, workstation_steps_ascending):
         if len(workstation_steps_ascending) > 1:
-            multiple_workstations = []
+            parallel_workstation_step_time = []
 
             possible_step = self.object_storage.contains_all_object_of_data_for_steps(workstation_steps_ascending)
             if possible_step:
                 for workstation, step in possible_step:
-                    multiple_workstations.append(
+                    parallel_workstation_step_time.append(
                         (workstation, step, self.last_timestamp))
-            self.parallel_workstation_step_start_time.extend(multiple_workstations[1:])
-            next_workstation, next_step ,_ = multiple_workstations[0]
+            self.parallel_workstation_step_start_time.extend(parallel_workstation_step_time[1:])
+            next_workstation, next_step ,_ = parallel_workstation_step_time[0]
         else:
             next_workstation, next_step = workstation_steps_ascending[0]
         return next_step, next_workstation
