@@ -2,7 +2,6 @@ import random
 from typing import List
 
 from simulation.simulator_objects.object_storage import ObjectStorage
-from simulation.simulator_objects.workprocessstep import WorkProcessStep
 from simulation.simulator_objects.workstation import WorkStation
 
 
@@ -23,10 +22,11 @@ class WorkstationService:
                 return workstation
         return None
 
-    def get_next_workstation_step_pair_parallel(self, next_available_steps, workstations: List[WorkStation],
+    def get_next_workstation_step_pair_parallel(self, next_available_steps, workstation_steps_ascending,
                                                 object_storage: ObjectStorage):
         steps_in_priority = []
-        workstations_preselected = self.get_workstations_preselected(workstations, next_available_steps, object_storage)
+        workstations_preselected = self.get_workstations_preselected([item[0] for item in workstation_steps_ascending],
+                                                                     next_available_steps, object_storage)
         if workstations_preselected:
             if type(workstations_preselected) is WorkStation:
                 steps_in_priority.append((workstations_preselected,
@@ -37,41 +37,23 @@ class WorkstationService:
                     steps_in_priority.append((workstation,
                                               workstation.get_prefered_activatable_work_steps(object_storage,
                                                                                               next_available_steps)))
-        for workstation in workstations:
+        for workstation, step in workstation_steps_ascending:
             if ((type(workstations_preselected) is WorkStation and workstation != workstations_preselected) or
                     (type(
                         workstations_preselected) is list and workstation not in workstations_preselected) or not workstations_preselected):
-                steps_in_priority.append((workstation, workstation.get_fastest_available_step(object_storage)))
+                steps_in_priority.append((workstation, step))
         possible_steps = object_storage.contains_all_object_of_data_for_steps(steps_in_priority)
         possible_steps.sort(key=lambda x: x[1].duration)
         return possible_steps
 
-    def get_next_workstations_sorted_duration_ascending(self, object_storage: ObjectStorage,
-                                                        workstations: List[WorkStation]):
-        workstations_with_step_sorted_duration_ascending = []
-        workstations_to_search_in = workstations.copy()
-        while len(workstations_with_step_sorted_duration_ascending) != len(workstations):
-            shortest_workstation = self.get_workstation_with_shortest_next_step(object_storage,
-                                                                                workstations_to_search_in)
-            workstations_to_search_in.remove(shortest_workstation)
-            workstations_with_step_sorted_duration_ascending.append(shortest_workstation)
-        return workstations_with_step_sorted_duration_ascending
-
-    def get_workstation_with_shortest_next_step(self, object_storage: ObjectStorage, workstations: List[WorkStation]):
-        minimal_duration = workstations[0].get_duration_of_shortest_available_step(object_storage=object_storage)
-        workstation_with_shortest_next_step = workstations[0]
-
+    def get_next_workstations_and_step_sorted_duration_ascending(self, object_storage: ObjectStorage,
+                                                                 workstations: List[WorkStation]):
+        workstations_step_pair = []
         for workstation in workstations:
-            workstation_shortest_duration = workstation.get_duration_of_shortest_available_step(
-                object_storage=object_storage)
-            if workstation_shortest_duration < minimal_duration:
-                minimal_duration = workstation_shortest_duration
-                workstation_with_shortest_next_step = workstation
-
-        return workstation_with_shortest_next_step
-
-    def get_random_workstation(self, workstations: List[WorkStation]) -> WorkStation:
-        return workstations[random.randint(0, len(workstations) - 1)]
+            step = workstation.get_random_workstation_step(object_storage=object_storage)
+            workstations_step_pair.append((workstation, step))
+        workstations_step_pair.sort(key=lambda x: x[1].duration)
+        return workstations_step_pair
 
     def get_workstations_preselected(self, workstations: List[WorkStation], prefered_workstation_steps: List[str],
                                      object_storage: ObjectStorage):

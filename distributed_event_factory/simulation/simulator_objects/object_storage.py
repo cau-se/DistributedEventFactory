@@ -12,12 +12,6 @@ class ObjectStorage:
     def __init__(self):
         self.objects: List[GenericObjectSource] = []
 
-    def contains_all_objects(self, objects: List[GenericObjectSource]):
-        for obj in objects:
-            if not obj in self.objects:
-                return False
-        return True
-
     def contains_all_object_of_data(self, objects: List[InputObjectProvider]):
         for obj in objects:
             if not obj.lastState:
@@ -65,8 +59,8 @@ class ObjectStorage:
         for obj in objects:
             self.add_object(obj)
 
-   # def find_object_of_data_in_local_storage(self, obj):
-    #    return self.find_object_of_data_in_storage(obj, self.objects)
+    def find_object_of_data_in_local_storage(self, obj):
+        return self.find_object_of_data_in_storage(obj, self.objects)
 
     def find_object_of_data_in_storage(self, obj, objects):
         if obj.lastState:
@@ -75,15 +69,6 @@ class ObjectStorage:
                         None)
         else:
             return next((item for item in objects if
-                         item.object_id.id.id == obj.objectName and not item.values_changed), None)
-
-    def find_object_of_data_in_local_storage(self, obj):
-        if obj.lastState:
-            return next((item for item in self.objects if
-                         item.object_id.id.id == obj.objectName and item.get_last_changed_value() == obj.lastState),
-                        None)
-        else:
-            return next((item for item in self.objects if
                          item.object_id.id.id == obj.objectName and not item.values_changed), None)
 
     def find_object_in_input_objects(self, obj, objects):

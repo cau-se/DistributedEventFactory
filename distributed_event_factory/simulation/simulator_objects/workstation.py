@@ -45,57 +45,9 @@ class WorkStation:
 
         return False
 
-    def get_duration_of_shortest_available_step(self, object_storage: ObjectStorage):
-        activatable_steps = self.get_activatable_work_steps(object_storage)
-
-        if not activatable_steps:
-            return None
-        minimal_duration = activatable_steps[0].duration
-
-        for workstation_step in activatable_steps:
-            if workstation_step.duration < minimal_duration:
-                minimal_duration = workstation_step.duration
-
-        return minimal_duration
-
-    def get_fastest_available_step(self, object_storage: ObjectStorage):
-        activatable_steps = self.get_activatable_work_steps(object_storage)
-
-        if not activatable_steps:
-            return None
-
-        minimal_duration = activatable_steps[0].duration
-        step = activatable_steps[0]
-        steps_with_same_duration = []
-
-        for workstation_step in activatable_steps:
-            if workstation_step.duration < minimal_duration:
-                minimal_duration = workstation_step.duration
-                step = workstation_step
-                steps_with_same_duration.append(step)
-            if workstation_step.duration == minimal_duration:
-                steps_with_same_duration.append(workstation_step)
-        if len(steps_with_same_duration) > 1:
-            return random.choice(steps_with_same_duration)
-        return step
-
     def get_random_workstation_step(self, object_storage: ObjectStorage) -> WorkProcessStep:
         work_process_steps_possible = self.get_activatable_work_steps(object_storage)
         return work_process_steps_possible[random.randint(0, len(work_process_steps_possible) - 1)]
-
-    def get_workstation_preselected(self, prefered_workstation_steps: List[str], object_storage: ObjectStorage) ->  WorkProcessStep:
-        workstation_steps_selected = []
-        prefered_process_steps = self.get_prefered_activatable_work_steps(object_storage, prefered_workstation_steps)
-        if prefered_process_steps:
-            for process_step in self.work_process_steps:
-               workstation_steps_selected.append(process_step)
-            if len(workstation_steps_selected) == 1:
-                return workstation_steps_selected[0]
-            elif len(workstation_steps_selected) > 1:
-                return random.choice(workstation_steps_selected)
-
-        all_possible_steps = self.get_activatable_work_steps(object_storage)
-        return all_possible_steps[random.randint(0, len(all_possible_steps) - 1)]
 
     def add_to_last_timestamp(self, current_timestamp, duration):
         self.last_event_end_timestamp = current_timestamp + timedelta(seconds=duration)

@@ -10,7 +10,7 @@ spec:
   input:
     - object: "woodShelf"
       number: 1
-      lastState: ""
+      lastState: "assembled"
   eventData:
     - activity:
         name: "Package waits for sending"

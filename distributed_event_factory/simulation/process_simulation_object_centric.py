@@ -63,14 +63,14 @@ class ProcessSimulationObjectCentric:
         return None
 
     def get_next_workstation_and_step(self, available_workstations):
-        workstations_ascending = self.workstation_service.get_next_workstations_sorted_duration_ascending(
+        workstation_steps_ascending = self.workstation_service.get_next_workstations_and_step_sorted_duration_ascending(
             object_storage=self.object_storage, workstations=available_workstations)
 
         if self.prior_step:
             next_available_steps = self._get_next_step_by_event_provider(self.prior_step)
             if next_available_steps[0]:
                 next_workstation_and_step = self.workstation_service.get_next_workstation_step_pair_parallel(
-                    next_available_steps, workstations_ascending, self.object_storage)
+                    next_available_steps, workstation_steps_ascending, self.object_storage)
 
                 if not next_workstation_and_step:
                     return ValueError("No available workstations")
@@ -84,18 +84,14 @@ class ProcessSimulationObjectCentric:
                         self.parallel_workstation_step_start_time.append((workstation, step, self.last_timestamp))
                     return next_step, next_workstation
 
-        next_step, next_workstation = self.get_random_workstation_step_or_parallel_start(workstations_ascending)
+        next_step, next_workstation = self.get_random_workstation_step_or_parallel_start(workstation_steps_ascending)
         return next_step, next_workstation
 
-    def get_random_workstation_step_or_parallel_start(self, parallel_workstations):
-        if len(parallel_workstations) > 1:
+    def get_random_workstation_step_or_parallel_start(self, workstation_steps_ascending):
+        if len(workstation_steps_ascending) > 1:
             multiple_workstations = []
-            forecast_workstations_steps = []
-            for workstation in parallel_workstations:
-                step = workstation.get_fastest_available_step(object_storage=self.object_storage)
-                forecast_workstations_steps.append((workstation, step))
 
-            possible_step = self.object_storage.contains_all_object_of_data_for_steps(forecast_workstations_steps)
+            possible_step = self.object_storage.contains_all_object_of_data_for_steps(workstation_steps_ascending)
             if possible_step:
                 for workstation, step in possible_step:
                     multiple_workstations.append(
@@ -103,8 +99,7 @@ class ProcessSimulationObjectCentric:
             self.parallel_workstation_step_start_time.extend(multiple_workstations[1:])
             next_workstation, next_step ,_ = multiple_workstations[0]
         else:
-            next_workstation: WorkStation = parallel_workstations[0]
-            next_step = next_workstation.get_random_workstation_step(object_storage=self.object_storage)
+            next_workstation, next_step = workstation_steps_ascending[0]
         return next_step, next_workstation
 
     def _get_sensor_with_id(self, data_source_id) -> DataSource:

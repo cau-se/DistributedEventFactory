@@ -1,7 +1,3 @@
-from datetime import timedelta, datetime
-
-from process_mining_core.datastructure.core.event import Event
-
 from simulation.object_event import ObjectEvent
 
 Y_M_D_H_M_S = "%Y-%m-%d %H:%M:%S"
