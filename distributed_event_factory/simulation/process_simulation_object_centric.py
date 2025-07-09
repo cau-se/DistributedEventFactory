@@ -6,9 +6,11 @@ from process_mining_core.datastructure.core.event import Event
 from core.abstract_datasource import DataSource
 from core.datasource_id import DataSourceId
 from core.object import ObjectData
+from core.route import Route
 from provider.object.input.input_provider import InputObjectProvider
 from simulation.simulator_objects.object_storage import ObjectStorage
 from simulation.simulator_objects.object_utility import ObjectUtility
+from simulation.simulator_objects.route_management import RouteManagement
 from simulation.simulator_objects.workprocessstep import WorkProcessStep
 from simulation.simulator_objects.workstation import WorkStation
 from simulation.simulator_objects.workstation_service import WorkstationService
@@ -20,6 +22,7 @@ class ProcessSimulationObjectCentric:
             object_storage: ObjectStorage,
             data_sources: Dict[str, DataSource],
             objects: Dict[str, ObjectData],
+            routes: Dict[str, Route],
             stocks: Dict[str, InputObjectProvider]
     ):
         self.workstations = []
@@ -28,6 +31,7 @@ class ProcessSimulationObjectCentric:
         self.object_storage = object_storage
         self.objects = objects
         self.data_sources = data_sources
+        self.routeManagement = RouteManagement(routes.get("default"))
         self.stocks: Dict[str, InputObjectProvider] = stocks
         self.configureWorkStationsAndSteps()
         self.add_configured_stocks_in_warehouse()

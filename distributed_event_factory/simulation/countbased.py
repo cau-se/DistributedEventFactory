@@ -29,6 +29,7 @@ class CountBasedSimulation(Simulation):
             object_storage=ObjectStorage(),
             data_sources=datasources,
             objects=objects,
+            routes=routes,
             stocks=stocks
         )
 
