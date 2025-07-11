@@ -7,5 +7,5 @@ spec:
     - object: "barResource"
       number: 1
       lastState: ""
-  length: ""
+  length: "2"
   width: ""

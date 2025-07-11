@@ -4,6 +4,9 @@ spec:
   name: "OrderPlacement"
   group: "factory"
   type: objectCentric
+  workforce: hasWorkforce
+  start: "O"
+  end: "O"
   workstation: "O"
   selection: genericProbability
   distribution: [1.0]
@@ -11,6 +14,9 @@ spec:
     - object: "order"
       number: 1
       lastState: ""
+  workforces:
+    - workforce: "manager"
+      number: 1
   eventData:
     - activity:
         name: "order for resources"

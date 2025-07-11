@@ -11,14 +11,20 @@ class WorkProcessStep:
             output_objects,
             duration,
             node,
-            group_id
+            group_id,
+            workforces_needed,
+            start_location,
+            end_location
     ):
         self.input_objects = input_objects
+        self.workforces_needed = workforces_needed
         self.output_objects = output_objects
         self.duration = duration
         self.activity = activity
         self.node = node
         self.group_id = group_id
+        self.start_location = start_location
+        self.end_location = end_location
 
     def produce_event(self, current_timestamp, workstation, ingoing_objects, outgoing_objects) -> ObjectEvent:
         return ObjectEvent(

@@ -10,6 +10,7 @@ from distributed_event_factory.provider.sink.http.http_sink import LoadTestHttpS
 from distributed_event_factory.simulation.abstract_simulation import Simulation
 from distributed_event_factory.simulation.process_simulation import ProcessSimulator
 from provider.object.input.input_provider import InputObjectProvider
+from provider.workforce.InputWorkforceProvider import WorkforceStartPositionProvider
 
 
 class LoadTestSimulation(Simulation):
@@ -29,17 +30,19 @@ class LoadTestSimulation(Simulation):
 
     def start_timeframe(self, sinks):
         for sink in self.sink:
-           sink.start_timeframe()
+            sink.start_timeframe()
 
     def end_timeframe(self, sinks):
         for sink in self.sink:
-           sink.end_timeframe()
+            sink.end_timeframe()
 
     def start_simulation(self, sinks):
         for sink in self.sink:
-           sink.start()
+            sink.start()
 
-    def run_simulation(self, data_sources: Dict[str, DataSource], datasource_sink_mapping: Dict[str, LoadTestHttpSink], objects: Dict[str, ObjectData], routes: Dict[str, Route], stocks: Dict[str, InputObjectProvider],
+    def run_simulation(self, data_sources: Dict[str, DataSource], datasource_sink_mapping: Dict[str, LoadTestHttpSink],
+                       objects: Dict[str, ObjectData], routes: Dict[str, Route], stocks: Dict[str, InputObjectProvider],
+                       workforce: Dict[str, WorkforceStartPositionProvider],
                        hook=lambda: None):
         self.setup_datasource_sink_mapping(datasource_sink_mapping)
         for sink in datasource_sink_mapping:
@@ -50,8 +53,8 @@ class LoadTestSimulation(Simulation):
             data_sources=data_sources,
             max_concurrent_cases=self.max_concurrent_cases,
             objects=objects,
-            routes = routes,
-            stocks = stocks
+            routes=routes,
+            stocks=stocks
         )
         iteration = 0
         while True:

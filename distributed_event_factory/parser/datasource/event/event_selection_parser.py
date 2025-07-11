@@ -14,4 +14,7 @@ class EventSelectionParser(Parser):
     def parse(self, config):
         return GenericDecisions(self.dependencies[config['selection']].parse(config),
                                 self.dependencies[config['type']].parse(config),
-                                config['workstation'])
+                                config['workstation'],
+                                self.dependencies[config['workforce']].parse(config),
+                                config['start'],
+                                config['end'])

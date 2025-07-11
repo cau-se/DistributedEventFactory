@@ -4,6 +4,9 @@ spec:
   name: "OutgoingStock"
   group: "factory"
   type: objectCentric
+  workforce: noWorkforce
+  start: "ST"
+  end: "ST"
   workstation: "ST"
   selection: parallel
   input:

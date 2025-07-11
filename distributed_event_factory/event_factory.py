@@ -13,6 +13,8 @@ from distributed_event_factory.provider.sink.sink_provider import Sink
 from parser.datasource.event.output.output_parser import OutputParser
 from parser.route.route_parser import RouteParser
 from parser.stock.stock_parser import StockParser
+from parser.workforce.workforce_start_positions import WorkforceStartPositionParser
+
 
 class EventFactory:
     def __init__(self):
@@ -22,6 +24,7 @@ class EventFactory:
         self.simulations = dict()
         self.datasources = dict()
         self.objects = dict()
+        self.workforce_start_positions = dict()
         self.datasources["<end>"] = EndDataSource()
         self.parser = ParserRegistry()
 
@@ -59,6 +62,9 @@ class EventFactory:
     def add_route_parser(self, key: str, parser: RouteParser):
         self.parser.route_parser.add_dependency(key, parser)
 
+    def add_workforce_start_position_parser(self, key: str, parser: WorkforceStartPositionParser):
+        self.parser.workforce_start_position_parser.add_dependency(key, parser)
+
     def add_stock_parser(self, key: str, parser: StockParser):
         self.parser.warehouse_stock_parser.add_dependency(key, parser)
 
@@ -93,12 +99,16 @@ class EventFactory:
         self.objects[name] = object_source
         return self
 
-    def add_route(self,name, routes):
+    def add_route(self, name, routes):
         self.routes[name] = routes
         return self
 
-    def add_stock(self,name, routes):
-        self.stocks[name] = routes
+    def add_stock(self, name, stock):
+        self.stocks[name] = stock
+        return self
+
+    def add_workforce_start_positions(self, name, workforce_start_positions):
+        self.workforce_start_positions[name] = workforce_start_positions
         return self
 
     def add_file(self, filename):
@@ -119,8 +129,11 @@ class EventFactory:
                 self.add_route(name, parsed_object)
             elif kind == "stock":
                 self.add_stock(name, parsed_object)
+            elif kind == "workforces":
+                self.add_workforce_start_positions(name, parsed_object)
         return self
 
     def run(self, hook=lambda: None):
         for simulation in self.simulations:
-            self.simulations[simulation].run_simulation(self.datasources, self.sinks, self.objects, self.routes, self.stocks, hook)
+            self.simulations[simulation].run_simulation(self.datasources, self.sinks, self.objects, self.routes,
+                                                        self.stocks, self.workforce_start_positions, hook)

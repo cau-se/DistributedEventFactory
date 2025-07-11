@@ -4,6 +4,9 @@ spec:
   name: "SandingBar"
   group: "factory"
   type: objectCentric
+  workforce: noWorkforce
+  start: "SA"
+  end: "SA"
   workstation: "SA"
   selection: genericProbability
   distribution: [1.0]

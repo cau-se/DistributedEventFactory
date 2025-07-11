@@ -13,7 +13,8 @@ from distributed_event_factory.parser.datasource.event.selection.generic_probabi
     GenericProbabilityEventSelectionParser
 from distributed_event_factory.parser.datasource.event.selection.ordered_event_selection_parser import \
     OrderedEventSelectionParser
-from distributed_event_factory.parser.datasource.event.selection.parallel_event_selection_parser import ParallelEventSelectionParser
+from distributed_event_factory.parser.datasource.event.selection.parallel_event_selection_parser import \
+    ParallelEventSelectionParser
 from distributed_event_factory.parser.datasource.event.selection.uniform_event_selection import \
     UniformEventSelectionParser
 from distributed_event_factory.parser.datasource.event.transition.transition_parser import TransitionParser
@@ -45,16 +46,19 @@ from parser.datasource.event.input.input_parser import InputParser
 from parser.datasource.event.output.output_parser import OutputParser, DummyObjectParser
 from parser.route.route_parser import RouteParser
 from parser.stock.stock_parser import StockParser
+from parser.workforce.workforce_parser import WorkforceParser, DummyWorkforceParser
+from parser.workforce.workforce_start_positions import WorkforceStartPositionParser
 
 
 class ParserRegistry:
 
     def __init__(self):
-
         # Objects
         self.output_parser = OutputParser()
         self.dummy_object_parser = DummyObjectParser()
         self.input_parser = InputParser()
+        self.workforce_parser = WorkforceParser()
+        self.dummy_workforce_parser = DummyWorkforceParser()
 
         # Count
         self.constant_count_parser = ConstantCountParser()
@@ -122,6 +126,8 @@ class ParserRegistry:
                                        .add_dependency("driftingProbability", self.drifting_selection_parser)
                                        .add_dependency("parallel", self.parallel_event_selection_parser)
                                        .add_dependency("objectCentric", self.input_parser)
+                                       .add_dependency("hasWorkforce", self.workforce_parser)
+                                       .add_dependency("noWorkforce", self.dummy_workforce_parser)
                                        .add_dependency("default", self.dummy_object_parser))
 
         # DataSource
@@ -130,6 +136,7 @@ class ParserRegistry:
 
         # Input
         self.object_source_parser = ObjectSourceParser()
+        self.workforce_start_position_parser = WorkforceStartPositionParser()
 
         # Route
         self.route_parser = RouteParser()
@@ -183,4 +190,5 @@ class ParserRegistry:
                                         .add_dependency("simulation", self.simulation_parser)
                                         .add_dependency("object", self.object_source_parser)
                                         .add_dependency("route", self.route_parser)
-                                        .add_dependency("stock", self.warehouse_stock_parser))
+                                        .add_dependency("stock", self.warehouse_stock_parser)
+                                        .add_dependency("workforces", self.workforce_start_position_parser))

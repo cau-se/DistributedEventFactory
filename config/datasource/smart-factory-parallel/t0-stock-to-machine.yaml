@@ -4,13 +4,19 @@ spec:
   name: "TransportM1"
   group: "transport"
   type: objectCentric
+  workforce: hasWorkforce
   workstation: "R"
+  start: "ST"
+  end: "M"
   selection: genericProbability
   distribution: [1.0]
   input:
     - object: "barResource"
       number: 1
       lastState: ""
+  workforces:
+    - workforce: "transportRobot"
+      number: 1
   eventData:
     - activity:
         name: "transport from stock to M1"
