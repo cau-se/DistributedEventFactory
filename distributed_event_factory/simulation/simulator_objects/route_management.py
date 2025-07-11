@@ -40,7 +40,7 @@ class RouteManagement:
     def closest_to_location_order(self, location:str):
         possible_routes = []
         for route in self.routes:
-            if route.start == location:
+            if route.end == location:
                 possible_routes.append(route)
         possible_routes.sort(key=lambda route: route.duration)
         return possible_routes

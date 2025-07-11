@@ -51,8 +51,8 @@ class WorkforceStorage:
         locations = routeManagement.closest_to_location_order(location)
         for closest_location in locations:
             for workforce in workforce_storage:
-                if workforce.name == type and workforce.location == closest_location:
-                    route = routeManagement.get_route_for_start_end(closest_location, location)
+                if workforce.name == type and workforce.location == closest_location.start:
+                    route = routeManagement.get_route_for_start_end(closest_location.start, location)
                     return workforce, route
         return None, None
 
@@ -95,9 +95,10 @@ class WorkforceStorage:
                                                                                     workforce.name,
                                                                                     workforce_forecast, routeManagement)
                 if workforce:
-                    steps_with_duration.append((step, step.duration + route.duration))
+                    step = step.clone()
+                    step.duration = step.duration + route.duration
                     self.workforces.remove(workforce)
-                    workforce.location = workstation.work_station_name
+                    workforce.location = step.start_location
                     self.workforces.append(workforce)
                 else:
                     all_workforces_at_location = False

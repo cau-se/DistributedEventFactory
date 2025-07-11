@@ -26,12 +26,25 @@ class WorkProcessStep:
         self.start_location = start_location
         self.end_location = end_location
 
+    def clone(self):
+        return WorkProcessStep(self.activity,
+                               self.input_objects,
+                               self.output_objects,
+                               self.duration,
+                               self.node,
+                               self.group_id,
+                               self.workforces_needed,
+                               self.start_location,
+                               self.end_location)
+
     def produce_event(self, current_timestamp, workstation, ingoing_objects, outgoing_objects) -> ObjectEvent:
         return ObjectEvent(
             timestamp=current_timestamp.strftime(Y_M_D_H_M_S),
             activity=self.activity,
             node=self.node,
             group_id=workstation,
-            input=", ".join([str(obj) for obj in self.input_objects] +["objectIds: " + ", ".join(obj.object_id.unique_id for obj in ingoing_objects)]),
-            output=", ".join([str(obj) for obj in self.output_objects] +["objectIds: " + ", ".join(obj.object_id.unique_id for obj in outgoing_objects)])
+            input=", ".join([str(obj) for obj in self.input_objects] + [
+                "objectIds: " + ", ".join(obj.object_id.unique_id for obj in ingoing_objects)]),
+            output=", ".join([str(obj) for obj in self.output_objects] + [
+                "objectIds: " + ", ".join(obj.object_id.unique_id for obj in outgoing_objects)])
         )
