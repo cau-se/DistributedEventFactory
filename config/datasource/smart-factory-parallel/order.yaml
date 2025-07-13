@@ -4,5 +4,4 @@ spec:
   name: "order"
   type: "order"
   input:
-  length: ""
-  width: ""
+  size:

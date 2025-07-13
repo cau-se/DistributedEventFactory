@@ -7,8 +7,9 @@ spec:
     - object: "bar"
       number: 4
       lastState: "sanded"
+      size:
     - object: "screw"
       number: 13
       lastState: ""
-  length: ""
-  width: ""
+      size:
+  size:

@@ -12,3 +12,6 @@ class ObjectId:
 
     def get_name(self):
         return self.id
+
+    def get_unique_id(self):
+        return self.unique_id

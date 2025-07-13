@@ -7,5 +7,5 @@ spec:
     - object:
       number:
       lastState:
-  length: ""
-  width: ""
+      size:
+  size:

@@ -14,15 +14,22 @@ spec:
     - object: "bar"
       number: 4
       lastState: "sanded"
+      size:
+        length: "2"
+        width: ""
+        depth: ""
     - object: "screw"
       number: 13
       lastState: ""
+      size:
     - object: "handover"
       number: 1
       lastState: ""
+      size:
     - object: "handoverStock"
       number: 1
       lastState: ""
+      size:
   eventData:
     - activity:
         name: "Assembling completed"
@@ -30,6 +37,7 @@ spec:
           - object: "woodShelf"
             number: 1
             change: "assembled"
+            size:
       duration: 10
       transition: "Shipping"
     - activity:
@@ -38,6 +46,7 @@ spec:
           - object: "woodShelf"
             number: 1
             change: "overheated"
+            size:
       transition: ""
       duration: 2
     - activity:
@@ -46,5 +55,6 @@ spec:
           - object: "woodShelf"
             number: 1
             change: "broke"
+            size:
       transition: ""
       duration: 1

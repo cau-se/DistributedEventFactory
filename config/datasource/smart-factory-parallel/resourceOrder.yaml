@@ -4,5 +4,4 @@ spec:
   name: "resourceOrder"
   type: "order"
   input:
-  length: ""
-  width: ""
+  size:

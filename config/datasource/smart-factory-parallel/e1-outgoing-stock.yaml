@@ -13,15 +13,21 @@ spec:
     - object: "resourceOrder"
       number: 1
       lastState: ""
+      size:
   eventData:
     - activity:
         name: "retrieve resources"
         output:
           - object: "barResource"
-            number: 1
+            number: 2
             change: ""
+            size:
+              length: "4"
+              width: ""
+              depth: ""
           - object: "screw"
             number: 13
             change: ""
+            size:
       duration: 3
       transition: ""

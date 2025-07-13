@@ -14,6 +14,7 @@ spec:
     - object: "bar"
       number: 4
       lastState: "sanded"
+      size:
   workforces:
     - workforce: "transportRobot"
       number: 1
@@ -24,8 +25,10 @@ spec:
           - object: "bar"
             number: 4
             change: "sanded"
+            size:
           - object: "handover"
             number: 1
             change: ""
+            size:
       transition: "Assembly"
       duration: 10

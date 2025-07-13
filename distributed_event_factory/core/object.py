@@ -24,8 +24,7 @@ class GenericObjectSource(ObjectSource):
             object_id_name: str,
             object_type: str,
             input_objects: [],
-            length: int,
-            width: int
+            size
 
     ):
         self.values_changed: List[ObjectData] = []
@@ -33,8 +32,7 @@ class GenericObjectSource(ObjectSource):
         self.object_id = ObjectId(object_id_name)
         self.object_type = object_type
         self.input_objects = input_objects
-        self.length = length
-        self.width = width
+        self.size = size
 
     def emit_object(self, id, object_name, timestamp) -> ObjectData:
         object = ObjectData(
@@ -54,14 +52,13 @@ class GenericObjectSource(ObjectSource):
     def get_input_objects(self) -> []:
         return self.input_objects
 
-    def get_length(self) -> int:
-        return self.length
-
-    def get_width(self) -> int:
-        return self.width
+    def get_size(self):
+        return self.size
 
     def get_last_changed_value(self):
-        return self.values_changed[-1].object_state
+        if self.values_changed:
+            return self.values_changed[-1].object_state
+        return None
 
     def add_change(self, change):
         self.values_changed.append(change)
@@ -70,5 +67,4 @@ class GenericObjectSource(ObjectSource):
         return GenericObjectSource(self.object_id_name,
                                    self.object_type,
                                    self.input_objects,
-                                   self.length,
-                                   self.width)
+                                   self.size)

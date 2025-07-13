@@ -12,8 +12,12 @@ spec:
   distribution: [1.0]
   input:
     - object: "barResource"
-      number: 1
+      number: 2
       lastState: ""
+      size:
+        length: "4"
+        width: ""
+        depth: ""
   workforces:
     - workforce: "transportRobot"
       number: 1
@@ -22,10 +26,15 @@ spec:
         name: "transport from stock to M1"
         output:
           - object: "barResource"
-            number: 1
+            number: 2
             change: ""
+            size:
+              length: "4"
+              width: ""
+              depth: ""
           - object: "handover"
             number: 1
             change: ""
+            size:
       transition: "SawingBar"
       duration: 10

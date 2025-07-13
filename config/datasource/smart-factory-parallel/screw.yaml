@@ -7,5 +7,5 @@ spec:
     - object: "order"
       number: 1
       lastState: ""
-  length: ""
-  width: ""
+      size:
+  size:

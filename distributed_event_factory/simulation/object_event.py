@@ -17,4 +17,4 @@ class ObjectEvent(Event):
         return self.input + "->" + self.output
 
     def __str__(self):
-        return str(self.__dict__)
+        return str(self.__dict__).replace("\\", "")

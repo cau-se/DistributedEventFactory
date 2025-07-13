@@ -5,3 +5,4 @@ spec:
     - object: "order"
       number: 100
       lastState:
+      size:

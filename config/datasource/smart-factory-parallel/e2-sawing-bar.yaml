@@ -12,11 +12,16 @@ spec:
   distribution: [1.0]
   input:
     - object: "barResource"
-      number: 1
+      number: 2
       lastState: ""
+      size:
+        length: "4"
+        width: ""
+        depth: ""
     - object: "handover"
       number: 1
       lastState: ""
+      size:
   eventData:
     - activity:
         name: "Sawed"
@@ -24,5 +29,9 @@ spec:
           - object: "bar"
             number: 4
             change: "divided Resource"
+            size:
+              length: "2"
+              width: ""
+              depth: ""
       transition: "DrillingBar"
       duration: 5

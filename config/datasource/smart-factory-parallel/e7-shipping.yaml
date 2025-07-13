@@ -14,6 +14,7 @@ spec:
     - object: "woodShelf"
       number: 1
       lastState: "assembled"
+      size:
   eventData:
     - activity:
         name: "Package waits for sending"
@@ -21,6 +22,7 @@ spec:
           - object: "woodShelf"
             number: 1
             change: ""
+            size:
       transition: "Shipping"
       duration: 180
     - activity:
@@ -29,5 +31,6 @@ spec:
           - object: "woodShelf"
             number: 1
             change: ""
+            size:
       transition: ""
       duration: 1

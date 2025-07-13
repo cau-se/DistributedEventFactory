@@ -34,7 +34,7 @@ class CountBasedSimulation(Simulation):
             workforce_start_positions=workforce_start_positions
         )
 
-        for i in range(10):
+        for i in range(200):
             event = process_simulator.simulate()
             self.send_event(event)
         hook()
