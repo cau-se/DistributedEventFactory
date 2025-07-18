@@ -16,7 +16,7 @@ class CountBasedSimulation(Simulation):
         self.sinks = dict()
         self.max_concurrent_cases = max_concurrent_cases
 
-    def run_simulation(self, datasources, sinks, objects, routes, stocks, workforce_start_positions, hook=lambda: None):
+    def run_simulation(self, datasources, sinks, objects, routes, stocks, workforce_start_positions, root, hook=lambda: None):
         self.setup_datasource_sink_mapping(sinks)
         # process_simulator = ProcessSimulator(
         #    case_id_provider=self.case_id_provider,
@@ -35,6 +35,6 @@ class CountBasedSimulation(Simulation):
         )
 
         for i in range(200):
-            event = process_simulator.simulate()
-            self.send_event(event)
+            event, object_store = process_simulator.simulate()
+            self.send_event(event, root, objects, object_store)
         hook()

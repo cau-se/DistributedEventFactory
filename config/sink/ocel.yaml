@@ -1,0 +1,27 @@
+kind: sink
+name: ocelConsole
+spec:
+  type: ocel
+  id: "Sensor"
+  dataSourceRefs:
+    - "GoodsDelivery"
+    - "MaterialPreparation"
+    - "AssemblyLineSetup"
+    - "Assembling"
+    - "QualityControl"
+    - "Packaging"
+    - "Shipping"
+    - "OutgoingStock"
+    - "Assembly"
+    - "SawingBar"
+    - "DrillingBar"
+    - "SandingBar"
+    - "OrderPlacement"
+    - "TransportM1"
+    - "TransportM1A"
+    - "TransportSA"
+    - "A"
+    - "B"
+    - "C"
+    - "D"
+    - "E"

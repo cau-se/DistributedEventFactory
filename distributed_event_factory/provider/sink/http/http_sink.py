@@ -44,5 +44,5 @@ class LoadTestHttpSink(Sink):
     def start(self):
         requests.post(url=self.url + "/start")
 
-    def send(self, event: Event) -> None:
+    def send(self, event: Event, root, object_sources, object_store) -> None:
         self.timeframe.add_event(event)

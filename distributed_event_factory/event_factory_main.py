@@ -23,4 +23,4 @@ if __name__ == '__main__':
      .add_directory(f"{content_root}/config/datasource/{datasource}")
      .add_file(f"{content_root}/config/simulation/{simulation}")
      .add_file(f"{content_root}/config/sink/{sink}")
-     ).run()
+     ).run(content_root = content_root)

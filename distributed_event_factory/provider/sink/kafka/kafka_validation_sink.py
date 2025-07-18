@@ -29,7 +29,7 @@ class KafkaValidationSink(Sink):
         self.validation_topic = validation_topic
         self.validation_split = validation_split
 
-    def send(self, event: Event) -> None:
+    def send(self, event: Event, root, object_sources, object_store) -> None:
         if hash(event.get_case()) % self.validation_split == 0:
             send_topic = self.validation_topic
             send_partition = ConstantPartitionProvider(partition=0)

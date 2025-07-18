@@ -20,7 +20,7 @@ class KafkaSink(Sink):
         self.topic = topic
         self.partition_provider = partition_provider
 
-    def send(self, event: Event) -> None:
+    def send(self, event: Event, root, object_sources, object_store) -> None:
         self.producer.send(
             self.topic,
             value=json.dumps(event.__dict__),

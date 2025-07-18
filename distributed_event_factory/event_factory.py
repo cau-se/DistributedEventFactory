@@ -133,7 +133,7 @@ class EventFactory:
                 self.add_workforce_start_positions(name, parsed_object)
         return self
 
-    def run(self, hook=lambda: None):
+    def run(self, content_root, hook=lambda: None):
         for simulation in self.simulations:
             self.simulations[simulation].run_simulation(self.datasources, self.sinks, self.objects, self.routes,
-                                                        self.stocks, self.workforce_start_positions, hook)
+                                                        self.stocks, self.workforce_start_positions, content_root, hook)

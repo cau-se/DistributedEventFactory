@@ -62,7 +62,7 @@ class ProcessSimulationObjectCentric:
             self.workforce_storage.manage_workforce_changes(next_step, self.routeManagement)
         event = next_step.produce_event(self.last_timestamp,
                                         next_workstation.work_station_name, ingoing_objects, outgoing_objects)
-        return event
+        return event, self.object_storage
 
     def _get_next_step_by_event_provider(self, data_source) -> List[str]:
         events = self._get_sensor_with_id(DataSourceId(data_source)).get_event_data()

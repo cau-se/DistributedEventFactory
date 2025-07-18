@@ -45,6 +45,7 @@ from distributed_event_factory.provider.data.increasing_case import IncreasingCa
 from parser.datasource.event.input.input_parser import InputParser
 from parser.datasource.event.output.output_parser import OutputParser, DummyObjectParser
 from parser.route.route_parser import RouteParser
+from parser.sink.ocel_sink_parser import OcelConsoleSinkParser
 from parser.stock.stock_parser import StockParser
 from parser.workforce.workforce_parser import WorkforceParser, DummyWorkforceParser
 from parser.workforce.workforce_start_positions import WorkforceStartPositionParser
@@ -73,13 +74,15 @@ class ParserRegistry:
         # Sinks
         self.kafka_sink_parser = (KafkaSinkParser()).add_dependency("partition", self.partition_parser)
         self.console_sink_parser = (PrintConsoleSinkParser())
+        self.ocel_console_sink_parser = (OcelConsoleSinkParser())
         self.ui_sink_parser = (UiSinkParser())
         self.http_sink_parser = (HttpSinkParser())
         self.sink_parser = (SinkParser()
                             .add_dependency("console", self.console_sink_parser)
                             .add_dependency("ui", self.ui_sink_parser)
                             .add_dependency("http", self.http_sink_parser)
-                            .add_dependency("kafka", self.kafka_sink_parser))
+                            .add_dependency("kafka", self.kafka_sink_parser)
+                            .add_dependency("ocel", self.ocel_console_sink_parser))
         ##########
         # Activity
         self.activity_parser = ActivityParser().add_dependency("output", self.output_parser)

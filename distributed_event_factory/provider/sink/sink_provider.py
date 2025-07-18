@@ -8,7 +8,7 @@ class Sink:
         self.data_source_ref = data_source_ref
 
     @abc.abstractmethod
-    def send(self, event: Event) -> None:
+    def send(self, event: Event, root, object_sources, object_store) -> None:
         pass
 
     def get_datasource_ref(self):

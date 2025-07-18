@@ -5,10 +5,10 @@ class Simulation(ABC):
     def __init__(self):
         self.datasource_sink_mapping = dict()
 
-    def send_event(self, event):
+    def send_event(self, event, root, object_sources, object_store:None):
         if event.node in self.datasource_sink_mapping:
             for sink in self.datasource_sink_mapping[event.node]:
-                sink.send(event)
+                sink.send(event, root, object_sources, object_store)
         else:
             print(f"Skip event. No sink configured. Event: {event}")
 

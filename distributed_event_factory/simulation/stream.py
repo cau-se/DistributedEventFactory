@@ -20,7 +20,7 @@ class StreamSimulation(Simulation):
         self.max_concurrent_cases = max_concurrent_cases
         self.sinks = dict()
 
-    def run_simulation(self, datasources, sinks, objects, routes, stocks, workforce_start_positions, hook):
+    def run_simulation(self, datasources, sinks, objects, routes, stocks, workforce_start_positions, root, hook):
         self.setup_datasource_sink_mapping(sinks)
         process_simulator = ProcessSimulator(
             case_id_provider=self.case_id_provider,
@@ -33,7 +33,7 @@ class StreamSimulation(Simulation):
         while True:
             with ScheduledThreadPoolExecutor() as executor:
                 scheduler = executor.schedule(
-                    lambda: self.send_event(process_simulator.simulate()),
+                    lambda: self.send_event(process_simulator.simulate(), root, objects),
                     period=1 / self.load_provider.get_load_value()
                 )
                 hook()

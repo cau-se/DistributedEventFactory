@@ -42,7 +42,7 @@ class LoadTestSimulation(Simulation):
 
     def run_simulation(self, data_sources: Dict[str, DataSource], datasource_sink_mapping: Dict[str, LoadTestHttpSink],
                        objects: Dict[str, ObjectData], routes: Dict[str, Route], stocks: Dict[str, InputObjectProvider],
-                       workforce: Dict[str, WorkforceStartPositionProvider],
+                       workforce: Dict[str, WorkforceStartPositionProvider], root,
                        hook=lambda: None):
         self.setup_datasource_sink_mapping(datasource_sink_mapping)
         for sink in datasource_sink_mapping:
@@ -62,7 +62,7 @@ class LoadTestSimulation(Simulation):
                 self.start_simulation(self.datasource_sink_mapping)
             self.start_timeframe(self.datasource_sink_mapping)
             for _ in range(int(self.load_provider.get_load_value())):
-                self.send_event(process_simulator.simulate())
+                self.send_event(process_simulator.simulate(), root, objects)
                 hook()
             self.end_timeframe(self.datasource_sink_mapping)
             iteration = iteration + 1

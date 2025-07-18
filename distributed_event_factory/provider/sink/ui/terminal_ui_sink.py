@@ -7,7 +7,7 @@ class TerminalGui(Sink):
     def __init__(self, terminal):
         self.terminal: Terminal = terminal
 
-    def send(self, event: Event):
+    def send(self, event: Event, root, object_sources, object_store):
         self.terminal.print(event)
 
 class UiSink(Sink):
@@ -15,7 +15,7 @@ class UiSink(Sink):
         self.ui = Terminal(title=id, start_position=0)
         self.data_source_ref = data_source_ref
 
-    def send(self, event: Event) -> None:
+    def send(self, event: Event, root, object_sources, object_store) -> None:
         self.ui.print(event)
 
 

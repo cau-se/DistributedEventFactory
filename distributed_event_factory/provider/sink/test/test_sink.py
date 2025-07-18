@@ -9,7 +9,7 @@ class TestSink(Sink):
         super().__init__(data_source_ref)
         self.event_log: List[Event] = []
 
-    def send(self, event: Event) -> None:
+    def send(self, event: Event, root, object_sources, object_store) -> None:
         self.event_log.append(event)
 
     def contains_event(self, event):

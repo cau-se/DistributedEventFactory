@@ -86,6 +86,7 @@ class ObjectCounter:
 class ObjectIdenticalParameters:
     def __init__(self, object):
         self.name = object.object_id_name.id
+        self.object_type = object.object_type
         self.size = object.size
 
     def __str__(self):

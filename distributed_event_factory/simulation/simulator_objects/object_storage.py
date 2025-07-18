@@ -194,6 +194,10 @@ class ObjectStorage:
         return next((item for item in objects if
                      item.object_id.id.id == obj.objectName), None)
 
+    def find_object_by_id(self, uid):
+        return next((item for item in self.objects if
+                     item.object_id.unique_id == uid), None)
+
     def manage_input_and_output_of_steps(self, input_objects: List[InputObjectProvider],
                                          output_objects: List[OutputObjectProvider],
                                          object_templates: Dict[str, ObjectData], timestamp):

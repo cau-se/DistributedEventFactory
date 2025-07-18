@@ -9,7 +9,7 @@ class PrintConsole(Sink):
         super().__init__(data_source_ref)
         self.id = id
 
-    def send(self, event: Event) -> None:
+    def send(self, event: Event, root, object_sources, object_store) -> None:
         #print(event.timestamp)
         print("Sensor " + event.node + ": " + str(event))
 
