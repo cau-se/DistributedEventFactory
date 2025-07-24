@@ -158,6 +158,11 @@ class ObjectStorage:
             return SizeParamsProvider(depth=depth, width=width, length=length)
         return given_size
 
+    def are_size_params_empty(self, size_params):
+        if not size_params or (not size_params.depth and not size_params.width and not size_params.length):
+            return True
+        return False
+
     def add_object(self, obj: GenericObjectSource):
         self.objects.append(obj)
 
@@ -211,7 +216,7 @@ class ObjectStorage:
                     self.objects.remove(obj)
                     if obj.size and input_object.size:
                         leftover_size = self.get_leftover_size_of_given_object(obj.size, input_object.size)
-                        if leftover_size:
+                        if not self.are_size_params_empty(leftover_size):
                             obj = obj.clone()
                             obj.add_change(ObjectData(timestamp=timestamp.strftime("%Y-%m-%d %H:%M:%S"),
                                                       object_state="size: "+str(leftover_size),
