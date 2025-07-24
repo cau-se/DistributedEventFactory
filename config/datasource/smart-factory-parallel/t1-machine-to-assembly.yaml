@@ -15,6 +15,9 @@ spec:
       number: 4
       lastState: "sanded"
       size:
+        length: "2"
+        width: ""
+        depth: ""
   workforces:
     - workforce: "transportRobot"
       number: 1
@@ -26,6 +29,9 @@ spec:
             number: 4
             change: "sanded"
             size:
+              length: "2"
+              width: ""
+              depth: ""
           - object: "handover"
             number: 1
             change: ""
