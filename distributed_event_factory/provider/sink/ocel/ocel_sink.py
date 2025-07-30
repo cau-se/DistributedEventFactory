@@ -1,4 +1,5 @@
-from typing import Any, Dict, Collection
+from datetime import datetime
+from typing import Dict
 
 import pm4py
 from process_mining_core.datastructure.core.event import Event
@@ -21,9 +22,19 @@ class OcelConsole(Sink):
         self.contentRoot = None
         self.index = 0
         self.object_types = []
+        self.input_counter = 0
+        self.output_counter = 0
+        self.start_time = None
+        self.end_time = None
+        self.problem_event_counter = 0
 
     def send(self, event: Event, root, object_sources, object_store) -> None:
-        # print(event.timestamp)
+        if self.start_time is None:
+            self.start_time = event.timestamp
+
+        if "Failure:" in event.activity:
+            self.problem_event_counter += 1
+
         if not self.object_types:
             for object_source in object_sources.values():
                 if object_source.object_type not in self.object_types:
@@ -40,6 +51,8 @@ class OcelConsole(Sink):
         for type in self.object_types:
             input_objects = self.get_objects_of_type(type, event.input, object_store)
             output_objects = self.get_objects_of_type(type, event.output, object_store)
+            self.input_counter += len(input_objects)
+            self.output_counter += len(output_objects)
             involved_objects = []
             for input_object in input_objects:
                 if input_object in output_objects:
@@ -52,7 +65,6 @@ class OcelConsole(Sink):
                 involved_objects.append(output_object)
             type_objects[type] = involved_objects
         for type, involved_object in type_objects.items():
-            #new_row["ocel:" + type + ":type"] = type
             new_row[type + "-name"] = ", ".join(
                 [item.name for item in involved_object if item.name is not None])
             new_row[type + "-size"] = ", ".join(
@@ -68,6 +80,7 @@ class OcelConsole(Sink):
         self.rowsList.append(new_row)
         self.contentRoot = root
         self.index += 1
+        self.end_time = event.timestamp
 
     def start_timeframe(self):
         pass
@@ -84,7 +97,30 @@ class OcelConsole(Sink):
                                                  object_types=self.object_types, obj_separator=", ",
                                                  additional_event_attributes=["ocel:node", "ocel:workstation"],
                                                  additional_object_attributes=type_attributes)
-        pm4py.algo.discovery.ocel.ocpn.variants.classic.apply(ocel=ocel, parameters=ocel.parameters)
+        petri_net=pm4py.algo.discovery.ocel.ocpn.variants.classic.apply(ocel=ocel, parameters=ocel.parameters)
+        #pm4py.visualization.ocel.ocpn.visualizer.apply(ocpn=petri_net).view() ## Install graphviz
+        pm4py.objects.ocel.exporter.jsonocel.exporter.apply(ocel=ocel, target_path=self.contentRoot + "/ocel.jsonocel")
+        #pm4py.algo.conformance.alignments.petri_net.variants(obj=df, petri_net=petri_net, initial_marking=None, final_marking=None)
+
+        start_time_dt = datetime.strptime(self.start_time, "%Y-%m-%d %H:%M:%S")
+        end_time_dt = datetime.strptime(self.end_time, "%Y-%m-%d %H:%M:%S")
+
+        print("time: "+ str(end_time_dt - start_time_dt))
+        petri_nety_per_object_type = petri_net.get("petri_nets")
+        simplicity_nodes = []
+        simplicity_transition = []
+        for object_type in self.object_types:
+            petri_type = petri_nety_per_object_type.get(object_type)[0]
+            if petri_type is not None:
+                simplicity_nodes.append(len(petri_type.places))
+                simplicity_transition.append(len(petri_type.transitions))
+
+        print("Simplicity nodes: " + str(simplicity_nodes))
+        print("Simplicity transitions: " + str(simplicity_transition))
+        print("Problems Events: "+ str(self.problem_event_counter))
+        print("Input objects per event: "+ str(self.input_counter/self.index))
+        print("Output objects per event: "+ str(self.output_counter/self.index))
+
 
     def get_objects_of_type(self, type, objects, object_store):
         objects_of_type = []

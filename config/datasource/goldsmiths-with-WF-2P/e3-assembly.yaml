@@ -30,7 +30,7 @@ spec:
       duration: 10
       transition: "ShippingB"
     - activity:
-        name: "Item broke"
+        name: "Failure: Item broke"
         output:
           - object: "earring"
             number: 2

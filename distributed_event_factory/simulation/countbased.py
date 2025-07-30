@@ -1,10 +1,8 @@
 from distributed_event_factory.provider.data.case_provider import CaseIdProvider
 from distributed_event_factory.provider.data.count_provider import CountProvider
 from distributed_event_factory.simulation.abstract_simulation import Simulation
-from distributed_event_factory.simulation.process_simulation import ProcessSimulator
 from simulation.process_simulation_object_centric import ProcessSimulationObjectCentric
 from simulation.simulator_objects.object_storage import ObjectStorage
-from simulation.simulator_objects.workprocessstep import WorkProcessStep
 
 
 class CountBasedSimulation(Simulation):
@@ -16,8 +14,13 @@ class CountBasedSimulation(Simulation):
         self.sinks = dict()
         self.max_concurrent_cases = max_concurrent_cases
 
+    def end_timeframe(self):
+        for sink in self.sinks.values():
+            sink.end_timeframe()
+
     def run_simulation(self, datasources, sinks, objects, routes, stocks, workforce_start_positions, root, hook=lambda: None):
         self.setup_datasource_sink_mapping(sinks)
+        self.sinks = sinks
         # process_simulator = ProcessSimulator(
         #    case_id_provider=self.case_id_provider,
         #    data_sources=datasources,
@@ -34,7 +37,10 @@ class CountBasedSimulation(Simulation):
             workforce_start_positions=workforce_start_positions
         )
 
-        for i in range(200):
+        for i in range(self.simulation_steps):
             event, object_store = process_simulator.simulate()
             self.send_event(event, root, objects, object_store)
+        self.end_timeframe()
         hook()
+
+
