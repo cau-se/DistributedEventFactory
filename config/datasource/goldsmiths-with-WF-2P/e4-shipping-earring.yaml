@@ -1,0 +1,39 @@
+kind: datasource
+name: "ShippingB"
+spec:
+  name: "ShippingB"
+  group: "factory"
+  type: objectCentric
+  workforce: hasWorkforce
+  start: "S"
+  end: "S"
+  workstation: "S"
+  selection: genericProbability
+  distribution: [ 0.8, 0.2 ]
+  input:
+    - object: "earring"
+      number: 2
+      lastState: "assembled"
+      size:
+  workforces:
+    - workforce: "humanWorkforce"
+      number: 1
+  eventData:
+    - activity:
+        name: "Package waits for sending"
+        output:
+          - object: "earring"
+            number: 2
+            change: "assembled"
+            size:
+      transition: "Shipping"
+      duration: 20
+    - activity:
+        name: "Package sent"
+        output:
+          - object: "earring"
+            number: 2
+            change: "shipped"
+            size:
+      transition: ""
+      duration: 1
