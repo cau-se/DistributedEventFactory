@@ -1,0 +1,36 @@
+kind: datasource
+name: "Shipping"
+spec:
+  name: "Shipping"
+  group: "factory"
+  type: objectCentric
+  workforce: noWorkforce
+  start: "S"
+  end: "S"
+  workstation: "S"
+  selection: genericProbability
+  distribution: [ 0.8, 0.2 ]
+  input:
+    - object: "woodShelf"
+      number: 1
+      lastState: "assembled"
+      size:
+  eventData:
+    - activity:
+        name: "Package waits for sending"
+        output:
+          - object: "woodShelf"
+            number: 1
+            change: ""
+            size:
+      transition: "Shipping"
+      duration: 180
+    - activity:
+        name: "Package sent"
+        output:
+          - object: "woodShelf"
+            number: 1
+            change: ""
+            size:
+      transition: ""
+      duration: 1

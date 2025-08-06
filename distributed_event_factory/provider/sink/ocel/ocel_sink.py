@@ -98,7 +98,7 @@ class OcelConsole(Sink):
                                                  additional_event_attributes=["ocel:node", "ocel:workstation"],
                                                  additional_object_attributes=type_attributes)
         petri_net=pm4py.algo.discovery.ocel.ocpn.variants.classic.apply(ocel=ocel, parameters=ocel.parameters)
-        #pm4py.visualization.ocel.ocpn.visualizer.apply(ocpn=petri_net).view() ## Install graphviz
+        pm4py.visualization.ocel.ocpn.visualizer.apply(ocpn=petri_net).view()
         pm4py.objects.ocel.exporter.jsonocel.exporter.apply(ocel=ocel, target_path=self.contentRoot + "/ocel.jsonocel")
         #pm4py.algo.conformance.alignments.petri_net.variants(obj=df, petri_net=petri_net, initial_marking=None, final_marking=None)
 
@@ -106,6 +106,7 @@ class OcelConsole(Sink):
         end_time_dt = datetime.strptime(self.end_time, "%Y-%m-%d %H:%M:%S")
 
         print("time: "+ str(end_time_dt - start_time_dt))
+        print("duration: "+ str(datetime.now() - start_time_dt))
         petri_nety_per_object_type = petri_net.get("petri_nets")
         simplicity_nodes = []
         simplicity_transition = []

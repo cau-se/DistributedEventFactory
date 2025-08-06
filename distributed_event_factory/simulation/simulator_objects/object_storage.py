@@ -226,7 +226,7 @@ class ObjectStorage:
                             outgoing_objects.append(obj)
                 else:
                     return ValueError("Object not found")
-        outgoing_objects.extend(self.add_output_changed_objects_to_store(ingoing_objects, object_templates, output_objects,
+        outgoing_objects.extend(self.add_output_changed_objects_to_store(ingoing_objects.copy(), object_templates, output_objects,
                                                                     timestamp))
         return ingoing_objects, outgoing_objects
 
