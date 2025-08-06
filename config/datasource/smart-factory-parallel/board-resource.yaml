@@ -1,0 +1,14 @@
+kind: object
+name: "boardResource"
+spec:
+  name: "boardResource"
+  type: "resource"
+  input:
+    - object: "order"
+      number: 1
+      lastState: ""
+      size:
+  size:
+    length: ""
+    width: "30"
+    depth: "30"

@@ -1,42 +1,40 @@
 kind: datasource
-name: "TransportSA"
+name: "TransportM1"
 spec:
-  name: "TransportSA"
+  name: "TransportM1"
   group: "transport"
   type: objectCentric
   workforce: hasWorkforce
   workstation: "R"
   start: "ST"
-  end: "A"
+  end: "M"
   selection: genericProbability
   distribution: [1.0]
   input:
-    - object: "screw"
-      number: 13
+    - object: "boardResource"
+      number: 1
       lastState: ""
       size:
-    - object: "bolt"
-      number: 13
-      lastState: ""
-      size:
+        length: ""
+        width: "30"
+        depth: "30"
   workforces:
     - workforce: "transportRobot"
       number: 1
   eventData:
     - activity:
-        name: "transport from stock to assembly"
+        name: "transport from stock to M1"
         output:
-          - object: "screw"
-            number: 13
-            change: ""
-            size:
-          - object: "bolt"
-            number: 13
-            change: ""
-            size:
-          - object: "handoverStock"
+          - object: "boardResource"
             number: 1
             change: ""
             size:
-      transition: "Assembly"
+              length: ""
+              width: "30"
+              depth: "30"
+          - object: "handover"
+            number: 1
+            change: ""
+            size:
+      transition: "SawingBar"
       duration: 10

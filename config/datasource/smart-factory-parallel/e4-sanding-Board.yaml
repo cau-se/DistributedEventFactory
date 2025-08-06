@@ -1,7 +1,7 @@
 kind: datasource
-name: "SandingBar"
+name: "SandingBoard"
 spec:
-  name: "SandingBar"
+  name: "SandingBoard"
   group: "factory"
   type: objectCentric
   workforce: noWorkforce
@@ -11,23 +11,23 @@ spec:
   selection: genericProbability
   distribution: [1.0]
   input:
-    - object: "bar"
+    - object: "board"
       number: 1
       lastState: "drilled"
       size:
-        length: "2"
-        width: ""
-        depth: ""
+        length: ""
+        width: "5"
+        depth: "5"
   eventData:
     - activity:
-        name: "Sanded bar"
+        name: "Sanded board"
         output:
-          - object: "bar"
+          - object: "board"
             number: 1
             change: "sanded"
             size:
-              length: "2"
-              width: ""
-              depth: ""
-      transition: "TransportM1ABar"
+              length: ""
+              width: "5"
+              depth: "5"
+      transition: "TransportM1A"
       duration: 5

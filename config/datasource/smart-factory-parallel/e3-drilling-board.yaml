@@ -1,0 +1,33 @@
+kind: datasource
+name: "DrillingBoard"
+spec:
+  name: "DrillingBoard"
+  group: "factory"
+  type: objectCentric
+  workforce: noWorkforce
+  start: "D"
+  end: "D"
+  workstation: "D"
+  selection: genericProbability
+  distribution: [1.0]
+  input:
+    - object: "board"
+      number: 1
+      lastState: "divided Resource"
+      size:
+        length: ""
+        width: "5"
+        depth: "5"
+  eventData:
+    - activity:
+        name: "Drilled"
+        output:
+          - object: "board"
+            number: 1
+            change: "drilled"
+            size:
+              length: ""
+              width: "5"
+              depth: "5"
+      transition: "SandingBoard"
+      duration: 5
