@@ -18,11 +18,26 @@ spec:
         length: "2"
         width: ""
         depth: ""
+    - object: "board"
+      number: 6
+      lastState: "sanded"
+      size:
+        length: ""
+        width: "5"
+        depth: "5"
     - object: "screw"
       number: 13
       lastState: ""
       size:
+    - object: "bolt"
+      number: 13
+      lastState: ""
+      size:
     - object: "handover"
+      number: 2
+      lastState: ""
+      size:
+    - object: "handoverBar"
       number: 1
       lastState: ""
       size:
@@ -39,7 +54,7 @@ spec:
             change: "assembled"
             size:
       duration: 10
-      transition: "Shipping"
+      transition: "QualityControl"
     - activity:
         name: "Overheating"
         output:

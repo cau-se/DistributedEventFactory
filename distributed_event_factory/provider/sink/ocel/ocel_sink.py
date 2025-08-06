@@ -105,17 +105,17 @@ class OcelConsole(Sink):
         start_time_dt = datetime.strptime(self.start_time, "%Y-%m-%d %H:%M:%S")
         end_time_dt = datetime.strptime(self.end_time, "%Y-%m-%d %H:%M:%S")
 
-        print("time: "+ str(end_time_dt - start_time_dt))
-        print("duration: "+ str(datetime.now() - start_time_dt))
         petri_nety_per_object_type = petri_net.get("petri_nets")
         simplicity_nodes = []
         simplicity_transition = []
         for object_type in self.object_types:
-            petri_type = petri_nety_per_object_type.get(object_type)[0]
+            petri_type = petri_nety_per_object_type.get(object_type)
             if petri_type is not None:
-                simplicity_nodes.append(len(petri_type.places))
-                simplicity_transition.append(len(petri_type.transitions))
+                simplicity_nodes.append(len(petri_type[0].places))
+                simplicity_transition.append(len(petri_type[0].transitions))
 
+        print("Time: "+ str(end_time_dt - start_time_dt))
+        print("Duration: "+ str(datetime.now() - start_time_dt))
         print("Simplicity nodes: " + str(simplicity_nodes))
         print("Simplicity transitions: " + str(simplicity_transition))
         print("Problems Events: "+ str(self.problem_event_counter))

@@ -1,7 +1,7 @@
 kind: datasource
-name: "TransportM1A"
+name: "TransportM1ABar"
 spec:
-  name: "TransportM1A"
+  name: "TransportM1ABar"
   group: "transport"
   type: objectCentric
   workforce: hasWorkforce
@@ -32,7 +32,7 @@ spec:
               length: "2"
               width: ""
               depth: ""
-          - object: "handover"
+          - object: "handoverBar"
             number: 1
             change: ""
             size:

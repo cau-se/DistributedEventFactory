@@ -1,0 +1,17 @@
+kind: object
+name: "board"
+spec:
+  name: "board"
+  type: "processedResource"
+  input:
+    - object: "boardResource"
+      number: 1
+      lastState: ""
+      size:
+        length: ""
+        width: "5"
+        depth: "5"
+  size:
+    length:
+    width: "5"
+    depth: "5"

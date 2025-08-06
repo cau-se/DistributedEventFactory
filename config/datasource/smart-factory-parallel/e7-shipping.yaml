@@ -13,7 +13,7 @@ spec:
   input:
     - object: "woodShelf"
       number: 1
-      lastState: "assembled"
+      lastState: "proofed"
       size:
   eventData:
     - activity:
@@ -21,7 +21,7 @@ spec:
         output:
           - object: "woodShelf"
             number: 1
-            change: ""
+            change: "proofed"
             size:
       transition: "Shipping"
       duration: 180
@@ -30,7 +30,7 @@ spec:
         output:
           - object: "woodShelf"
             number: 1
-            change: ""
+            change: "sent"
             size:
       transition: ""
       duration: 1

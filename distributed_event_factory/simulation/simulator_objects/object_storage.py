@@ -133,8 +133,8 @@ class ObjectStorage:
             depth_times = None
             width_times = None
             length_times = None
-            if given_size.depth and wanted_size.dept:
-                depth_times = round(given_size.depth / wanted_size.dept)
+            if given_size.depth and wanted_size.depth:
+                depth_times = round(given_size.depth / wanted_size.depth)
             if given_size.width and wanted_size.width:
                 width_times = round(given_size.width / wanted_size.width)
             if given_size.length and wanted_size.length:
@@ -149,8 +149,8 @@ class ObjectStorage:
             depth = given_size.depth
             width = given_size.width
             length = given_size.length
-            if given_size.depth and wanted_size.dept:
-                depth = given_size.depth - (wanted_size.dept * factor)
+            if given_size.depth and wanted_size.depth:
+                depth = given_size.depth - (wanted_size.depth * factor)
             if given_size.width and wanted_size.width:
                 width = given_size.width - (wanted_size.width * factor)
             if given_size.length and wanted_size.length:

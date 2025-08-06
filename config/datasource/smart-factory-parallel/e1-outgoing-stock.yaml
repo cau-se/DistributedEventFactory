@@ -19,15 +19,26 @@ spec:
         name: "retrieve resources"
         output:
           - object: "barResource"
-            number: 2
+            number: 4
             change: ""
             size:
               length: "4"
               width: ""
               depth: ""
+          - object: "boardResource"
+            number: 1
+            change: ""
+            size:
+              length: ""
+              width: "30"
+              depth: "30"
           - object: "screw"
             number: 13
             change: ""
             size:
-      duration: 3
+          - object: "bolt"
+            number: 13
+            change: ""
+            size:
+      duration: 13
       transition: ""
