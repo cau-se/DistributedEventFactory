@@ -1,6 +1,0 @@
-kind: object
-name: "ringGold"
-spec:
-  name: "ringGold"
-  type: "ring"
-  size:

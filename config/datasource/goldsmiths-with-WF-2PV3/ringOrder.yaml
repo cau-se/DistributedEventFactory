@@ -1,6 +1,0 @@
-kind: object
-name: "ringOrder"
-spec:
-  name: "ringOrder"
-  type: "ring"
-  size:

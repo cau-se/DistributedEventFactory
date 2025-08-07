@@ -3,4 +3,5 @@ name: "order"
 spec:
   name: "order"
   type: "ring"
+  input:
   size:

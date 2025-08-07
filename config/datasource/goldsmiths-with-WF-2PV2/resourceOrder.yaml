@@ -3,4 +3,5 @@ name: "resourceOrder"
 spec:
   name: "resourceOrder"
   type: "ring"
+  input:
   size:

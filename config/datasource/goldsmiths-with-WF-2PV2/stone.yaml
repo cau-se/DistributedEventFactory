@@ -3,4 +3,9 @@ name: "stone"
 spec:
   name: "stone"
   type: "earring"
+  input: 
+    - object: "order"
+      number: 1
+      lastState: ""
+      size:
   size:

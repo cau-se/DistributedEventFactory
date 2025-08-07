@@ -1,6 +1,0 @@
-kind: object
-name: "earringResourceOrder"
-spec:
-  name: "earringResourceOrder"
-  type: "earring"
-  size:
