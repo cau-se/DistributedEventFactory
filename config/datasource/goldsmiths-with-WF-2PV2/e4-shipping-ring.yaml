@@ -1,7 +1,7 @@
 kind: datasource
-name: "Shipping"
+name: "ShippingA"
 spec:
-  name: "Shipping"
+  name: "ShippingA"
   group: "factory"
   type: objectCentric
   workforce: hasWorkforce
@@ -9,11 +9,11 @@ spec:
   end: "S"
   workstation: "S"
   selection: genericProbability
-  distribution: [0.1, 0.9]
+  distribution: [ 0.2, 0.8 ]
   input:
     - object: "gold"
       number: 1
-      lastState: "shaped"
+      lastState: "ring_shaped"
       size:
   workforces:
     - workforce: "humanWorkforce"
@@ -24,7 +24,7 @@ spec:
         output:
           - object: "gold"
             number: 1
-            change: "shaped"
+            change: "ring_shaped"
             size:
       transition: "Shipping"
       duration: 20

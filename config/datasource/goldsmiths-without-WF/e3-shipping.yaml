@@ -9,19 +9,28 @@ spec:
   end: "S"
   workstation: "S"
   selection: genericProbability
-  distribution: [1.0]
+  distribution: [0.1, 0.9]
   input:
-    - object: "order"
+    - object: "gold"
       number: 1
-      lastState: ""
+      lastState: "shaped"
       size:
   eventData:
     - activity:
-        name: "order for resources"
+        name: "Package waits for sending"
         output:
-          - object: "resourceOrder"
+          - object: "gold"
             number: 1
-            change: ""
+            change: "shaped"
             size:
-      transition: "OutgoingStock"
-      duration: 0
+      transition: "Shipping"
+      duration: 20
+    - activity:
+        name: "Package sent"
+        output:
+          - object: "gold"
+            number: 1
+            change: "shipped"
+            size:
+      transition: ""
+      duration: 1
