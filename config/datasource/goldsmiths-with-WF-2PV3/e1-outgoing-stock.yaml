@@ -1,0 +1,30 @@
+kind: datasource
+name: "OutgoingStock"
+spec:
+  name: "OutgoingStock"
+  group: "factory"
+  type: objectCentric
+  workforce: hasWorkforce
+  start: "ST"
+  end: "ST"
+  workstation: "ST"
+  selection: genericProbability
+  distribution: [ 1 ]
+  input:
+    - object: "ringResourceOrder"
+      number: 1
+      lastState: ""
+      size:
+  workforces:
+    - workforce: "humanWorkforce"
+      number: 1
+  eventData:
+    - activity:
+        name: "retrieve resources ring"
+        output:
+          - object: "ringGold"
+            number: 1
+            change: ""
+            size:
+      duration: 3
+      transition: "ForgingA"
