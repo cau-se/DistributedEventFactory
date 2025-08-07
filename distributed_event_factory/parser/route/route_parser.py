@@ -1,5 +1,3 @@
-from typing import List
-
 from core.route import Route
 from parser.parser import Parser
 
@@ -19,7 +17,6 @@ class RouteParser(Parser):
                 route_for_activity=route["routeForActivity"],
                 start=route["start"],
                 end=route["end"],
-                transfer_objects=route["transferObjects"],
                 duration=route["duration"]
             ))
         return route_list
