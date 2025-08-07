@@ -5,42 +5,24 @@ spec:
     - routeForActivity: "retrieve resources"
       start: "ST"
       end: "M"
-      transferObjects:
-        - name: "barResource"
-          number: 1
       duration: 3
     - routeForActivity: "Sent to assembly station"
       start: "ST"
       end: "A"
-      transferObjects:
-        - name: "screw"
-          number: 13
       duration: 3
     - routeForActivity: "Back to stock"
       start: "A"
       end: "ST"
-      transferObjects:
-        - name: "screw"
-          number: 13
       duration: 3
     - routeForActivity: "Back to stock"
       start: "M"
       end: "ST"
-      transferObjects:
-        - name: "screw"
-          number: 13
       duration: 3
     - routeForActivity: "Sent to assembly station"
       start: "M"
       end: "A"
-      transferObjects:
-        - name: "screw"
-          number: 13
       duration: 3
     - routeForActivity: "Back to machine"
       start: "A"
       end: "M"
-      transferObjects:
-        - name: "screw"
-          number: 13
       duration: 3

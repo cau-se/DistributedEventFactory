@@ -3,5 +3,4 @@ name: "resourceOrder"
 spec:
   name: "resourceOrder"
   type: "order"
-  input:
   size:

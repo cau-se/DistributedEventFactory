@@ -3,9 +3,4 @@ name: "bolt"
 spec:
   name: "bolt"
   type: "smallComponent"
-  input:
-    - object: "order"
-      number: 1
-      lastState: ""
-      size:
   size:

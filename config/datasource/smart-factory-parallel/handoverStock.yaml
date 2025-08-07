@@ -3,9 +3,4 @@ name: "handoverStock"
 spec:
   name: "handoverStock"
   type: "transport"
-  input: 
-    - object:
-      number:
-      lastState:
-      size:
   size:

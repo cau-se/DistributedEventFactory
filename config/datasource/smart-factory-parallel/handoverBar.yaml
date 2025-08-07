@@ -3,9 +3,4 @@ name: "handoverBar"
 spec:
   name: "handoverBar"
   type: "transport"
-  input: 
-    - object:
-      number:
-      lastState:
-      size:
   size:

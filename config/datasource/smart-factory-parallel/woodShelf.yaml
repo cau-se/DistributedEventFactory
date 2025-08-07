@@ -3,13 +3,4 @@ name: "woodShelf"
 spec:
   name: "woodShelf"
   type: "product"
-  input: 
-    - object: "bar"
-      number: 4
-      lastState: "sanded"
-      size:
-    - object: "screw"
-      number: 13
-      lastState: ""
-      size:
   size:

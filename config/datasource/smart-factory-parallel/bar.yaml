@@ -3,14 +3,6 @@ name: "bar"
 spec:
   name: "bar"
   type: "processedResource"
-  input: 
-    - object: "barResource"
-      number: 1
-      lastState: ""
-      size:
-        length: "5"
-        width: ""
-        depth: ""
   size:
     length: "2"
     width: ""
