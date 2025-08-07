@@ -3,9 +3,4 @@ name: "gold"
 spec:
   name: "gold"
   type: "object"
-  input: 
-    - object: "order"
-      number: 1
-      lastState: ""
-      size:
   size:

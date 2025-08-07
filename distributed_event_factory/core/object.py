@@ -23,15 +23,12 @@ class GenericObjectSource(ObjectSource):
             self,
             object_id_name: str,
             object_type: str,
-            input_objects: [],
             size
-
     ):
         self.values_changed: List[ObjectData] = []
         self.object_id_name = object_id_name
         self.object_id = ObjectId(object_id_name)
         self.object_type = object_type
-        self.input_objects = input_objects
         self.size = size
 
     def emit_object(self, id, object_name, timestamp) -> ObjectData:
@@ -49,9 +46,6 @@ class GenericObjectSource(ObjectSource):
     def get_object_type(self) -> str:
         return self.object_type
 
-    def get_input_objects(self) -> []:
-        return self.input_objects
-
     def get_size(self):
         return self.size
 
@@ -66,5 +60,4 @@ class GenericObjectSource(ObjectSource):
     def clone(self):
         return GenericObjectSource(self.object_id_name,
                                    self.object_type,
-                                   self.input_objects,
                                    self.size)
