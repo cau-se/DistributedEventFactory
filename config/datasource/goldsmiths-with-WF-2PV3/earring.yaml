@@ -1,6 +1,6 @@
 kind: object
-name: "stone"
+name: "earring"
 spec:
-  name: "stone"
+  name: "earring"
   type: "earring"
   size:

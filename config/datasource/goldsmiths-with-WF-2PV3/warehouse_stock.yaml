@@ -1,0 +1,12 @@
+kind: stock
+name: "default"
+spec:
+  stocks:
+    - object: "ringOrder"
+      number: 500
+      lastState:
+      size:
+    - object: "earringOrder"
+      number: 500
+      lastState:
+      size:

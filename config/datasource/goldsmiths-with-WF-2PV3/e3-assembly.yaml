@@ -1,0 +1,40 @@
+kind: datasource
+name: "Assembly"
+spec:
+  name: "Assembly"
+  group: "factory"
+  type: objectCentric
+  workforce: noWorkforce
+  start: "M"
+  end: "M"
+  workstation: "M"
+  selection: genericProbability
+  distribution: [ 0.9, 0.1 ]
+  input:
+    - object: "earringGold"
+      number: 2
+      lastState: "earring_shaped"
+      size:
+    - object: "stone"
+      number: 2
+      lastState: ""
+      size:
+  eventData:
+    - activity:
+        name: "Assembling completed"
+        output:
+          - object: "earring"
+            number: 2
+            change: "assembled"
+            size:
+      duration: 10
+      transition: "ShippingB"
+    - activity:
+        name: "Failure: Item broke"
+        output:
+          - object: "earring"
+            number: 2
+            change: "broke"
+            size:
+      transition: ""
+      duration: 2

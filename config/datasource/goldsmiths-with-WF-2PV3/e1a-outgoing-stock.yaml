@@ -1,0 +1,34 @@
+kind: datasource
+name: "OutgoingStocka"
+spec:
+  name: "OutgoingStocka"
+  group: "factory"
+  type: objectCentric
+  workforce: hasWorkforce
+  start: "ST"
+  end: "ST"
+  workstation: "ST"
+  selection: genericProbability
+  distribution: [ 1 ]
+  input:
+    - object: "earringResourceOrder"
+      number: 1
+      lastState: ""
+      size:
+  workforces:
+    - workforce: "humanWorkforce"
+      number: 1
+  eventData:
+    - activity:
+        name: "retrieve resources earrings"
+        output:
+          - object: "earringGold"
+            number: 2
+            change: ""
+            size:
+          - object: "stone"
+            number: 2
+            change: ""
+            size:
+      duration: 8
+      transition: "ForgingB"
