@@ -1,0 +1,48 @@
+kind: datasource
+name: "DrillingBar"
+spec:
+  name: "DrillingBar"
+  group: "factory"
+  type: objectCentric
+  workforce: hasWorkforce
+  start: "M"
+  end: "M"
+  workstation: "M"
+  selection: genericProbability
+  distribution: [0.99, 0.01]
+  input:
+    - object: "bar"
+      number: 1
+      lastState: "divided Resource"
+      size:
+        length: "2"
+        width: ""
+        depth: ""
+  workforces:
+    - workforce: "machineWorker"
+      number: 1
+  eventData:
+    - activity:
+        name: "Drilled"
+        output:
+          - object: "bar"
+            number: 1
+            change: "drilled"
+            size:
+              length: "2"
+              width: ""
+              depth: ""
+      transition: "SandingBar"
+      duration: 3
+    - activity:
+        name: "Failure: Sawing machine broken"
+        output:
+          - object: "bar"
+            number: 1
+            change: "divided Resource"
+            size:
+              length: "2"
+              width: ""
+              depth: ""
+      duration: 20
+      transition: ""

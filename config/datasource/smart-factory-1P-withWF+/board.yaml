@@ -1,0 +1,9 @@
+kind: object
+name: "board"
+spec:
+  name: "board"
+  type: "processedResource"
+  size:
+    length:
+    width: "5"
+    depth: "5"

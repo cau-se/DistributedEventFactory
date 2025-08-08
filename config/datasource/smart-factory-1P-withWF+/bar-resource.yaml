@@ -1,0 +1,9 @@
+kind: object
+name: "barResource"
+spec:
+  name: "barResource"
+  type: "resource"
+  size:
+    length: "5"
+    width: ""
+    depth: ""

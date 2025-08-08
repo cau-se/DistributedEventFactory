@@ -1,0 +1,36 @@
+kind: datasource
+name: "SandingBoard"
+spec:
+  name: "SandingBoard"
+  group: "factory"
+  type: objectCentric
+  workforce: hasWorkforce
+  start: "M"
+  end: "M"
+  workstation: "M"
+  selection: genericProbability
+  distribution: [1.0]
+  input:
+    - object: "board"
+      number: 1
+      lastState: "divided Resource"
+      size:
+        length: ""
+        width: "5"
+        depth: "5"
+  workforces:
+    - workforce: "machineWorker"
+      number: 1
+  eventData:
+    - activity:
+        name: "Sanded board"
+        output:
+          - object: "board"
+            number: 1
+            change: "sanded"
+            size:
+              length: ""
+              width: "5"
+              depth: "5"
+      transition: "TransportM1AB"
+      duration: 2
