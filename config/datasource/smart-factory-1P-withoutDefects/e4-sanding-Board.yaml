@@ -13,7 +13,7 @@ spec:
   input:
     - object: "board"
       number: 1
-      lastState: "drilled"
+      lastState: "divided Resource"
       size:
         length: ""
         width: "5"
