@@ -1,0 +1,49 @@
+kind: datasource
+name: "QualityControl"
+spec:
+  name: "QualityControl"
+  group: "factory"
+  type: objectCentric
+  workforce: noWorkforce
+  start: "A"
+  end: "A"
+  workstation: "A"
+  selection: genericProbability
+  distribution: [ 0.3, 0.1, 0.6 ]
+  input:
+    - object: "woodShelf"
+      number: 1
+      lastState: "assembled"
+      size:
+  eventData:
+    - activity:
+        name: "Item Corrections"
+        output:
+          - object: "woodShelf"
+            number: 1
+            change: "proofed"
+            size:
+      transition: "Shipping"
+      duration: 22
+    - activity:
+        name: "Failure: Quality Insufficient"
+        output:
+          - object: "woodShelf"
+            number: 1
+            change: "damaged"
+            size:
+      transition: ""
+      duration: 2
+    - activity:
+        name: "Quality check passed"
+        output:
+          - object: "woodShelf"
+            number: 1
+            change: "proofed"
+            size:
+      transition: "Shipping"
+      duration:
+        type: uniform
+        lowerBound: 5
+        upperBound: 10
+

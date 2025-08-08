@@ -1,0 +1,28 @@
+kind: datasource
+name: "QualityControl2"
+spec:
+  name: "QualityControl2"
+  group: "factory"
+  type: objectCentric
+  workforce: noWorkforce
+  start: "A"
+  end: "A"
+  workstation: "A"
+  selection: genericProbability
+  distribution: [ 1.0 ]
+  input:
+    - object: "shelf2"
+      number: 1
+      lastState: "assembled"
+      size:
+  eventData:
+    - activity:
+        name: "Quality check passed"
+        output:
+          - object: "shelf2"
+            number: 1
+            change: "proofed"
+            size:
+      transition: "Shipping2"
+      duration: 2
+

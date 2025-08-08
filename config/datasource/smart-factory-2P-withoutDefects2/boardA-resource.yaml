@@ -1,0 +1,9 @@
+kind: object
+name: "boardAResource"
+spec:
+  name: "boardAResource"
+  type: "aluminium"
+  size:
+    length: ""
+    width: "30"
+    depth: "30"

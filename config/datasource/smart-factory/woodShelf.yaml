@@ -1,6 +1,0 @@
-kind: object
-name: "woodenShelf"
-spec:
-  name: "woodenShelf"
-  type: "product"
-  input: "bar,board,screw,bolt,pin"

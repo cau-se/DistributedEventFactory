@@ -1,6 +1,0 @@
-kind: object
-name: "bolt"
-spec:
-  name: "bolt"
-  type: "smallComponent"
-  input: "order"

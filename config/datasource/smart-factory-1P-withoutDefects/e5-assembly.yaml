@@ -9,7 +9,7 @@ spec:
   end: "A"
   workstation: "A"
   selection: genericProbability
-  distribution: [ 0.8, 0.1, 0.1 ]
+  distribution: [ 1.0 ]
   input:
     - object: "bar"
       number: 4
@@ -18,16 +18,19 @@ spec:
         length: "2"
         width: ""
         depth: ""
+    - object: "board"
+      number: 6
+      lastState: "sanded"
+      size:
+        length: ""
+        width: "5"
+        depth: "5"
     - object: "screw"
       number: 13
       lastState: ""
       size:
-    - object: "handover"
-      number: 1
-      lastState: ""
-      size:
-    - object: "handoverStock"
-      number: 1
+    - object: "bolt"
+      number: 13
       lastState: ""
       size:
   eventData:
@@ -38,23 +41,5 @@ spec:
             number: 1
             change: "assembled"
             size:
-      duration: 10
+      duration: 15
       transition: "QualityControl"
-    - activity:
-        name: "Failure: Overheating"
-        output:
-          - object: "woodShelf"
-            number: 1
-            change: "overheated"
-            size:
-      transition: ""
-      duration: 2
-    - activity:
-        name: "Failure: Item broke"
-        output:
-          - object: "woodShelf"
-            number: 1
-            change: "broke"
-            size:
-      transition: ""
-      duration: 1

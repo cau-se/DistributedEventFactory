@@ -9,22 +9,13 @@ spec:
   end: "S"
   workstation: "S"
   selection: genericProbability
-  distribution: [ 0.8, 0.2 ]
+  distribution: [ 1.0 ]
   input:
     - object: "woodShelf"
       number: 1
       lastState: "proofed"
       size:
   eventData:
-    - activity:
-        name: "Package waits for sending"
-        output:
-          - object: "woodShelf"
-            number: 1
-            change: "sent"
-            size:
-      transition: "Shipping"
-      duration: 180
     - activity:
         name: "Package sent"
         output:
@@ -33,4 +24,4 @@ spec:
             change: "sent"
             size:
       transition: ""
-      duration: 1
+      duration: 5

@@ -1,0 +1,9 @@
+kind: object
+name: "boardA"
+spec:
+  name: "boardA"
+  type: "2D"
+  size:
+    length:
+    width: "5"
+    depth: "5"

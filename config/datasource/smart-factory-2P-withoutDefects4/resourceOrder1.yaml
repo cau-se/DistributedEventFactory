@@ -1,0 +1,6 @@
+kind: object
+name: "resourceOrder1"
+spec:
+  name: "resourceOrder1"
+  type: "standard"
+  size:

@@ -1,0 +1,9 @@
+kind: object
+name: "boardAResource"
+spec:
+  name: "boardAResource"
+  type: "2D"
+  size:
+    length: ""
+    width: "30"
+    depth: "30"
