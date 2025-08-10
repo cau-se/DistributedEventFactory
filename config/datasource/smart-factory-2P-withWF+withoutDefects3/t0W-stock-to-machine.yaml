@@ -1,0 +1,40 @@
+kind: datasource
+name: "TransportMW"
+spec:
+  name: "TransportMW"
+  group: "transport"
+  type: objectCentric
+  workforce: hasWorkforce
+  workstation: "R"
+  start: "ST"
+  end: "W"
+  selection: genericProbability
+  distribution: [1.0]
+  input:
+    - object: "barWResource"
+      number: 2
+      lastState: ""
+      size:
+        length: "4"
+        width: ""
+        depth: ""
+  workforces:
+    - workforce: "transportRobot"
+      number: 1
+  eventData:
+    - activity:
+        name: "transport: stock -> MW"
+        output:
+          - object: "barWResource"
+            number: 2
+            change: ""
+            size:
+              length: "4"
+              width: ""
+              depth: ""
+          - object: "handoverBarR"
+            number: 1
+            change: ""
+            size:
+      transition: "SawingBarW"
+      duration: 1

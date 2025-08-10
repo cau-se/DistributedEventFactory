@@ -1,0 +1,36 @@
+kind: datasource
+name: "DrillingBarA"
+spec:
+  name: "DrillingBarA"
+  group: "factory"
+  type: objectCentric
+  workforce: hasWorkforce
+  start: "Al"
+  end: "Al"
+  workstation: "Al"
+  selection: genericProbability
+  distribution: [1.0]
+  input:
+    - object: "barA"
+      number: 1
+      lastState: "divided Resource"
+      size:
+        length: "2"
+        width: ""
+        depth: ""
+  workforces:
+    - workforce: "machineWorker"
+      number: 1
+  eventData:
+    - activity:
+        name: "Drilled"
+        output:
+          - object: "barA"
+            number: 1
+            change: "drilled"
+            size:
+              length: "2"
+              width: ""
+              depth: ""
+      transition: "SandingBarA"
+      duration: 3

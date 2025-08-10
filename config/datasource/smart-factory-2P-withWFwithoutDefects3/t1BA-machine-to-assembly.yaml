@@ -1,0 +1,40 @@
+kind: datasource
+name: "TransportMAlAB"
+spec:
+  name: "TransportMAlAB"
+  group: "transport"
+  type: objectCentric
+  workforce: hasWorkforce
+  workstation: "R"
+  start: "Al"
+  end: "A"
+  selection: genericProbability
+  distribution: [1.0]
+  input:
+    - object: "boardA"
+      number: 6
+      lastState: "sanded"
+      size:
+        length: ""
+        width: "5"
+        depth: "5"
+  workforces:
+    - workforce: "transportRobot"
+      number: 1
+  eventData:
+    - activity:
+        name: "transport: MAl -> assembly"
+        output:
+          - object: "boardA"
+            number: 6
+            change: "sanded"
+            size:
+              length: ""
+              width: "5"
+              depth: "5"
+          - object: "handoverBoardA"
+            number: 1
+            change: ""
+            size:
+      transition: "Assembly"
+      duration: 1

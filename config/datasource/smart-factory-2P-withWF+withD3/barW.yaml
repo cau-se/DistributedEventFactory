@@ -1,0 +1,9 @@
+kind: object
+name: "barW"
+spec:
+  name: "barW"
+  type: "processedResource"
+  size:
+    length: "2"
+    width: ""
+    depth: ""
