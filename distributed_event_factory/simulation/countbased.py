@@ -4,6 +4,8 @@ from distributed_event_factory.simulation.abstract_simulation import Simulation
 from simulation.process_simulation_object_centric import ProcessSimulationObjectCentric
 from simulation.simulator_objects.object_storage import ObjectStorage
 
+from distributed_event_factory.simulation.process_simulation import ProcessSimulator
+
 
 class CountBasedSimulation(Simulation):
 
@@ -21,26 +23,28 @@ class CountBasedSimulation(Simulation):
     def run_simulation(self, datasources, sinks, objects, routes, stocks, workforce_start_positions, root, hook=lambda: None):
         self.setup_datasource_sink_mapping(sinks)
         self.sinks = sinks
-        # process_simulator = ProcessSimulator(
-        #    case_id_provider=self.case_id_provider,
-        #    data_sources=datasources,
-        #    max_concurrent_cases=self.max_concurrent_cases,
-        #    objects=objects,
-        #    routes=routes,
-        #    stocks=stocks,
-        process_simulator = ProcessSimulationObjectCentric(
-            object_storage=ObjectStorage(),
-            data_sources=datasources,
-            objects=objects,
-            routes=routes,
-            stocks=stocks,
-            workforce_start_positions=workforce_start_positions
-        )
+        if objects and len(objects)>0:
+            process_simulator = ProcessSimulationObjectCentric(
+                object_storage=ObjectStorage(),
+                data_sources=datasources,
+                objects=objects,
+                routes=routes,
+                stocks=stocks,
+                workforce_start_positions=workforce_start_positions
+            )
 
-        for i in range(self.simulation_steps):
-            event, object_store = process_simulator.simulate()
-            self.send_event(event, root, objects, object_store)
-        self.end_timeframe()
-        hook()
+            for i in range(self.simulation_steps):
+                event, object_store = process_simulator.simulate()
+                self.send_event(event, root, objects, object_store)
+            self.end_timeframe()
+            hook()
+        else:
+            process_simulator = ProcessSimulator(
+               case_id_provider=self.case_id_provider,
+               data_sources=datasources,
+               max_concurrent_cases=self.max_concurrent_cases)
 
-
+            for i in range(self.simulation_steps):
+                event = process_simulator.simulate()
+                self.send_event(event, root, objects, None)
+                hook()

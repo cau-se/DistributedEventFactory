@@ -51,10 +51,7 @@ class LoadTestSimulation(Simulation):
         process_simulator = ProcessSimulator(
             case_id_provider=self.case_id_provider,
             data_sources=data_sources,
-            max_concurrent_cases=self.max_concurrent_cases,
-            objects=objects,
-            routes=routes,
-            stocks=stocks
+            max_concurrent_cases=self.max_concurrent_cases
         )
         iteration = 0
         while True:

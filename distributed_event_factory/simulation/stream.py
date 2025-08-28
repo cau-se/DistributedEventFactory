@@ -25,10 +25,7 @@ class StreamSimulation(Simulation):
         process_simulator = ProcessSimulator(
             case_id_provider=self.case_id_provider,
             data_sources=datasources,
-            max_concurrent_cases=self.max_concurrent_cases,
-            objects=objects,
-            routes=routes,
-            stocks=stocks,
+            max_concurrent_cases=self.max_concurrent_cases
         )
         while True:
             with ScheduledThreadPoolExecutor() as executor:
