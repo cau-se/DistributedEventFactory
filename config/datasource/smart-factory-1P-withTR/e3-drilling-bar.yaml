@@ -30,4 +30,4 @@ spec:
               width: ""
               depth: ""
       transition: "SandingBar"
-      duration: 5
+      duration: 3

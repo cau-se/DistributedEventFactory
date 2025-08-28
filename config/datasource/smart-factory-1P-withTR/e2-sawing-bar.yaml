@@ -18,7 +18,7 @@ spec:
         length: "4"
         width: ""
         depth: ""
-    - object: "handover"
+    - object: "handoverBarR"
       number: 1
       lastState: ""
       size:
@@ -34,4 +34,4 @@ spec:
               width: ""
               depth: ""
       transition: "DrillingBar"
-      duration: 5
+      duration: 4

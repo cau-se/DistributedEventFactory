@@ -1,6 +1,6 @@
 kind: object
-name: "woodShelf"
+name: "shelf2"
 spec:
-  name: "woodShelf"
+  name: "shelf2"
   type: "product"
   size:

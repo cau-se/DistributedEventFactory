@@ -1,7 +1,7 @@
 kind: object
-name: "barResource"
+name: "barAResource"
 spec:
-  name: "barResource"
+  name: "barAResource"
   type: "resource"
   size:
     length: "5"

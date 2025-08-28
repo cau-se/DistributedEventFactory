@@ -1,8 +1,8 @@
 kind: object
-name: "bar"
+name: "barW"
 spec:
-  name: "bar"
-  type: "processedResource"
+  name: "barW"
+  type: "wood"
   size:
     length: "2"
     width: ""

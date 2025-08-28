@@ -30,4 +30,4 @@ spec:
               width: ""
               depth: ""
       transition: "TransportM1A"
-      duration: 5
+      duration: 2

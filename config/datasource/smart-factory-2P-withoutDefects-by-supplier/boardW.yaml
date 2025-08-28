@@ -1,8 +1,8 @@
 kind: object
-name: "board"
+name: "boardW"
 spec:
-  name: "board"
-  type: "processedResource"
+  name: "boardW"
+  type: "wood"
   size:
     length:
     width: "5"

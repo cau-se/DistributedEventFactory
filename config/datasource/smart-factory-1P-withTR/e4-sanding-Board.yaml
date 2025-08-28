@@ -13,7 +13,7 @@ spec:
   input:
     - object: "board"
       number: 1
-      lastState: "drilled"
+      lastState: "divided Resource"
       size:
         length: ""
         width: "5"
@@ -29,5 +29,5 @@ spec:
               length: ""
               width: "5"
               depth: "5"
-      transition: "TransportM1A"
-      duration: 5
+      transition: "TransportM1AB"
+      duration: 2

@@ -1,7 +1,7 @@
 kind: object
-name: "boardResource"
+name: "boardAResource"
 spec:
-  name: "boardResource"
+  name: "boardAResource"
   type: "resource"
   size:
     length: ""

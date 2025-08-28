@@ -4,10 +4,10 @@ spec:
   name: "SandingBar"
   group: "factory"
   type: objectCentric
-  workforce: noWorkforce
-  start: "SA"
-  end: "SA"
-  workstation: "SA"
+  workforce: hasWorkforce
+  start: "M"
+  end: "M"
+  workstation: "M"
   selection: genericProbability
   distribution: [1.0]
   input:
@@ -18,6 +18,9 @@ spec:
         length: "2"
         width: ""
         depth: ""
+  workforces:
+    - workforce: "machineWorker"
+      number: 1
   eventData:
     - activity:
         name: "Sanded bar"
