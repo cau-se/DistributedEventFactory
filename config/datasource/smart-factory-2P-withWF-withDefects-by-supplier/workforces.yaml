@@ -1,0 +1,13 @@
+kind: workforces
+name: "default"
+spec:
+  workforces:
+    - name: "transportRobot"
+      startLocation: "ST"
+      number: 3
+    - name: "machineWorker"
+      startLocation: "W"
+      number: 2
+    - name: "machineWorker"
+      startLocation: "Al"
+      number: 2

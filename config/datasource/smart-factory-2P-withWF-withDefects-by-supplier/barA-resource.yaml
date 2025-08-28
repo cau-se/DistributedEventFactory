@@ -1,0 +1,9 @@
+kind: object
+name: "barAResource"
+spec:
+  name: "barAResource"
+  type: "aluminum"
+  size:
+    length: "5"
+    width: ""
+    depth: ""

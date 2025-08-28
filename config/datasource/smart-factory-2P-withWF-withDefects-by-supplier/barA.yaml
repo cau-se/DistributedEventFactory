@@ -1,0 +1,9 @@
+kind: object
+name: "barA"
+spec:
+  name: "barA"
+  type: "aluminum"
+  size:
+    length: "2"
+    width: ""
+    depth: ""

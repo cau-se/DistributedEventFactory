@@ -1,0 +1,47 @@
+kind: datasource
+name: "QualityControl2"
+spec:
+  name: "QualityControl2"
+  group: "factory"
+  type: objectCentric
+  workforce: noWorkforce
+  start: "A"
+  end: "A"
+  workstation: "A"
+  selection: genericProbability
+  distribution: [ 0.8, 0.15, 0.05]
+  input:
+    - object: "shelf2"
+      number: 1
+      lastState: "assembled"
+      size:
+  eventData:
+    - activity:
+        name: "Quality check passed"
+        output:
+          - object: "shelf2"
+            number: 1
+            change: "proofed"
+            size:
+      transition: "Shipping2"
+      duration: 2
+    - activity:
+        name: "Item Corrections"
+        output:
+          - object: "shelf2"
+            number: 1
+            change: "proofed"
+            size:
+      transition: "Shipping2"
+      duration: 12
+    - activity:
+        name: "Failure: Quality Insufficient"
+        output:
+          - object: "shelf2"
+            number: 1
+            change: "damaged"
+            size:
+      transition: ""
+      duration: 2
+
+
