@@ -1,0 +1,27 @@
+kind: datasource
+name: "Packaging"
+spec:
+  name: "Packaging"
+  group: "factory"
+  type: objectCentric
+  workforce: noWorkforce
+  start: "J"
+  end: "J"
+  workstation: "J"
+  selection: genericProbability
+  distribution: [1.0]
+  input:
+    - object: "order"
+      number: 1
+      lastState: ""
+      size:
+  eventData:
+    - activity:
+        name: "order for resources"
+        output:
+          - object: "resourceOrder"
+            number: 1
+            change: ""
+            size:
+      transition: "OutgoingStock"
+      duration: 0

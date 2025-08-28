@@ -1,0 +1,63 @@
+kind: datasource
+name: "A"
+spec:
+  name: "A"
+  group: "factory"
+  type: objectCentric
+  workforce: noWorkforce
+  start: "O"
+  end: "O"
+  workstation: "O"
+  selection: genericProbability
+  distribution: [0.96, 0.01, 0.01, 0.01, 0.01]
+  input:
+    - object: "order"
+      number: 1
+      lastState: ""
+      size:
+  eventData:
+    - activity:
+        name: "order for resource1"
+        output:
+          - object: "resourceOrder"
+            number: 1
+            change: ""
+            size:
+      transition: "OutgoingStock"
+      duration: 0
+    - activity:
+        name: "order for resource2"
+        output:
+          - object: "resourceOrder"
+            number: 1
+            change: ""
+            size:
+      transition: "OutgoingStock"
+      duration: 0
+    - activity:
+        name: "order for resource3"
+        output:
+          - object: "resourceOrder"
+            number: 1
+            change: ""
+            size:
+      transition: "OutgoingStock"
+      duration: 0
+    - activity:
+        name: "order for resource4"
+        output:
+          - object: "resourceOrder"
+            number: 1
+            change: ""
+            size:
+      transition: "OutgoingStock"
+      duration: 0
+    - activity:
+        name: "order for resource5"
+        output:
+          - object: "resourceOrder"
+            number: 1
+            change: ""
+            size:
+      transition: "OutgoingStock"
+      duration: 0

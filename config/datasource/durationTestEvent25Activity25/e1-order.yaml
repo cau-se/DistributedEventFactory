@@ -1,0 +1,244 @@
+kind: datasource
+name: "B"
+spec:
+  name: "B"
+  group: "factory"
+  type: objectCentric
+  workforce: noWorkforce
+  start: "O"
+  end: "O"
+  workstation: "O"
+  selection: genericProbability
+  selection: genericProbability
+  distribution: [ 0.76, 0.01, 0.01, 0.01, 0.01, 0.01, 0.01, 0.01, 0.01, 0.01, 0.01, 0.01, 0.01, 0.01, 0.01, 0.01, 0.01, 0.01, 0.01, 0.01, 0.01, 0.01, 0.01, 0.01, 0.01 ]
+  input:
+    - object: "order"
+      number: 1
+      lastState: ""
+      size:
+  eventData:
+    - activity:
+        name: "order for resource1"
+        output:
+          - object: "resourceOrder"
+            number: 1
+            change: ""
+            size:
+      transition: "OutgoingStock"
+      duration: 0
+    - activity:
+        name: "order for resource2"
+        output:
+          - object: "resourceOrder"
+            number: 1
+            change: ""
+            size:
+      transition: "OutgoingStock"
+      duration: 0
+    - activity:
+        name: "order for resource3"
+        output:
+          - object: "resourceOrder"
+            number: 1
+            change: ""
+            size:
+      transition: "OutgoingStock"
+      duration: 0
+    - activity:
+        name: "order for resource4"
+        output:
+          - object: "resourceOrder"
+            number: 1
+            change: ""
+            size:
+      transition: "OutgoingStock"
+      duration: 0
+    - activity:
+        name: "order for resource5"
+        output:
+          - object: "resourceOrder"
+            number: 1
+            change: ""
+            size:
+      transition: "OutgoingStock"
+      duration: 0
+    - activity:
+        name: "order for resource1a"
+        output:
+          - object: "resourceOrder"
+            number: 1
+            change: ""
+            size:
+      transition: "OutgoingStock"
+      duration: 0
+    - activity:
+        name: "order for resource2a"
+        output:
+          - object: "resourceOrder"
+            number: 1
+            change: ""
+            size:
+      transition: "OutgoingStock"
+      duration: 0
+    - activity:
+        name: "order for resource3a"
+        output:
+          - object: "resourceOrder"
+            number: 1
+            change: ""
+            size:
+      transition: "OutgoingStock"
+      duration: 0
+    - activity:
+        name: "order for resource4a"
+        output:
+          - object: "resourceOrder"
+            number: 1
+            change: ""
+            size:
+      transition: "OutgoingStock"
+      duration: 0
+    - activity:
+        name: "order for resource5a"
+        output:
+          - object: "resourceOrder"
+            number: 1
+            change: ""
+            size:
+      transition: "OutgoingStock"
+      duration: 0
+    - activity:
+        name: "order for resource1b"
+        output:
+          - object: "resourceOrder"
+            number: 1
+            change: ""
+            size:
+      transition: "OutgoingStock"
+      duration: 0
+    - activity:
+        name: "order for resource2b"
+        output:
+          - object: "resourceOrder"
+            number: 1
+            change: ""
+            size:
+      transition: "OutgoingStock"
+      duration: 0
+    - activity:
+        name: "order for resource3b"
+        output:
+          - object: "resourceOrder"
+            number: 1
+            change: ""
+            size:
+      transition: "OutgoingStock"
+      duration: 0
+    - activity:
+        name: "order for resource4b"
+        output:
+          - object: "resourceOrder"
+            number: 1
+            change: ""
+            size:
+      transition: "OutgoingStock"
+      duration: 0
+    - activity:
+        name: "order for resource5b"
+        output:
+          - object: "resourceOrder"
+            number: 1
+            change: ""
+            size:
+      transition: "OutgoingStock"
+      duration: 0
+    - activity:
+        name: "order for resource1c"
+        output:
+          - object: "resourceOrder"
+            number: 1
+            change: ""
+            size:
+      transition: "OutgoingStock"
+      duration: 0
+    - activity:
+        name: "order for resource2c"
+        output:
+          - object: "resourceOrder"
+            number: 1
+            change: ""
+            size:
+      transition: "OutgoingStock"
+      duration: 0
+    - activity:
+        name: "order for resource3c"
+        output:
+          - object: "resourceOrder"
+            number: 1
+            change: ""
+            size:
+      transition: "OutgoingStock"
+      duration: 0
+    - activity:
+        name: "order for resource4c"
+        output:
+          - object: "resourceOrder"
+            number: 1
+            change: ""
+            size:
+      transition: "OutgoingStock"
+      duration: 0
+    - activity:
+        name: "order for resource5c"
+        output:
+          - object: "resourceOrder"
+            number: 1
+            change: ""
+            size:
+      transition: "OutgoingStock"
+      duration: 0
+    - activity:
+        name: "order for resource1d"
+        output:
+          - object: "resourceOrder"
+            number: 1
+            change: ""
+            size:
+      transition: "OutgoingStock"
+      duration: 0
+    - activity:
+        name: "order for resource2d"
+        output:
+          - object: "resourceOrder"
+            number: 1
+            change: ""
+            size:
+      transition: "OutgoingStock"
+      duration: 0
+    - activity:
+        name: "order for resource3d"
+        output:
+          - object: "resourceOrder"
+            number: 1
+            change: ""
+            size:
+      transition: "OutgoingStock"
+      duration: 0
+    - activity:
+        name: "order for resource4d"
+        output:
+          - object: "resourceOrder"
+            number: 1
+            change: ""
+            size:
+      transition: "OutgoingStock"
+      duration: 0
+    - activity:
+        name: "order for resource5d"
+        output:
+          - object: "resourceOrder"
+            number: 1
+            change: ""
+            size:
+      transition: "OutgoingStock"
+      duration: 0
