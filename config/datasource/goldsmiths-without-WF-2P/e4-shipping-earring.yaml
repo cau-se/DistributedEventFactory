@@ -9,7 +9,7 @@ spec:
   end: "S"
   workstation: "S"
   selection: genericProbability
-  distribution: [ 0.8, 0.2 ]
+  distribution: [ 0.2, 0.8 ]
   input:
     - object: "earring"
       number: 2

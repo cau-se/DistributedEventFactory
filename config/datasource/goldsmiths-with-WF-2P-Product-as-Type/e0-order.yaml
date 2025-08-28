@@ -4,7 +4,7 @@ spec:
   name: "OrderPlacement"
   group: "factory"
   type: objectCentric
-  workforce: hasWorkforce
+  workforce: noWorkforce
   start: "O"
   end: "O"
   workstation: "O"
@@ -15,9 +15,6 @@ spec:
       number: 1
       lastState: ""
       size:
-  workforces:
-    - workforce: "manager"
-      number: 1
   eventData:
     - activity:
         name: "order for resources"
