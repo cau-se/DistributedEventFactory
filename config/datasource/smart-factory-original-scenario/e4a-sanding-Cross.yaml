@@ -1,0 +1,36 @@
+kind: datasource
+name: "SandingCrossA"
+spec:
+  name: "SandingCrossA"
+  group: "factory"
+  type: objectCentric
+  workforce: hasWorkforce
+  start: "Al"
+  end: "Al"
+  workstation: "Al"
+  selection: genericProbability
+  distribution: [1.0]
+  input:
+    - object: "crossA"
+      number: 1
+      lastState: "drilled"
+      size:
+        length: "190"
+        width: ""
+        depth: ""
+  workforces:
+    - workforce: "machineWorker"
+      number: 1
+  eventData:
+    - activity:
+        name: "Sanded"
+        output:
+          - object: "crossA"
+            number: 1
+            change: "sanded"
+            size:
+              length: "190"
+              width: ""
+              depth: ""
+      transition: ""
+      duration: 2

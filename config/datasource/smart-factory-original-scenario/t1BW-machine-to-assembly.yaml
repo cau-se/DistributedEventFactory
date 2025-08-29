@@ -1,0 +1,40 @@
+kind: datasource
+name: "TransportMWAB"
+spec:
+  name: "TransportMWAB"
+  group: "transport"
+  type: objectCentric
+  workforce: hasWorkforce
+  workstation: "R9"
+  start: "W"
+  end: "A"
+  selection: genericProbability
+  distribution: [1.0]
+  input:
+    - object: "boardW"
+      number: 5
+      lastState: "sanded"
+      size:
+        length: ""
+        width: "40"
+        depth: "30"
+  workforces:
+    - workforce: "transportRobot"
+      number: 1
+  eventData:
+    - activity:
+        name: "transport: MW -> assembly"
+        output:
+          - object: "boardW"
+            number: 5
+            change: "sanded"
+            size:
+              length: ""
+              width: "40"
+              depth: "30"
+          - object: "handoverBoard"
+            number: 1
+            change: ""
+            size:
+      transition: "Assembly"
+      duration: 1

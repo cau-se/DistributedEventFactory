@@ -1,0 +1,89 @@
+kind: datasource
+name: "ResourceDelivery"
+spec:
+  name: "ResourceDelivery"
+  group: "factory"
+  type: objectCentric
+  workforce: noWorkforce
+  start: "RD"
+  end: "RD"
+  workstation: "RD"
+  selection: genericProbability
+  distribution: [1.0]
+  input:
+    - object: "order1"
+      number: 1
+      lastState: ""
+      size:
+    - object: "orderBuyResource"
+      number: 1
+      lastState: ""
+      size:
+  eventData:
+    - activity:
+        name: "order for resources"
+        output:
+          - object: "order1"
+            number: 1
+            change: ""
+            size:
+          - object: "barAResource"
+            number: 150
+            change: ""
+            size:
+              length: "500"
+              width: ""
+              depth: ""
+          - object: "barWResource"
+            number: 150
+            change: ""
+            size:
+              length: "500"
+              width: ""
+              depth: ""
+          - object: "boardAResource"
+            number: 150
+            change: ""
+            size:
+              length: ""
+              width: "500"
+              depth: "500"
+          - object: "boardWResource"
+            number: 150
+            change: ""
+            size:
+              length: ""
+              width: "500"
+              depth: "500"
+          - object: "crossAResource"
+            number: 150
+            change: ""
+            size:
+              length: "500"
+              width: ""
+              depth: ""
+          - object: "crossWResource"
+            number: 150
+            change: ""
+            size:
+              length: "500"
+              width: ""
+              depth: ""
+          - object: "pinA"
+            number: 150
+            change: ""
+            size:
+          - object: "pinW"
+            number: 150
+            change: ""
+            size:
+          - object: "screw1"
+            number: 150
+            change: ""
+            size:
+          - object: "screw2"
+            number: 150
+            change: ""
+            size:
+      transition: ""
+      duration: 10

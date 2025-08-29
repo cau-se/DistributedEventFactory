@@ -1,0 +1,82 @@
+kind: datasource
+name: "Assembly2"
+spec:
+  name: "Assembly2"
+  group: "factory"
+  type: objectCentric
+  workforce: noWorkforce
+  start: "A"
+  end: "A"
+  workstation: "A"
+  selection: genericProbability
+  distribution: [ 0.94, 0.03, 0.03 ]
+  input:
+    - object: "barW"
+      number: 4
+      lastState: "sanded"
+      size:
+        length: "50"
+        width: ""
+        depth: ""
+    - object: "crossW"
+      number: 4
+      lastState: "sanded"
+      size:
+        length: "20"
+        width: ""
+        depth: ""
+    - object: "boardA"
+      number: 3
+      lastState: "sanded"
+      size:
+        length: ""
+        width: "20"
+        depth: "20"
+    - object: "screw2"
+      number: 8
+      lastState: ""
+      size:
+    - object: "pinA"
+      number: 24
+      lastState: ""
+      size:
+    - object: "handoverBoardA"
+      number: 1
+      lastState: ""
+      size:
+    - object: "handoverBar"
+      number: 1
+      lastState: ""
+      size:
+    - object: "handoverA"
+      number: 1
+      lastState: ""
+      size:
+  eventData:
+    - activity:
+        name: "Assembling completed"
+        output:
+          - object: "shelf2"
+            number: 1
+            change: "assembled"
+            size:
+      duration: 15
+      transition: "QualityControl2"
+    - activity:
+        name: "Failure: Overheating"
+        output:
+          - object: "shelf2"
+            number: 1
+            change: "overheated"
+            size:
+      transition: ""
+      duration: 2
+    - activity:
+        name: "Failure: Item broke"
+        output:
+          - object: "shelf2"
+            number: 1
+            change: "broke"
+            size:
+      transition: ""
+      duration: 1
