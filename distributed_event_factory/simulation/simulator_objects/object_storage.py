@@ -226,7 +226,8 @@ class ObjectStorage:
                             outgoing_objects.append(obj)
                 else:
                     return ValueError("Object not found")
-        outgoing_objects.extend(self.add_output_changed_objects_to_store(ingoing_objects.copy(), object_templates, output_objects,
+        ingoing_objects_copy = ingoing_objects[:]
+        outgoing_objects.extend(self.add_output_changed_objects_to_store(ingoing_objects_copy, object_templates, output_objects,
                                                                     timestamp))
         return ingoing_objects, outgoing_objects
 
@@ -239,7 +240,11 @@ class ObjectStorage:
                     if output_object.change:
                         obj.add_change(ObjectData(timestamp=timestamp.strftime("%Y-%m-%d %H:%M:%S"),
                                                   object_state=output_object.change,
-                                                  object_id=obj.object_id))
+                                                     object_id=obj.object_id))
+                    if output_object.size:
+                        obj.size.length = output_object.size.length
+                        obj.size.width = output_object.size.width
+                        obj.size.depth = output_object.size.depth
                     self.add_object(obj)
                     outgoing_objects.append(obj)
                     objects.remove(obj)
@@ -250,6 +255,11 @@ class ObjectStorage:
                         obj.add_change(ObjectData(timestamp=timestamp.strftime("%Y-%m-%d %H:%M:%S"),
                                                   object_state=output_object.change,
                                                   object_id=obj.object_id))
+
+                    if output_object.size:
+                        obj.size.length = output_object.size.length
+                        obj.size.width = output_object.size.width
+                        obj.size.depth = output_object.size.depth
                     self.add_object(obj)
                     outgoing_objects.append(obj)
         return outgoing_objects
