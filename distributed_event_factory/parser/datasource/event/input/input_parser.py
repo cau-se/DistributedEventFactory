@@ -1,6 +1,5 @@
 from distributed_event_factory.parser.parser import Parser
-from provider.object.input.input_provider import InputObjectProvider
-
+from distributed_event_factory.provider.object.input.input_provider import InputObjectProvider
 
 class InputParser(Parser):
     def __init__(self):

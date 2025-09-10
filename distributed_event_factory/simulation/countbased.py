@@ -3,9 +3,6 @@ from distributed_event_factory.provider.data.count_provider import CountProvider
 from distributed_event_factory.simulation.abstract_process_simulator import ProcessSimulator
 from distributed_event_factory.simulation.abstract_simulation import Simulation
 from distributed_event_factory.simulation.process_simulation import ProcessSimulator
-from simulation.process_simulation_object_centric import ProcessSimulationObjectCentric
-from simulation.simulator_objects.object_storage import ObjectStorage
-from simulation.simulator_objects.workprocessstep import WorkProcessStep
 
 
 class CountBasedSimulation(Simulation):

@@ -1,5 +1,5 @@
 from distributed_event_factory.parser.parser import Parser
-from provider.transition.output.output_provider import OutputObjectProvider
+from distributed_event_factory.provider.transition.output.output_provider import OutputObjectProvider
 
 
 class OutputParser(Parser):

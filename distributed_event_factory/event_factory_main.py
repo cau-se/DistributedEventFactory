@@ -18,13 +18,14 @@ if __name__ == '__main__':
     sink = os.environ["SINK"]
     simulation = os.environ["SIMULATION"]
     content_root = os.environ["ROOT"]
-    event_factory = EventFactory()
 
     print("Running with config:")
     print(f"datasource directory: {datasource}")
     print(f"Sink: {sink}")
     print(f"Simulation: {simulation}")
     print(f"Content root: {content_root}")
+
+    event_factory = EventFactory()
 
     (event_factory
      .add_directory(f"{content_root}/config/datasource/{datasource}")
@@ -36,16 +37,19 @@ if __name__ == '__main__':
               data_sources=dict(),
               max_concurrent_cases=ConstantCountProvider(1)
             )
-    ).add_sink("Hi", DriftConformanceCheckingSink(["A","B","C","D","E"]))
+    ).add_sink("Hi", DriftConformanceCheckingSink(
+        ["A","B","C","D","E"]
+    ))
      .run()
-     #   XesProcessSimulator(
-     #       "../config/Road_Traffic_Fine_Management_Process.xes"
-     #   )
+
+
+     XesProcessSimulator(
+         "../config/Road_Traffic_Fine_Management_Process.xes"
+     )
         #DefProcessSimulator(
         #   case_id_provider=IncreasingCaseIdProvider(),
         #   data_sources=dict(),
         #   max_concurrent_cases=ConstantCountProvider(1)
         #)
      )
-     #.add_sink("hello_algorithm", SayHelloAlgorithm(["GoodsDelivery"]))
      #).run()

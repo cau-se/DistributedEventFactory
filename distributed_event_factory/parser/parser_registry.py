@@ -9,6 +9,8 @@ from distributed_event_factory.parser.datasource.event.duration.gaussian_duratio
     GaussianDurationParser
 from distributed_event_factory.parser.datasource.event.duration.uniform_duration_parser import \
     UniformDurationParser
+from distributed_event_factory.parser.datasource.event.input.input_parser import InputParser
+from distributed_event_factory.parser.datasource.event.output.output_parser import OutputParser, DummyObjectParser
 from distributed_event_factory.parser.datasource.event.selection.drifting_probability_event_selection_parser import \
     DriftingProbabilityEventSelectionParser
 from distributed_event_factory.parser.datasource.event.selection.generic_probability_event_selection_parser import \
@@ -20,6 +22,7 @@ from distributed_event_factory.parser.datasource.event.selection.uniform_event_s
     UniformEventSelectionParser
 from distributed_event_factory.parser.datasource.event.transition.transition_parser import TransitionParser
 from distributed_event_factory.parser.object.object_source_parser import ObjectSourceParser
+from distributed_event_factory.parser.route.route_parser import RouteParser
 from distributed_event_factory.parser.simulation.case.case_id_parser import CaseIdParser
 from distributed_event_factory.parser.datasource.data_source_parser import DataSourceParser
 from distributed_event_factory.parser.datasource.event.distribution_parser import DistributionParser
@@ -46,11 +49,8 @@ from distributed_event_factory.parser.sink.load_test_http_sink_parser import Loa
 from distributed_event_factory.parser.sink.print_console_sink_parser import PrintConsoleSinkParser
 from distributed_event_factory.parser.sink.sink_parser import SinkParser
 from distributed_event_factory.parser.sink.ui_sink_parser import UiSinkParser
+from distributed_event_factory.parser.stock.stock_parser import StockParser
 from distributed_event_factory.provider.data.increasing_case import IncreasingCaseIdProvider
-from parser.datasource.event.input.input_parser import InputParser
-from parser.datasource.event.output.output_parser import OutputParser, DummyObjectParser
-from parser.route.route_parser import RouteParser
-from parser.stock.stock_parser import StockParser
 
 
 class ParserRegistry:
@@ -89,6 +89,7 @@ class ParserRegistry:
         ##########
         # Activity
         self.activity_parser = ActivityParser().add_dependency("output", self.output_parser)
+        self.constant_activity_parser = ConstantActivityParser()
         self.image_activity_parser = ImageActivityParser()
         self.activity_parser = (ActivityParser()
                                 .add_dependency("constant", self.constant_activity_parser)

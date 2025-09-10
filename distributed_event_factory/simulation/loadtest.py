@@ -1,15 +1,14 @@
 from typing import Dict
 
-from core.object import ObjectData
-from core.route import Route
 from distributed_event_factory.core.datasource import DataSource
+from distributed_event_factory.core.object import ObjectData
+from distributed_event_factory.core.route import Route
 from distributed_event_factory.provider.data.case_provider import CaseIdProvider
 from distributed_event_factory.provider.data.count_provider import CountProvider
 from distributed_event_factory.provider.load.load_provider import LoadProvider
+from distributed_event_factory.provider.object.input.input_provider import InputObjectProvider
 from distributed_event_factory.provider.sink.loadtest.loadtest_sink import LoadTestHttpSink
 from distributed_event_factory.simulation.abstract_simulation import Simulation
-from distributed_event_factory.simulation.process_simulation import ProcessSimulator
-from provider.object.input.input_provider import InputObjectProvider
 from distributed_event_factory.simulation.process_simulation import DefProcessSimulator
 
 

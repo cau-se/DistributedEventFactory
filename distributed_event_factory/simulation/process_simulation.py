@@ -4,21 +4,19 @@ from queue import PriorityQueue
 from typing import Dict, List
 import math
 
-from core.datasource_id import ROUTING_ID
-from core.object import ObjectData
-from core.route import Route
 from distributed_event_factory.core.end_datasource import EndDataSource
+from distributed_event_factory.core.object import ObjectData
+from distributed_event_factory.core.route import Route
 from distributed_event_factory.provider.data.count_provider import CountProvider
+from distributed_event_factory.provider.event.event_provider import EventDataProvider
+from distributed_event_factory.provider.object.input.input_provider import InputObjectProvider
 from distributed_event_factory.simulation.abstract_process_simulator import ProcessSimulator
-from process_mining_core.datastructure.core.SEvent import SEvent
+from distributed_event_factory.simulation.object_event import ObjectEvent
 from process_mining_core.datastructure.core.event import Event
 
 from distributed_event_factory.core.datasource import DataSource
-from distributed_event_factory.core.datasource_id import START_SENSOR_ID, END_DATA_SOURCE_ID, DataSourceId
+from distributed_event_factory.core.datasource_id import START_SENSOR_ID, END_DATA_SOURCE_ID, DataSourceId, ROUTING_ID
 from distributed_event_factory.provider.data.case_provider import CaseIdProvider
-from provider.event.event_provider import EventDataProvider
-from provider.object.input.input_provider import InputObjectProvider
-from simulation.object_event import ObjectEvent
 
 CHANGE = "change"
 LAST_STATE = "lastState"
@@ -135,7 +133,6 @@ class DefProcessSimulator(ProcessSimulator):
                 return ObjectEvent(
                     timestamp=timestamp.strftime(Y_M_D_H_M_S),
                     activity=activity,
-                    case_id=case,
                     node=datasource.sensor_id.get_name(),
                     group_id=datasource.group_id,
                     input=", ".join(str(obj) for obj in input),

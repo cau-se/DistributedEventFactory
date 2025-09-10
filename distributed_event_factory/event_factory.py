@@ -3,18 +3,16 @@ import yaml
 
 from distributed_event_factory.core.end_datasource import EndDataSource
 from distributed_event_factory.parser.datasource.event.activity.activity_parser import ActivityParser
+from distributed_event_factory.parser.datasource.event.output.output_parser import OutputParser
 from distributed_event_factory.parser.datasource.event.transition.transition_parser import TransitionParser
 from distributed_event_factory.parser.object.object_source_parser import ObjectSourceParser
 from distributed_event_factory.parser.parser_registry import ParserRegistry
+from distributed_event_factory.parser.route.route_parser import RouteParser
 from distributed_event_factory.parser.simulation.case.case_id_parser import CaseIdParser
 from distributed_event_factory.parser.simulation.load.load_parser import LoadParser
 from distributed_event_factory.parser.sink.sink_parser import SinkParser
+from distributed_event_factory.parser.stock.stock_parser import StockParser
 from distributed_event_factory.provider.sink.sink_provider import Sink
-from distributed_event_factory.simulation.process_simulation import DefProcessSimulator
-
-from parser.datasource.event.output.output_parser import OutputParser
-from parser.route.route_parser import RouteParser
-from parser.stock.stock_parser import StockParser
 
 class EventFactory:
     def __init__(self):
