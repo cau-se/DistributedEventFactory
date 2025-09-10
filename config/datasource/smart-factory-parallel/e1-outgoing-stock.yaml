@@ -1,0 +1,24 @@
+kind: datasource
+name: "OutgoingStock"
+spec:
+  name: "OutgoingStock"
+  group: "factory"
+  type: objectCentric
+  workstation: "groupname"
+  selection: parallel
+  input:
+    - object: "resourceOrder"
+      number: 1
+      lastState: ""
+  eventData:
+    - activity:
+        name: "retrieve resources"
+        output:
+          - object: "barResource"
+            number: 1
+            change: ""
+          - object: "screw"
+            number: 13
+            change: ""
+      duration: 3
+      transition: ""

@@ -3,6 +3,7 @@ name: "Packaging"
 spec:
   name: "Packaging"
   group: "Packaging"
+  type: default
   selection: genericProbability
   distribution: [ 1.0 ]
   eventData:

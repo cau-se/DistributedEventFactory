@@ -6,6 +6,8 @@ from distributed_event_factory.core.abstract_datasource import DataSource
 from distributed_event_factory.core.datasource_id import END_DATA_SOURCE_ID, DataSourceId
 from distributed_event_factory.core.event import EndEvent
 from distributed_event_factory.provider.event.event_provider import EventDataProvider, EndEventProvider
+from provider.object.input.input_provider import InputObjectProvider
+
 
 class EndDataSource(DataSource):
     def __init__(self):
@@ -26,3 +28,6 @@ class EndDataSource(DataSource):
 
     def get_event_log(self) -> List[Event]:
         return self.event_log
+
+    #def get_input_objects(self):
+    #    return InputObjectProvider().get_input_objects()

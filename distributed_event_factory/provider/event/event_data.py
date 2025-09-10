@@ -20,5 +20,5 @@ class EventData:
     def get_next_sensor(self):
         return self.transition_provider.get_transition()
 
-    def get_activity(self):
-        return self.activity_provider.get_activity()
+    def get_activity_provider(self):
+        return self.activity_provider

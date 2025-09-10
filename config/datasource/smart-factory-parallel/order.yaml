@@ -1,0 +1,8 @@
+kind: object
+name: "order"
+spec:
+  name: "order"
+  type: "order"
+  input:
+  length: ""
+  width: ""

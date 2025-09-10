@@ -1,0 +1,6 @@
+kind: object
+name: "pin"
+spec:
+  name: "pin"
+  type: "smallComponent"
+  input: "order"

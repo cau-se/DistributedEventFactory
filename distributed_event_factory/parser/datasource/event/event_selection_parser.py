@@ -1,6 +1,5 @@
+from core.core_decisions_datasource import GenericDecisions
 from distributed_event_factory.parser.parser import Parser
-from distributed_event_factory.provider.eventselection.generic_probability_event_selection_provider import \
-    GenericProbabilityEventSelectionProvider
 
 
 class EventSelectionParser(Parser):
@@ -13,4 +12,6 @@ class EventSelectionParser(Parser):
         return self
 
     def parse(self, config):
-        return self.dependencies[config['selection']].parse(config)
+        return GenericDecisions(self.dependencies[config['selection']].parse(config),
+                                self.dependencies[config['type']].parse(config),
+                                config['workstation'])

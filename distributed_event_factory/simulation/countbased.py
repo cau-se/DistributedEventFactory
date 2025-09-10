@@ -1,11 +1,12 @@
-import sys
-import time
-from threading import Thread
-
 from distributed_event_factory.provider.data.case_provider import CaseIdProvider
 from distributed_event_factory.provider.data.count_provider import CountProvider
 from distributed_event_factory.simulation.abstract_process_simulator import ProcessSimulator
 from distributed_event_factory.simulation.abstract_simulation import Simulation
+from distributed_event_factory.simulation.process_simulation import ProcessSimulator
+from simulation.process_simulation_object_centric import ProcessSimulationObjectCentric
+from simulation.simulator_objects.object_storage import ObjectStorage
+from simulation.simulator_objects.workprocessstep import WorkProcessStep
+
 
 class CountBasedSimulation(Simulation):
 
@@ -19,7 +20,13 @@ class CountBasedSimulation(Simulation):
     def run(self, process_simulator, steps, hook):
         for i in range(steps):
             self.send_event(process_simulator.simulate())
-            #hook(i+1)
+        return
+
+    #TODO hrei: Check that the correct process simulator is used here
+    # ProcessSimulationObjectCentric
+    def run(self, process_simulator, steps, hook):
+        for i in range(steps):
+            self.send_event(process_simulator.simulate())
         return
 
     def run_simulation(self, process_simulator: ProcessSimulator, data_sources, sinks, hook=lambda: None):

@@ -1,0 +1,25 @@
+kind: datasource
+name: "TransportM1A"
+spec:
+  name: "TransportM1A"
+  group: "transport"
+  type: objectCentric
+  workstation: "groupname"
+  selection: genericProbability
+  distribution: [1.0]
+  input:
+    - object: "bar"
+      number: 4
+      lastState: "sanded"
+  eventData:
+    - activity:
+        name: "transport from M1 to assembly"
+        output:
+          - object: "bar"
+            number: 4
+            change: "sanded"
+          - object: "handover"
+            number: 1
+            change: ""
+      transition: "Assembly"
+      duration: 10

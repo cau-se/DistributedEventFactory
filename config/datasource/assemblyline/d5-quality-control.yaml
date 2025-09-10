@@ -3,6 +3,7 @@ name: "QualityControl"
 spec:
   name: "QualityControl"
   group: "QualityControl"
+  type: default
   selection: genericProbability
   distribution: [ 0.3, 0.1, 0.6 ]
   eventData:

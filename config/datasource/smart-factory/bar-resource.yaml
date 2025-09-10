@@ -1,0 +1,8 @@
+kind: object
+name: "barResource"
+spec:
+  name: "barResource"
+  type: "resource"
+  input: "order"
+  length: "5"
+  width: ""

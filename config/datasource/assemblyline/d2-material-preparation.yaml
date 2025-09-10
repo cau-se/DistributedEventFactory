@@ -3,6 +3,7 @@ name: "MaterialPreparation"
 spec:
   name: "MaterialPreparation"
   group: "MaterialPreparation"
+  type: default
   selection: genericProbability
   distribution: [ 0.25, 0.7, 0.05 ]
   eventData:

@@ -3,6 +3,7 @@ name: "Assembling"
 spec:
   name: "Assembling"
   group: "Assembling"
+  type: default
   selection: genericProbability
   distribution: [ 0.8, 0.1, 0.08, 0.02 ]
   eventData:

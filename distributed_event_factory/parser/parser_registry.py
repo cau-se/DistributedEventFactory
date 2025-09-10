@@ -15,9 +15,11 @@ from distributed_event_factory.parser.datasource.event.selection.generic_probabi
     GenericProbabilityEventSelectionParser
 from distributed_event_factory.parser.datasource.event.selection.ordered_event_selection_parser import \
     OrderedEventSelectionParser
+from distributed_event_factory.parser.datasource.event.selection.parallel_event_selection_parser import ParallelEventSelectionParser
 from distributed_event_factory.parser.datasource.event.selection.uniform_event_selection import \
     UniformEventSelectionParser
 from distributed_event_factory.parser.datasource.event.transition.transition_parser import TransitionParser
+from distributed_event_factory.parser.object.object_source_parser import ObjectSourceParser
 from distributed_event_factory.parser.simulation.case.case_id_parser import CaseIdParser
 from distributed_event_factory.parser.datasource.data_source_parser import DataSourceParser
 from distributed_event_factory.parser.datasource.event.distribution_parser import DistributionParser
@@ -45,11 +47,23 @@ from distributed_event_factory.parser.sink.print_console_sink_parser import Prin
 from distributed_event_factory.parser.sink.sink_parser import SinkParser
 from distributed_event_factory.parser.sink.ui_sink_parser import UiSinkParser
 from distributed_event_factory.provider.data.increasing_case import IncreasingCaseIdProvider
+from parser.datasource.event.input.input_parser import InputParser
+from parser.datasource.event.output.output_parser import OutputParser, DummyObjectParser
+from parser.route.route_parser import RouteParser
+from parser.stock.stock_parser import StockParser
 
 
 class ParserRegistry:
 
     def __init__(self):
+
+        # Objects
+
+        self.output_parser = OutputParser()
+        # hrei check this Dummy ObjectParser
+        self.dummy_object_parser = DummyObjectParser()
+        self.input_parser = InputParser()
+
         # Count
         self.constant_count_parser = ConstantCountParser()
 
@@ -74,11 +88,12 @@ class ParserRegistry:
                             .add_dependency("kafka", self.kafka_sink_parser))
         ##########
         # Activity
-        self.constant_activity_parser = ConstantActivityParser()
+        self.activity_parser = ActivityParser().add_dependency("output", self.output_parser)
         self.image_activity_parser = ImageActivityParser()
         self.activity_parser = (ActivityParser()
                                 .add_dependency("constant", self.constant_activity_parser)
                                 .add_dependency("image", self.image_activity_parser))
+
 
         # Duration
         self.constant_duration_parser = ConstantDurationParser()
@@ -103,6 +118,8 @@ class ParserRegistry:
 
         self.uniform_event_selection_parser = (UniformEventSelectionParser())
         self.ordered_event_selection_parser = (OrderedEventSelectionParser())
+        self.parallel_event_selection_parser = (ParallelEventSelectionParser()
+                                                .add_dependency("eventData", self.event_data_list_parser))
 
         self.drifting_selection_parser = (DriftingProbabilityEventSelectionParser()
                                           .add_dependency("distribution", self.distribution_parser)
@@ -117,12 +134,25 @@ class ParserRegistry:
                                        .add_dependency("ordered", self.ordered_event_selection_parser)
                                        .add_dependency("uniform", self.uniform_event_selection_parser)
                                        .add_dependency("genericProbability", self.probability_selection_parser)
-                                       .add_dependency("driftingProbability", self.drifting_selection_parser))
+                                       .add_dependency("driftingProbability", self.drifting_selection_parser)
+                                       .add_dependency("parallel", self.parallel_event_selection_parser)
+                                       .add_dependency("objectCentric", self.input_parser)
+                                       .add_dependency("default", self.dummy_object_parser))
 
         # DataSource
         self.datasource_parser = (DataSourceParser()
                                   .add_dependency("eventData", self.event_selection_parser))
 
+
+        # Input
+        self.object_source_parser = ObjectSourceParser()
+
+
+        # Route
+        self.route_parser = RouteParser()
+
+        # Warehouse Stocks
+        self.warehouse_stock_parser = StockParser()
 
         ##########
         # Case
@@ -176,4 +206,7 @@ class ParserRegistry:
                                         .add_dependency("sink", self.sink_parser)
                                         .add_dependency("datasource", self.datasource_parser)
                                         .add_dependency("simulation", self.simulation_parser)
-                                        .add_dependency("process_simulation", self.process_simulation_parser))
+                                        .add_dependency("process_simulation", self.process_simulation_parser)
+                                        .add_dependency("object", self.object_source_parser)
+                                        .add_dependency("route", self.route_parser)
+                                        .add_dependency("stock", self.warehouse_stock_parser))

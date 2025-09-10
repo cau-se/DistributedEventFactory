@@ -4,6 +4,7 @@ import yaml
 from distributed_event_factory.core.end_datasource import EndDataSource
 from distributed_event_factory.parser.datasource.event.activity.activity_parser import ActivityParser
 from distributed_event_factory.parser.datasource.event.transition.transition_parser import TransitionParser
+from distributed_event_factory.parser.object.object_source_parser import ObjectSourceParser
 from distributed_event_factory.parser.parser_registry import ParserRegistry
 from distributed_event_factory.parser.simulation.case.case_id_parser import CaseIdParser
 from distributed_event_factory.parser.simulation.load.load_parser import LoadParser
@@ -11,6 +12,9 @@ from distributed_event_factory.parser.sink.sink_parser import SinkParser
 from distributed_event_factory.provider.sink.sink_provider import Sink
 from distributed_event_factory.simulation.process_simulation import DefProcessSimulator
 
+from parser.datasource.event.output.output_parser import OutputParser
+from parser.route.route_parser import RouteParser
+from parser.stock.stock_parser import StockParser
 
 class EventFactory:
     def __init__(self):
@@ -20,6 +24,10 @@ class EventFactory:
         self.process_simulator = None
         self.datasources["<end>"] = EndDataSource()
         self.parser = ParserRegistry()
+        # TODO hrei: Check Whether that is on the correct level
+        self.objects = dict()
+        self.routes = dict()
+        self.stocks = dict()
 
     def add_load_parser(self, key: str, parser: LoadParser):
         self.parser.load_parser.add_dependency(key, parser)
@@ -49,11 +57,29 @@ class EventFactory:
         self.process_simulator = process_simulator
         return self
 
+    # TODO hrei: It seams that the following 4 are on the wrong level
+    def add_output_parser(self, key: str, parser: OutputParser):
+        self.parser.output_parser.add_dependency(key, parser)
+        return self
+
+    def add_object_source_parser(self, key: str, parser: ObjectSourceParser):
+        self.parser.object_source_parser.add_dependency(key, parser)
+
+    def add_route_parser(self, key: str, parser: RouteParser):
+        self.parser.route_parser.add_dependency(key, parser)
+
+    def add_stock_parser(self, key: str, parser: StockParser):
+        self.parser.warehouse_stock_parser.add_dependency(key, parser)
+
+
     def get_datasource(self, datasource_key):
         return self.datasources[datasource_key]
 
     def get_sink(self, sink_key):
         return self.sinks[sink_key]
+
+    def get_object_source(self, object_key):
+        return self.objects[object_key]
 
     def add_directory(self, directory):
         for filename in os.listdir(directory):
@@ -73,6 +99,18 @@ class EventFactory:
         self.simulations[name] = simulation
         return self
 
+    def add_object(self, name, object_source):
+        self.objects[name] = object_source
+        return self
+
+    def add_route(self,name, routes):
+        self.routes[name] = routes
+        return self
+
+    def add_stock(self,name, routes):
+        self.stocks[name] = routes
+        return self
+
     def add_file(self, filename):
         with open(filename) as file:
             configuration = yaml.safe_load(file)
@@ -87,6 +125,13 @@ class EventFactory:
                 self.add_sink(name, parsed_object)
             elif kind == "processSimulator":
                 self.add_process_simulator(parsed_object)
+            # These should also be on the level of the process simulator
+            elif kind == "object":
+                self.add_object(name, parsed_object)
+            elif kind == "route":
+                self.add_route(name, parsed_object)
+            elif kind == "stock":
+                self.add_stock(name, parsed_object)
 
         return self
 

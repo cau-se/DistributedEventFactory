@@ -3,6 +3,7 @@ name: "<start>"
 spec:
   name: "<start>"
   group: "factory"
+  type: default
   selection: genericProbability
   distribution: [1.0]
   eventData:
