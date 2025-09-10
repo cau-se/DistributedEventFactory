@@ -9,10 +9,6 @@ from distributed_event_factory.provider.event.event_data import EventData
 class DataSource(ABC):
 
     @abstractmethod
-    def emit_event(self, case, activity_name, timestamp) -> None:
-        pass
-
-    @abstractmethod
     def get_event_data(self) -> EventData:
         pass
 

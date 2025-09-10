@@ -2,12 +2,13 @@ from abc import ABC
 
 
 class Simulation(ABC):
+
     def __init__(self):
         self.datasource_sink_mapping = dict()
 
     def send_event(self, event):
-        if event.node in self.datasource_sink_mapping:
-            for sink in self.datasource_sink_mapping[event.node]:
+        if event.group in self.datasource_sink_mapping:
+            for sink in self.datasource_sink_mapping[event.group]:
                 sink.send(event)
         else:
             print(f"Skip event. No sink configured. Event: {event}")

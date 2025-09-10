@@ -3,9 +3,9 @@ from distributed_event_factory.core.datasource import DataSource
 from distributed_event_factory.provider.data.case_provider import CaseIdProvider
 from distributed_event_factory.provider.data.count_provider import CountProvider
 from distributed_event_factory.provider.load.load_provider import LoadProvider
-from distributed_event_factory.provider.sink.http.http_sink import LoadTestHttpSink
+from distributed_event_factory.provider.sink.loadtest.loadtest_sink import LoadTestHttpSink
 from distributed_event_factory.simulation.abstract_simulation import Simulation
-from distributed_event_factory.simulation.process_simulation import ProcessSimulator
+from distributed_event_factory.simulation.process_simulation import DefProcessSimulator
 
 
 class LoadTestSimulation(Simulation):
@@ -41,7 +41,7 @@ class LoadTestSimulation(Simulation):
         for sink in datasource_sink_mapping:
             self.sink.append(datasource_sink_mapping[sink])
 
-        process_simulator = ProcessSimulator(
+        process_simulator = DefProcessSimulator(
             case_id_provider=self.case_id_provider,
             data_sources=data_sources,
             max_concurrent_cases=self.max_concurrent_cases

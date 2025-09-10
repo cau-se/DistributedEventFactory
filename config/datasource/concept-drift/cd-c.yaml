@@ -2,7 +2,7 @@ kind: datasource
 name: "C"
 spec:
   name: "C"
-  group: "concept-drift"
+  group: "C"
   selection: genericProbability
   distribution: [1.0]
   eventData:

@@ -1,8 +1,8 @@
 from distributed_event_factory.parser.parser import Parser
-from distributed_event_factory.simulation.stream import StreamSimulation
+from distributed_event_factory.simulation.process_simulation import DefProcessSimulator
 
+class DefSimulationParser(Parser):
 
-class StreamSimulationParser(Parser):
     def __init__(self):
         self.dependencies = dict()
 
@@ -11,8 +11,8 @@ class StreamSimulationParser(Parser):
         return self
 
     def parse(self, config):
-        return StreamSimulation(
-            load_provider=self.dependencies["load"].parse(config["load"]),
+        return DefProcessSimulator(
             case_id_provider=self.dependencies["caseId"].parse(config["caseId"]),
-            max_concurrent_cases=self.dependencies["maxConcurrentCases"].parse(config["maxConcurrentCases"])
+            max_concurrent_cases=self.dependencies["maxConcurrentCases"].parse(config["maxConcurrentCases"]),
+            data_sources=self.dependencies["dataSource"].parse(config["dataSource"])
         )

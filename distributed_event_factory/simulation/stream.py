@@ -4,8 +4,8 @@ from scheduled_futures import ScheduledThreadPoolExecutor
 from distributed_event_factory.provider.data.case_provider import CaseIdProvider
 from distributed_event_factory.provider.data.count_provider import CountProvider
 from distributed_event_factory.provider.load.load_provider import LoadProvider
+from distributed_event_factory.simulation.abstract_process_simulator import ProcessSimulator
 from distributed_event_factory.simulation.abstract_simulation import Simulation
-from distributed_event_factory.simulation.process_simulation import ProcessSimulator
 
 class StreamSimulation(Simulation):
     def __init__(
@@ -20,13 +20,8 @@ class StreamSimulation(Simulation):
         self.max_concurrent_cases=max_concurrent_cases
         self.sinks = dict()
 
-    def run_simulation(self, datasources, sinks, hook):
+    def run_simulation(self, process_simulator, datasources, sinks, hook):
         self.setup_datasource_sink_mapping(sinks)
-        process_simulator = ProcessSimulator(
-            case_id_provider=self.case_id_provider,
-            data_sources=datasources,
-            max_concurrent_cases=self.max_concurrent_cases
-        )
         while True:
             with ScheduledThreadPoolExecutor() as executor:
                 scheduler = executor.schedule(

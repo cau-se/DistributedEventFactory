@@ -9,6 +9,7 @@ from distributed_event_factory.parser.simulation.case.case_id_parser import Case
 from distributed_event_factory.parser.simulation.load.load_parser import LoadParser
 from distributed_event_factory.parser.sink.sink_parser import SinkParser
 from distributed_event_factory.provider.sink.sink_provider import Sink
+from distributed_event_factory.simulation.process_simulation import DefProcessSimulator
 
 
 class EventFactory:
@@ -16,6 +17,7 @@ class EventFactory:
         self.sinks = dict()
         self.simulations = dict()
         self.datasources = dict()
+        self.process_simulator = None
         self.datasources["<end>"] = EndDataSource()
         self.parser = ParserRegistry()
 
@@ -41,6 +43,10 @@ class EventFactory:
 
     def add_selection_parser(self, key: str, parser: SinkParser):
         self.parser.probability_selection_parser.add_dependency(key, parser)
+        return self
+
+    def add_process_simulator(self, process_simulator):
+        self.process_simulator = process_simulator
         return self
 
     def get_datasource(self, datasource_key):
@@ -79,8 +85,11 @@ class EventFactory:
                 self.add_datasource(name, parsed_object)
             elif kind == "sink":
                 self.add_sink(name, parsed_object)
+            elif kind == "processSimulator":
+                self.add_process_simulator(parsed_object)
+
         return self
 
     def run(self, hook=lambda: None):
         for simulation in self.simulations:
-            self.simulations[simulation].run_simulation(self.datasources, self.sinks, hook)
+            self.simulations[simulation].run_simulation(self.process_simulator, self.datasources, self.sinks, hook)

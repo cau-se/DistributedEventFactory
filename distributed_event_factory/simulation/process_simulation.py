@@ -4,25 +4,29 @@ from queue import PriorityQueue
 from typing import Dict
 
 from distributed_event_factory.provider.data.count_provider import CountProvider
+from distributed_event_factory.simulation.abstract_process_simulator import ProcessSimulator
+from process_mining_core.datastructure.core.SEvent import SEvent
 from process_mining_core.datastructure.core.event import Event
 
 from distributed_event_factory.core.datasource import DataSource
 from distributed_event_factory.core.datasource_id import START_SENSOR_ID, END_DATA_SOURCE_ID, DataSourceId
 from distributed_event_factory.provider.data.case_provider import CaseIdProvider
 
-class ProcessSimulator:
+class DefProcessSimulator(ProcessSimulator):
     def __init__(
-            self,
-            data_sources: Dict[str, DataSource],
-            case_id_provider: CaseIdProvider,
-            max_concurrent_cases: CountProvider
+        self,
+        data_sources: Dict[str, DataSource],
+        case_id_provider: CaseIdProvider,
+        max_concurrent_cases: CountProvider
     ):
-
         self.max_concurrent_cases = max_concurrent_cases
         self.tokens: PriorityQueue[Token] = PriorityQueue(self.max_concurrent_cases.get())
         self.datasources: Dict[str, DataSource] = data_sources
         self.case_id_provider = case_id_provider
         self.last_timestamp = datetime.now()
+
+    def add_datasource(self, name, data_source):
+        self.datasources[name] = data_source
 
     def simulate(self) -> Event:
         emit_event = None
@@ -58,12 +62,12 @@ class ProcessSimulator:
 
     def _build_event(self, case, activity, timestamp, datasource):
         if hasattr(datasource, "sensor_id"):
-            return Event(
+            return SEvent(
                 timestamp=timestamp.strftime("%Y-%m-%d %H:%M:%S"),
                 activity=activity,
-                case_id=case,
+                caseid=case,
                 node=datasource.sensor_id.get_name(),
-                group_id=datasource.group_id
+                group=datasource.group_id
             )
 
     def _get_sensor_with_id(self, data_source_id) -> DataSource:
