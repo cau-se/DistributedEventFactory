@@ -39,15 +39,17 @@ class WorkProcessStep:
                                self.end_location)
 
     def produce_event(self, current_timestamp, workstation, ingoing_objects, outgoing_objects) -> ObjectEvent:
-        ingoing_summary = self.summary_of_objects(objects=ingoing_objects)
-        outgoing_summary = self.summary_of_objects(objects=outgoing_objects)
+        #ingoing_summary = self.summary_of_objects(objects=ingoing_objects)
+        #outgoing_summary = self.summary_of_objects(objects=outgoing_objects)
         return ObjectEvent(
             timestamp=current_timestamp.strftime(Y_M_D_H_M_S),
             activity=self.activity,
             node=self.node,
             group_id=workstation,
-            input=ingoing_summary,
-            output=outgoing_summary
+            #input=ingoing_summary,
+            #output=outgoing_summary
+            input=ingoing_objects,
+            output=outgoing_objects
         )
 
     def summary_of_objects(self, objects):

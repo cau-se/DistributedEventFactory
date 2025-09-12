@@ -4,7 +4,7 @@ from typing import Dict
 import pm4py
 
 from distributed_event_factory.provider.object.size_params_provider import SizeParamsProvider
-from process_mining_core.datastructure.core.event import Event
+from distributed_event_factory.simulation.object_event import ObjectEvent
 
 from distributed_event_factory.provider.sink.sink_provider import Sink, SinkProvider
 import pandas as pd
@@ -28,17 +28,21 @@ class OcelConsole(Sink):
         self.end_time = None
         self.problem_event_counter = 0
 
-    def send(self, event: Event, root, object_sources, object_store) -> None:
+    def send(
+        self,
+        event: ObjectEvent
+    ) -> None:
         if self.start_time is None:
             self.start_time = event.timestamp
 
         if "Failure:" in event.activity:
             self.problem_event_counter += 1
 
-        if not self.object_types:
-            for object_source in object_sources.values():
-                if object_source.object_type not in self.object_types:
-                    self.object_types.append(object_source.object_type)
+        #if not self.object_types:
+        #    for object_source in object_sources.values():
+        #        if object_source.object_type not in self.object_types:
+        #            self.object_types.append(object_source.object_type)
+
         print("Sensor " + event.node + ": " + str(event))
         self.el.append("Sensor " + event.node + ": " + str(event))
         new_row = {}
@@ -46,39 +50,27 @@ class OcelConsole(Sink):
         new_row["ocel:timestamp"] = event.timestamp
         new_row["ocel:activity"] = event.activity
         new_row["ocel:node"] = event.node
-        new_row["ocel:workstation"]: event.group
+        new_row["ocel:workstation"]= event.group
+        #TODO hrei hier bitte mehr Objekt-Typen mit considern
+
+        new_row["ocel:type"] = "MyType" #event.object_types[0]
+
+        new_row["ocel:type2"] = "MyType2" #event.object_types[0]
+
+        for input_event in event.input:
+            new_row[input_event.get_object_type()] = input_event.get_object_type()
+            if input_event.get_object_type() not in self.object_types:
+                self.object_types.append(input_event.get_object_type())
+        for output_event in event.output:
+                new_row[output_event.get_object_type()] = output_event.get_object_type()
+                if output_event.get_object_type() not in self.object_types:
+                    self.object_types.append(output_event.get_object_type())
+
         type_objects: Dict[str, list[ObjectSummary]] = {}
-        for type in self.object_types:
-            input_objects = self.get_objects_of_type(type, event.input, object_store)
-            output_objects = self.get_objects_of_type(type, event.output, object_store)
-            self.input_counter += len(input_objects)
-            self.output_counter += len(output_objects)
-            involved_objects = []
-            for input_object in input_objects:
-                if input_object in output_objects:
-                    output_objects.remove(input_object)
-                    input_object.set_is_output(True)
-                input_object.set_is_input(True)
-                involved_objects.append(input_object)
-            for output_object in output_objects:
-                output_object.set_is_output(True)
-                involved_objects.append(output_object)
-            type_objects[type] = involved_objects
-        for type, involved_object in type_objects.items():
-            new_row[type + "-name"] = ", ".join(
-                [item.name for item in involved_object if item.name is not None])
-            new_row[type + "-size"] = ", ".join(
-                [str(item.size) for item in involved_object if item.size is not None])
-            new_row[type + "-lastChange"] = ", ".join(
-                [item.last_change for item in involved_object if item.last_change is not None])
-            new_row[type] = ", ".join(
-                [str(item.unique_ids) for item in involved_object if item.unique_ids is not None])
-            new_row[type + "-input"] = ", ".join(
-                [str(item.is_input) for item in involved_object if item.is_input is not None])
-            new_row[type + "-output"] = ", ".join(
-                [str(item.is_output) for item in involved_object if item.is_output is not None])
+
+
         self.rowsList.append(new_row)
-        self.contentRoot = root
+        self.contentRoot = "~/Repo/scalablemine"
         self.index += 1
         self.end_time = event.timestamp
 
@@ -86,19 +78,23 @@ class OcelConsole(Sink):
         pass
 
     def end_timeframe(self):
-        df =pd.DataFrame.from_records(data = self.rowsList)#.to_csv(self.contentRoot + "/ocel.csv", index=False, sep=";")
-        type_attributes: Dict[str, list[str]] = {}
-        for object_type in self.object_types:
-            type_attributes[object_type] = [object_type + "-name", object_type + "-size",
-                                            object_type + "-lastChange",object_type + "-oid",
-                                            object_type + "-input", object_type + "-output"]
-        ocel = pm4py.convert.convert_log_to_ocel(log=df, activity_column="ocel:activity",
-                                                 timestamp_column="ocel:timestamp",
-                                                 object_types=self.object_types, obj_separator=", ",
-                                                 additional_event_attributes=["ocel:node", "ocel:workstation"],
-                                                 additional_object_attributes=type_attributes)
-        petri_net=pm4py.algo.discovery.ocel.ocpn.variants.classic.apply(ocel=ocel, parameters=ocel.parameters)
+        df = pd.DataFrame.from_records(
+            data=self.rowsList
+        )  # .to_csv(self.contentRoot + "/ocel.csv", index=False, sep=";")
+
+        # TODO hrei check here whether we need additional payloads..
+        ocel = pm4py.convert.convert_log_to_ocel(
+            log=df,
+            activity_column="ocel:activity",
+            timestamp_column="ocel:timestamp",
+            object_types=self.object_types,
+            #additional_event_attributes=["ocel:node", "ocel:workstation"],
+            #additional_object_attributes=type_attributes
+        )
+
+        petri_net = pm4py.algo.discovery.ocel.ocpn.variants.classic.apply(ocel=ocel, parameters=ocel.parameters)
         pm4py.visualization.ocel.ocpn.visualizer.apply(ocpn=petri_net).view()
+
         pm4py.objects.ocel.exporter.jsonocel.exporter.apply(ocel=ocel, target_path=self.contentRoot + "/ocel.jsonocel")
         #pm4py.algo.conformance.alignments.petri_net.variants(obj=df, petri_net=petri_net, initial_marking=None, final_marking=None)
 
@@ -118,10 +114,9 @@ class OcelConsole(Sink):
         print("Duration: " + str(datetime.now() - start_time_dt))
         print("Simplicity nodes: " + str(simplicity_nodes))
         print("Simplicity transitions: " + str(simplicity_transition))
-        print("Problems Events: "+ str(self.problem_event_counter))
-        print("Input objects per event: "+ str(self.input_counter/self.index))
-        print("Output objects per event: "+ str(self.output_counter/self.index))
-
+        print("Problems Events: " + str(self.problem_event_counter))
+        print("Input objects per event: " + str(self.input_counter / self.index))
+        print("Output objects per event: " + str(self.output_counter / self.index))
 
     def get_objects_of_type(self, type, objects, object_store):
         objects_of_type = []
@@ -131,9 +126,14 @@ class OcelConsole(Sink):
                 unique_ids_part = ast.literal_eval(obj.split("Unique IDs = {")[1].split("}")[0].strip())
                 object_example = object_store.find_object_by_id(unique_ids_part[0])
                 if object_example:
-                    object_summary = ObjectSummary(object_example.object_id_name.id, object_example.object_type,
-                                                   object_example.size,
-                                                   object_example.get_last_changed_value(), count, unique_ids_part)
+                    object_summary = ObjectSummary(
+                        object_example.object_id_name.id,
+                        object_example.object_type,
+                        object_example.size,
+                        object_example.get_last_changed_value(),
+                        count,
+                        unique_ids_part
+                    )
                     if object_summary not in objects_of_type:
                         objects_of_type.append(object_summary)
                 else:

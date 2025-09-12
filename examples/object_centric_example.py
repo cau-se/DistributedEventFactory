@@ -22,3 +22,4 @@ if __name__ == '__main__':
     #)
     )
     event_factory.run()
+    event_factory.get_sink("ocelConsole").end_timeframe()

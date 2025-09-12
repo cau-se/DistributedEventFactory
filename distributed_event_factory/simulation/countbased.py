@@ -13,13 +13,7 @@ class CountBasedSimulation(Simulation):
         self.sinks = dict()
         self.max_concurrent_cases = max_concurrent_cases
 
-    def run(self, process_simulator, steps, hook):
-        for i in range(steps):
-            self.send_event(process_simulator.simulate())
-        return
-
     # TODO hrei: Check that the correct process simulator is used here
-    # ProcessSimulationObjectCentric
     def run(self, process_simulator, steps, hook):
         for i in range(steps):
             self.send_event(process_simulator.simulate())
