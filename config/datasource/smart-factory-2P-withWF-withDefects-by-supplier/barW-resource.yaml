@@ -1,0 +1,9 @@
+kind: object
+name: "barWResource"
+spec:
+  name: "barWResource"
+  type: "wood"
+  size:
+    length: "5"
+    width: ""
+    depth: ""

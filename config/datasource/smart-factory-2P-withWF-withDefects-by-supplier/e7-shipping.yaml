@@ -1,0 +1,27 @@
+kind: datasource
+name: "Shipping1"
+spec:
+  name: "Shipping1"
+  group: "factory"
+  type: objectCentric
+  workforce: noWorkforce
+  start: "S"
+  end: "S"
+  workstation: "S"
+  selection: genericProbability
+  distribution: [ 1.0 ]
+  input:
+    - object: "shelf1"
+      number: 1
+      lastState: "proofed"
+      size:
+  eventData:
+    - activity:
+        name: "Package sent"
+        output:
+          - object: "shelf1"
+            number: 1
+            change: "sent"
+            size:
+      transition: ""
+      duration: 5

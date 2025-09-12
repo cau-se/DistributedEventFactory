@@ -27,5 +27,16 @@ class GenericDataSource(DataSource):
     def get_event_data(self):
         return self.event_provider.get_event_data()
 
+    def emit_event(self, case, activity_name, timestamp) -> Event:
+        event = Event(
+            timestamp=timestamp.strftime("%Y-%m-%d %H:%M:%S"),
+            sensor_value=activity_name,
+            case_id=case,
+            sensor_name=self.sensor_id.get_name(),
+            group_id=self.group_id
+        )
+        self.event_log.append(event)
+        return event
+
     def get_event_log(self) -> List[Event]:
         return self.event_log

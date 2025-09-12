@@ -1,0 +1,27 @@
+kind: datasource
+name: "DrillingBar"
+spec:
+  name: "DrillingBar"
+  group: "factory"
+  type: objectCentric
+  workforce: noWorkforce
+  start: "U"
+  end: "U"
+  workstation: "U"
+  selection: genericProbability
+  distribution: [1.0]
+  input:
+    - object: "order"
+      number: 1
+      lastState: ""
+      size:
+  eventData:
+    - activity:
+        name: "order for resources"
+        output:
+          - object: "resourceOrder"
+            number: 1
+            change: ""
+            size:
+      transition: "OutgoingStock"
+      duration: 0

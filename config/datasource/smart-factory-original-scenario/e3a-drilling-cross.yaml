@@ -1,0 +1,48 @@
+kind: datasource
+name: "DrillingBarC"
+spec:
+  name: "DrillingBarC"
+  group: "factory"
+  type: objectCentric
+  workforce: hasWorkforce
+  start: "Al"
+  end: "Al"
+  workstation: "Al"
+  selection: genericProbability
+  distribution: [0.99, 0.01]
+  input:
+    - object: "crossA"
+      number: 1
+      lastState: "divided Resource"
+      size:
+        length: "190"
+        width: ""
+        depth: ""
+  workforces:
+    - workforce: "machineWorker"
+      number: 1
+  eventData:
+    - activity:
+        name: "Drilled"
+        output:
+          - object: "crossA"
+            number: 1
+            change: "drilled"
+            size:
+              length: "190"
+              width: ""
+              depth: ""
+      transition: ""
+      duration: 3
+    - activity:
+        name: "Failure: Drilling machine broken"
+        output:
+          - object: "crossA"
+            number: 1
+            change: "divided Resource"
+            size:
+              length: "190"
+              width: ""
+              depth: ""
+      duration: 20
+      transition: ""

@@ -1,5 +1,5 @@
-from distributed_event_factory.core.route import Route
-from distributed_event_factory.parser.parser import Parser
+from core.route import Route
+from parser.parser import Parser
 
 
 class RouteParser(Parser):

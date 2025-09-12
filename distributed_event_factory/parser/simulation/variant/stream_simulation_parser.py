@@ -12,7 +12,7 @@ class StreamSimulationParser(Parser):
 
     def parse(self, config):
         return StreamSimulation(
-            load_provider=self.dependencies["load"].parse(config["load"]),
             case_id_provider=self.dependencies["caseId"].parse(config["caseId"]),
+            load_provider=self.dependencies["load"].parse(config["load"]),
             max_concurrent_cases=self.dependencies["maxConcurrentCases"].parse(config["maxConcurrentCases"])
         )

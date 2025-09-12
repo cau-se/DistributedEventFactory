@@ -19,7 +19,8 @@ from distributed_event_factory.parser.datasource.event.selection.generic_probabi
     GenericProbabilityEventSelectionParser
 from distributed_event_factory.parser.datasource.event.selection.ordered_event_selection_parser import \
     OrderedEventSelectionParser
-from distributed_event_factory.parser.datasource.event.selection.parallel_event_selection_parser import ParallelEventSelectionParser
+from distributed_event_factory.parser.datasource.event.selection.parallel_event_selection_parser import \
+    ParallelEventSelectionParser
 from distributed_event_factory.parser.datasource.event.selection.uniform_event_selection import \
     UniformEventSelectionParser
 from distributed_event_factory.parser.datasource.event.transition.transition_parser import TransitionParser
@@ -53,17 +54,25 @@ from distributed_event_factory.parser.sink.sink_parser import SinkParser
 from distributed_event_factory.parser.sink.ui_sink_parser import UiSinkParser
 from distributed_event_factory.parser.stock.stock_parser import StockParser
 from distributed_event_factory.provider.data.increasing_case import IncreasingCaseIdProvider
+from parser.datasource.event.input.input_parser import InputParser
+from parser.datasource.event.output.output_parser import OutputParser, DummyObjectParser
+from parser.route.route_parser import RouteParser
+from parser.sink.ocel_sink_parser import OcelConsoleSinkParser
+from parser.stock.stock_parser import StockParser
+from parser.workforce.workforce_parser import WorkforceParser, DummyWorkforceParser
+from parser.workforce.workforce_start_positions import WorkforceStartPositionParser
 
 
 class ParserRegistry:
 
     def __init__(self):
-
         # Objects
         self.output_parser = OutputParser()
         # hrei check this Dummy ObjectParser
         self.dummy_object_parser = DummyObjectParser()
         self.input_parser = InputParser()
+        self.workforce_parser = WorkforceParser()
+        self.dummy_workforce_parser = DummyWorkforceParser()
 
         # Count
         self.constant_count_parser = ConstantCountParser()
@@ -78,6 +87,7 @@ class ParserRegistry:
         # Sinks
         self.kafka_sink_parser = (KafkaSinkParser()).add_dependency("partition", self.partition_parser)
         self.console_sink_parser = (PrintConsoleSinkParser())
+        self.ocel_console_sink_parser = (OcelConsoleSinkParser())
         self.ui_sink_parser = (UiSinkParser())
         self.load_test_parser = (LoadTestHttpSinkParser())
         self.http_sink_parser = (HttpSinkParser())
@@ -86,16 +96,11 @@ class ParserRegistry:
                             .add_dependency("ui", self.ui_sink_parser)
                             .add_dependency("loadtest", self.load_test_parser)
                             .add_dependency("http", self.http_sink_parser)
-                            .add_dependency("kafka", self.kafka_sink_parser))
+                            .add_dependency("kafka", self.kafka_sink_parser)
+                            .add_dependency("ocel", self.ocel_console_sink_parser))
         ##########
         # Activity
-        self.object_activity_parser = ObjectConstantActivityParser().add_dependency("output", self.output_parser)
-        self.constant_activity_parser = ConstantActivityParser()
-        self.image_activity_parser = ImageActivityParser()
-        self.activity_parser = (ActivityParser()
-                                .add_dependency("constant", self.constant_activity_parser)
-                                .add_dependency("object", self.object_activity_parser)
-                                .add_dependency("image", self.image_activity_parser))
+        self.activity_parser = ActivityParser().add_dependency("output", self.output_parser)
 
         # Duration
         self.constant_duration_parser = ConstantDurationParser()
@@ -117,6 +122,7 @@ class ParserRegistry:
 
         # Distribution
         self.distribution_parser = (DistributionParser())
+
         self.uniform_event_selection_parser = (UniformEventSelectionParser())
         self.ordered_event_selection_parser = (OrderedEventSelectionParser())
         self.parallel_event_selection_parser = (ParallelEventSelectionParser()
@@ -138,16 +144,17 @@ class ParserRegistry:
                                        .add_dependency("driftingProbability", self.drifting_selection_parser)
                                        .add_dependency("parallel", self.parallel_event_selection_parser)
                                        .add_dependency("objectCentric", self.input_parser)
+                                       .add_dependency("hasWorkforce", self.workforce_parser)
+                                       .add_dependency("noWorkforce", self.dummy_workforce_parser)
                                        .add_dependency("default", self.dummy_object_parser))
 
         # DataSource
         self.datasource_parser = (DataSourceParser()
                                   .add_dependency("eventData", self.event_selection_parser))
 
-
         # Input
         self.object_source_parser = ObjectSourceParser()
-
+        self.workforce_start_position_parser = WorkforceStartPositionParser()
 
         # Route
         self.route_parser = RouteParser()
@@ -210,4 +217,5 @@ class ParserRegistry:
                                         .add_dependency("processSimulation", self.process_simulation_parser)
                                         .add_dependency("object", self.object_source_parser)
                                         .add_dependency("route", self.route_parser)
-                                        .add_dependency("stock", self.warehouse_stock_parser))
+                                        .add_dependency("stock", self.warehouse_stock_parser)
+                                        .add_dependency("workforces", self.workforce_start_position_parser))

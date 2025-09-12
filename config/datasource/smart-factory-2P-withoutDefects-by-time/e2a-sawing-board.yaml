@@ -1,0 +1,33 @@
+kind: datasource
+name: "SawingBoardA"
+spec:
+  name: "SawingBoardA"
+  group: "factory"
+  type: objectCentric
+  workforce: noWorkforce
+  start: "A"
+  end: "A"
+  workstation: "A"
+  selection: genericProbability
+  distribution: [1.0]
+  input:
+    - object: "boardAResource"
+      number: 1
+      lastState: ""
+      size:
+        length: ""
+        width: "30"
+        depth: "30"
+  eventData:
+    - activity:
+        name: "Sawed"
+        output:
+          - object: "boardA"
+            number: 6
+            change: "divided Resource"
+            size:
+              length: ""
+              width: "5"
+              depth: "5"
+      transition: "SandingBoardA"
+      duration: 9

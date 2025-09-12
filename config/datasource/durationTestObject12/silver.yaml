@@ -1,0 +1,6 @@
+kind: object
+name: "silver"
+spec:
+  name: "silver"
+  type: "object"
+  size:

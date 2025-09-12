@@ -5,10 +5,10 @@ from distributed_event_factory.provider.transition.transition.transition_provide
 
 class EventData:
     def __init__(
-        self,
-        duration_provider: DurationProvider,
-        activity_provider: ActivityProvider,
-        transition_provider: TransitionProvider
+            self,
+            duration_provider: DurationProvider,
+            activity_provider: ActivityProvider,
+            transition_provider: TransitionProvider
     ):
         self.duration_provider = duration_provider
         self.activity_provider = activity_provider

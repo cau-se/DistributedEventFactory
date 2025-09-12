@@ -1,0 +1,75 @@
+kind: datasource
+name: "Assembly"
+spec:
+  name: "Assembly"
+  group: "factory"
+  type: objectCentric
+  workforce: noWorkforce
+  start: "A"
+  end: "A"
+  workstation: "A"
+  selection: genericProbability
+  distribution: [ 0.94, 0.03, 0.03 ]
+  input:
+    - object: "bar"
+      number: 4
+      lastState: "sanded"
+      size:
+        length: "2"
+        width: ""
+        depth: ""
+    - object: "board"
+      number: 6
+      lastState: "sanded"
+      size:
+        length: ""
+        width: "5"
+        depth: "5"
+    - object: "screw"
+      number: 13
+      lastState: ""
+      size:
+    - object: "bolt"
+      number: 13
+      lastState: ""
+      size:
+    - object: "handoverBoard"
+      number: 1
+      lastState: ""
+      size:
+    - object: "handoverBar"
+      number: 1
+      lastState: ""
+      size:
+    - object: "handover"
+      number: 1
+      lastState: ""
+      size:
+  eventData:
+    - activity:
+        name: "Assembling completed"
+        output:
+          - object: "woodShelf"
+            number: 1
+            change: "assembled"
+            size:
+      duration: 15
+      transition: "QualityControl"
+    - activity:
+        name: "Failure: Overheating"
+        output:
+          - object: "woodShelf"
+            number: 1
+            change: "overheated"
+            size:
+      transition: ""
+      duration: 2
+    - activity:
+        name: "Failure: Item broke"
+        output:
+          - object: "woodShelf"
+            number: 1
+            change: "broke"
+            size:
+      transition: ""
+      duration: 1

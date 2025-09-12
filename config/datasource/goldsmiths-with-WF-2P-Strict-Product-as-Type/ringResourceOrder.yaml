@@ -1,0 +1,6 @@
+kind: object
+name: "ringResourceOrder"
+spec:
+  name: "ringResourceOrder"
+  type: "ring"
+  size:

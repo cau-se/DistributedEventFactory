@@ -1,0 +1,7 @@
+kind: workforces
+name: "default"
+spec:
+  workforces:
+    - name: "humanWorkforce"
+      startLocation: "ST"
+      number: 1

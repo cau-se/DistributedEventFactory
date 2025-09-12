@@ -1,0 +1,75 @@
+kind: datasource
+name: "SawingBar"
+spec:
+  name: "SawingBar"
+  group: "factory"
+  type: objectCentric
+  workforce: hasWorkforce
+  start: "M"
+  end: "M"
+  workstation: "M"
+  selection: genericProbability
+  distribution: [0.97, 0.01, 0.02]
+  input:
+    - object: "barResource"
+      number: 2
+      lastState: ""
+      size:
+        length: "4"
+        width: ""
+        depth: ""
+    - object: "handoverBarR"
+      number: 1
+      lastState: ""
+      size:
+  workforces:
+    - workforce: "machineWorker"
+      number: 1
+  eventData:
+    - activity:
+        name: "Sawed"
+        output:
+          - object: "bar"
+            number: 4
+            change: "divided Resource"
+            size:
+              length: "2"
+              width: ""
+              depth: ""
+      transition: "DrillingBar"
+      duration: 4
+    - activity:
+        name: "Failure: Sawing machine broken"
+        output:
+          - object: "barResource"
+            number: 2
+            change: ""
+            size:
+              length: "4"
+              width: ""
+              depth: ""
+          - object: "handoverBarR"
+            number: 1
+            change: ""
+            size:
+      duration: 20
+      transition: ""
+    - activity:
+        name: "Failure: One piece broken"
+        output:
+          - object: "bar"
+            number: 3
+            change: "divided Resource"
+            size:
+              length: "2"
+              width: ""
+              depth: ""
+          - object: "bar"
+            number: 1
+            change: "broken"
+            size:
+              length: "1.25"
+              width: ""
+              depth: ""
+      duration: 4
+      transition: "DrillingBar"

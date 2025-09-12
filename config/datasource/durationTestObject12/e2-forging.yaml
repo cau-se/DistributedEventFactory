@@ -1,0 +1,51 @@
+kind: datasource
+name: "Forging"
+spec:
+  name: "Forging"
+  group: "factory"
+  type: objectCentric
+  workforce: noWorkforce
+  start: "M"
+  end: "M"
+  workstation: "M"
+  selection: genericProbability
+  distribution: [1.0]
+  input:
+    - object: "gold"
+      number: 1
+      lastState: ""
+      size:
+    - object: "whitegold"
+      number: 1
+      lastState: ""
+      size:
+    - object: "silver"
+      number: 1
+      lastState: ""
+      size:
+    - object: "stone"
+      number: 1
+      lastState: ""
+      size:
+    - object: "diamond"
+      number: 1
+      lastState: ""
+      size:
+    - object: "smaragd"
+      number: 1
+      lastState: ""
+      size:
+    - object: "rubin"
+      number: 1
+      lastState: ""
+      size:
+  eventData:
+    - activity:
+        name: "Forged"
+        output:
+          - object: "ring"
+            number: 1
+            change: "shaped"
+            size:
+      transition: ""
+      duration: 5

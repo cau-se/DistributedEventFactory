@@ -1,0 +1,12 @@
+kind: stock
+name: "default"
+spec:
+  stocks:
+    - object: "order"
+      number: 1000
+      lastState:
+      size:
+    - object: "order2"
+      number: 1000
+      lastState:
+      size:

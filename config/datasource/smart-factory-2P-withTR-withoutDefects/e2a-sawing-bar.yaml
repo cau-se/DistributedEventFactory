@@ -1,0 +1,37 @@
+kind: datasource
+name: "SawingBarA"
+spec:
+  name: "SawingBarA"
+  group: "factory"
+  type: objectCentric
+  workforce: noWorkforce
+  start: "Al"
+  end: "Al"
+  workstation: "Al"
+  selection: genericProbability
+  distribution: [1.0]
+  input:
+    - object: "barAResource"
+      number: 2
+      lastState: ""
+      size:
+        length: "4"
+        width: ""
+        depth: ""
+    - object: "handoverBarRA"
+      number: 1
+      lastState: ""
+      size:
+  eventData:
+    - activity:
+        name: "Sawed"
+        output:
+          - object: "barA"
+            number: 4
+            change: "divided Resource"
+            size:
+              length: "2"
+              width: ""
+              depth: ""
+      transition: "DrillingBarA"
+      duration: 4

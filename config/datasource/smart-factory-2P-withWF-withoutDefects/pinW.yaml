@@ -1,0 +1,6 @@
+kind: object
+name: "pinW"
+spec:
+  name: "pinW"
+  type: "resource"
+  size:

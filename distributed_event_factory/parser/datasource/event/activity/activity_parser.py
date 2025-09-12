@@ -1,4 +1,6 @@
 from distributed_event_factory.parser.parser import Parser
+from distributed_event_factory.provider.activity.activity_provider import ConstantActivityProvider
+from provider.activity.activity_provider import ObjectConstantActivityProvider
 from distributed_event_factory.provider.activity.activity_provider import ConstantActivityProvider, \
     ObjectConstantActivityProvider
 

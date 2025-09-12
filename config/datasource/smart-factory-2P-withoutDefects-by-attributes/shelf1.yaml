@@ -1,0 +1,6 @@
+kind: object
+name: "shelf1"
+spec:
+  name: "shelf1"
+  type: "3D"
+  size:

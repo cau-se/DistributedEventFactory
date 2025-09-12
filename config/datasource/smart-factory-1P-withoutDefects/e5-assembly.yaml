@@ -1,0 +1,45 @@
+kind: datasource
+name: "Assembly"
+spec:
+  name: "Assembly"
+  group: "factory"
+  type: objectCentric
+  workforce: noWorkforce
+  start: "A"
+  end: "A"
+  workstation: "A"
+  selection: genericProbability
+  distribution: [ 1.0 ]
+  input:
+    - object: "bar"
+      number: 4
+      lastState: "sanded"
+      size:
+        length: "2"
+        width: ""
+        depth: ""
+    - object: "board"
+      number: 6
+      lastState: "sanded"
+      size:
+        length: ""
+        width: "5"
+        depth: "5"
+    - object: "screw"
+      number: 13
+      lastState: ""
+      size:
+    - object: "bolt"
+      number: 13
+      lastState: ""
+      size:
+  eventData:
+    - activity:
+        name: "Assembling completed"
+        output:
+          - object: "woodShelf"
+            number: 1
+            change: "assembled"
+            size:
+      duration: 15
+      transition: "QualityControl"

@@ -29,15 +29,15 @@ class LoadTestSimulation(Simulation):
 
     def start_timeframe(self, sinks):
         for sink in self.sink:
-           sink.start_timeframe()
+            sink.start_timeframe()
 
     def end_timeframe(self, sinks):
         for sink in self.sink:
-           sink.end_timeframe()
+            sink.end_timeframe()
 
     def start_simulation(self, sinks):
         for sink in self.sink:
-           sink.start()
+            sink.start()
 
     def run_simulation(self, data_sources: Dict[str, DataSource], datasource_sink_mapping: Dict[str, LoadTestHttpSink], objects: Dict[str, ObjectData], routes: Dict[str, Route], stocks: Dict[str, InputObjectProvider],
                        hook=lambda: None):

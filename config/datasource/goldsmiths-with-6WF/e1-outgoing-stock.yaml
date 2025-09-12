@@ -1,0 +1,29 @@
+kind: datasource
+name: "OutgoingStock"
+spec:
+  name: "OutgoingStock"
+  group: "factory"
+  type: objectCentric
+  workforce: hasWorkforce
+  start: "ST"
+  end: "ST"
+  workstation: "ST"
+  selection: parallel
+  input:
+    - object: "resourceOrder"
+      number: 1
+      lastState: ""
+      size:
+  workforces:
+    - workforce: "humanWorkforce"
+      number: 1
+  eventData:
+    - activity:
+        name: "retrieve resources"
+        output:
+          - object: "gold"
+            number: 1
+            change: ""
+            size:
+      duration: 3
+      transition: "Forging"

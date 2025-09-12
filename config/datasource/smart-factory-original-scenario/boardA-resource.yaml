@@ -1,0 +1,9 @@
+kind: object
+name: "boardAResource"
+spec:
+  name: "boardAResource"
+  type: "resource"
+  size:
+    length: ""
+    width: "500"
+    depth: "500"

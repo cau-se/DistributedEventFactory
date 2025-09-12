@@ -1,0 +1,9 @@
+kind: object
+name: "crossAResource"
+spec:
+  name: "crossAResource"
+  type: "resource"
+  size:
+    length: "500"
+    width: ""
+    depth: ""

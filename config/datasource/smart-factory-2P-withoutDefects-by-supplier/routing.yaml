@@ -1,0 +1,28 @@
+kind: route
+name: "default"
+spec:
+  routes:
+    - routeForActivity: "retrieve resources"
+      start: "ST"
+      end: "M"
+      duration: 3
+    - routeForActivity: "Sent to assembly station"
+      start: "ST"
+      end: "A"
+      duration: 3
+    - routeForActivity: "Back to stock"
+      start: "A"
+      end: "ST"
+      duration: 3
+    - routeForActivity: "Back to stock"
+      start: "M"
+      end: "ST"
+      duration: 3
+    - routeForActivity: "Sent to assembly station"
+      start: "M"
+      end: "A"
+      duration: 3
+    - routeForActivity: "Back to machine"
+      start: "A"
+      end: "M"
+      duration: 3

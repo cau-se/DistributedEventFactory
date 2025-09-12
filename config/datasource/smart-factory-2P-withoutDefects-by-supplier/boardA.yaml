@@ -1,0 +1,9 @@
+kind: object
+name: "boardA"
+spec:
+  name: "boardA"
+  type: "aluminium"
+  size:
+    length:
+    width: "5"
+    depth: "5"

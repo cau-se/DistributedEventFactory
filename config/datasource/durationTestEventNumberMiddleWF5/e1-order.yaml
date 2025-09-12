@@ -1,0 +1,30 @@
+kind: datasource
+name: "B"
+spec:
+  name: "B"
+  group: "factory"
+  type: objectCentric
+  workforce: hasWorkforce
+  start: "A"
+  end: "A"
+  workstation: "A"
+  selection: genericProbability
+  distribution: [1.0]
+  input:
+    - object: "order"
+      number: 1
+      lastState: ""
+      size:
+  workforces:
+    - workforce: "humanWorkforce"
+      number: 1
+  eventData:
+    - activity:
+        name: "order for resources"
+        output:
+          - object: "resourceOrder"
+            number: 1
+            change: ""
+            size:
+      transition: "OutgoingStock"
+      duration: 0
