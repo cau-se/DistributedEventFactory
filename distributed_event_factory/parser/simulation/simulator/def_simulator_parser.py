@@ -1,5 +1,7 @@
 from distributed_event_factory.parser.parser import Parser
-from distributed_event_factory.simulation.process_simulation import DefProcessSimulator
+from distributed_event_factory.simulation.process_simulation_object_centric import ProcessSimulationObjectCentric
+from distributed_event_factory.simulation.simulator_objects.object_storage import ObjectStorage
+
 
 class DefSimulationParser(Parser):
 
@@ -11,8 +13,9 @@ class DefSimulationParser(Parser):
         return self
 
     def parse(self, config):
-        return DefProcessSimulator(
-            case_id_provider=self.dependencies["caseId"].parse(config["caseId"]),
-            max_concurrent_cases=self.dependencies["maxConcurrentCases"].parse(config["maxConcurrentCases"]),
+        return ProcessSimulationObjectCentric(
+            ObjectStorage()
+            #case_id_provider=self.dependencies["caseId"].parse(config["caseId"]),
+            #max_concurrent_cases=self.dependencies["maxConcurrentCases"].parse(config["maxConcurrentCases"]),
             #data_sources=self.dependencies["dataSource"].parse(config["dataSource"])
         )

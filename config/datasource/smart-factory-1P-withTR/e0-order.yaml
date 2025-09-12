@@ -18,6 +18,7 @@ spec:
   eventData:
     - activity:
         name: "order for resources"
+        type: "objectCentric"
         output:
           - object: "resourceOrder"
             number: 1

@@ -13,7 +13,7 @@ spec:
   eventData:
     - activity:
         name: ""
-        type: "object"
+        type: "objectCentric"
         output:
           - object: "order"
             number: "1"

@@ -6,6 +6,7 @@ spec:
   type: objectCentric
   selection: genericProbability
   distribution: [1.0]
+  workstation: "DrillingBar"
   input:
     - object: "bar"
       number: 1
@@ -13,7 +14,7 @@ spec:
   eventData:
     - activity:
         name: "Drilled"
-        type: "object"
+        type: "objectCentric"
         output:
           - object: "bar"
             number: 1

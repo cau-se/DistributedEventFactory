@@ -25,6 +25,7 @@ spec:
   eventData:
     - activity:
         name: "Sawed"
+        type: "objectCentric"
         output:
           - object: "bar"
             number: 4

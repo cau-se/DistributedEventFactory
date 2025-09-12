@@ -18,6 +18,7 @@ spec:
   eventData:
     - activity:
         name: "Package sent"
+        type: "objectCentric"
         output:
           - object: "woodShelf"
             number: 1

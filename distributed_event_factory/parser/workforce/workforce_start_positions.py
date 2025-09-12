@@ -1,5 +1,5 @@
 from distributed_event_factory.parser.parser import Parser
-from provider.workforce.InputWorkforceProvider import InputWorkforceProvider, WorkforceStartPositionProvider
+from distributed_event_factory.provider.workforce.InputWorkforceProvider import WorkforceStartPositionProvider
 
 
 class WorkforceStartPositionParser(Parser):

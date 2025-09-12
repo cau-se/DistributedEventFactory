@@ -17,6 +17,7 @@ spec:
   eventData:
     - activity:
         name: "retrieve resources"
+        type: "objectCentric"
         output:
           - object: "barResource"
             number: 2

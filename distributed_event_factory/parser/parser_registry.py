@@ -54,13 +54,13 @@ from distributed_event_factory.parser.sink.sink_parser import SinkParser
 from distributed_event_factory.parser.sink.ui_sink_parser import UiSinkParser
 from distributed_event_factory.parser.stock.stock_parser import StockParser
 from distributed_event_factory.provider.data.increasing_case import IncreasingCaseIdProvider
-from parser.datasource.event.input.input_parser import InputParser
-from parser.datasource.event.output.output_parser import OutputParser, DummyObjectParser
-from parser.route.route_parser import RouteParser
-from parser.sink.ocel_sink_parser import OcelConsoleSinkParser
-from parser.stock.stock_parser import StockParser
-from parser.workforce.workforce_parser import WorkforceParser, DummyWorkforceParser
-from parser.workforce.workforce_start_positions import WorkforceStartPositionParser
+from distributed_event_factory.parser.datasource.event.input.input_parser import InputParser
+from distributed_event_factory.parser.datasource.event.output.output_parser import OutputParser, DummyObjectParser
+from distributed_event_factory.parser.route.route_parser import RouteParser
+from distributed_event_factory.parser.sink.ocel_sink_parser import OcelConsoleSinkParser
+from distributed_event_factory.parser.stock.stock_parser import StockParser
+from distributed_event_factory.parser.workforce.workforce_parser import WorkforceParser, DummyWorkforceParser
+from distributed_event_factory.parser.workforce.workforce_start_positions import WorkforceStartPositionParser
 
 
 class ParserRegistry:
@@ -100,7 +100,12 @@ class ParserRegistry:
                             .add_dependency("ocel", self.ocel_console_sink_parser))
         ##########
         # Activity
-        self.activity_parser = ActivityParser().add_dependency("output", self.output_parser)
+        self.object_centric_activity_parser = (
+            ObjectConstantActivityParser().add_dependency("output", self.output_parser)
+        )
+
+        self.activity_parser = (ActivityParser()
+                                .add_dependency("objectCentric", self.object_centric_activity_parser))
 
         # Duration
         self.constant_duration_parser = ConstantDurationParser()
@@ -171,6 +176,10 @@ class ParserRegistry:
         # Process Simulation
         self.xes_simulation_parser = XesSimulationParser()
         self.def_simulation_parser = DefSimulationParser()
+
+        self.def_simulation_parser.add_dependency("caseId", self.case_id_parser)
+        self.def_simulation_parser.add_dependency("maxConcurrentCases", self.constant_count_parser)
+
         self.process_simulation_parser = (ProcessSimulationParser()
             .add_dependency("xes", self.xes_simulation_parser)
             .add_dependency("def", self.def_simulation_parser)
@@ -214,7 +223,7 @@ class ParserRegistry:
                                         .add_dependency("sink", self.sink_parser)
                                         .add_dependency("datasource", self.datasource_parser)
                                         .add_dependency("simulation", self.simulation_parser)
-                                        .add_dependency("processSimulation", self.process_simulation_parser)
+                                        .add_dependency("processSimulator", self.process_simulation_parser)
                                         .add_dependency("object", self.object_source_parser)
                                         .add_dependency("route", self.route_parser)
                                         .add_dependency("stock", self.warehouse_stock_parser)

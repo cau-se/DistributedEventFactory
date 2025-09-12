@@ -18,6 +18,7 @@ spec:
   eventData:
     - activity:
         name: "Quality check passed"
+        type: "objectCentric"
         output:
           - object: "woodShelf"
             number: 1

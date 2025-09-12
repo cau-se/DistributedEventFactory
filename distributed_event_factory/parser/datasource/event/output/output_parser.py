@@ -1,6 +1,6 @@
 from distributed_event_factory.parser.parser import Parser
-from provider.object.size_params_provider import SizeParamsProvider
-from provider.transition.output.output_provider import OutputObjectProvider
+from distributed_event_factory.provider.object.size_params_provider import SizeParamsProvider
+from distributed_event_factory.provider.transition.output.output_provider import OutputObjectProvider
 
 
 class OutputParser(Parser):
@@ -15,7 +15,7 @@ class OutputParser(Parser):
         object_list = []
         for object_element in config:
             size_params = None
-            if object_element["size"]:
+            if "size" in object_element and object_element["size"]:
                 size_params = SizeParamsProvider(width=object_element["size"]["width"],
                                                 depth=object_element["size"]["depth"],
                                                 length=object_element["size"]["length"])

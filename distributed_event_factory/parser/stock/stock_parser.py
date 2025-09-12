@@ -1,6 +1,6 @@
-from parser.parser import Parser
-from provider.object.input.input_provider import InputObjectProvider
-from provider.object.size_params_provider import SizeParamsProvider
+from distributed_event_factory.parser.parser import Parser
+from distributed_event_factory.provider.object.input.input_provider import InputObjectProvider
+from distributed_event_factory.provider.object.size_params_provider import SizeParamsProvider
 
 
 class StockParser(Parser):

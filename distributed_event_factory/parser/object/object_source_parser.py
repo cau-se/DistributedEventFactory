@@ -2,7 +2,7 @@ from distributed_event_factory.core.object import GenericObjectSource
 from distributed_event_factory.core.object_id import ObjectId
 from distributed_event_factory.parser.parser import Parser
 from distributed_event_factory.provider.object.input.input_provider import InputObjectProvider
-from provider.object.size_params_provider import SizeParamsProvider
+from distributed_event_factory.provider.object.size_params_provider import SizeParamsProvider
 
 
 class ObjectSourceParser(Parser):
@@ -15,7 +15,7 @@ class ObjectSourceParser(Parser):
 
     def parse(self, config):
         size_params = None
-        if config["size"]:
+        if "size" in config and config["size"]:
             size_params = SizeParamsProvider(length=config["size"]["length"], depth=config["size"]["depth"],
                                              width=config["size"]["width"])
         return GenericObjectSource(

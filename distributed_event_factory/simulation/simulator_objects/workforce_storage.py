@@ -1,8 +1,8 @@
 from typing import List
 
-from core.workforce import Workforce
-from provider.workforce.InputWorkforceProvider import InputWorkforceProvider
-from simulation.simulator_objects.route_management import RouteManagement
+from distributed_event_factory.core.workforce import Workforce
+from distributed_event_factory.provider.workforce.InputWorkforceProvider import InputWorkforceProvider
+from distributed_event_factory.simulation.simulator_objects.route_management import RouteManagement
 
 
 class WorkforceStorage:

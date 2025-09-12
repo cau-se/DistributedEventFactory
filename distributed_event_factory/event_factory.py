@@ -12,11 +12,8 @@ from distributed_event_factory.parser.simulation.case.case_id_parser import Case
 from distributed_event_factory.parser.simulation.load.load_parser import LoadParser
 from distributed_event_factory.parser.sink.sink_parser import SinkParser
 from distributed_event_factory.parser.stock.stock_parser import StockParser
+from distributed_event_factory.parser.workforce.workforce_start_positions import WorkforceStartPositionParser
 from distributed_event_factory.provider.sink.sink_provider import Sink
-from parser.datasource.event.output.output_parser import OutputParser
-from parser.route.route_parser import RouteParser
-from parser.stock.stock_parser import StockParser
-from parser.workforce.workforce_start_positions import WorkforceStartPositionParser
 
 
 class EventFactory:
@@ -148,6 +145,14 @@ class EventFactory:
         return self
 
     def run(self, hook=lambda: None):
+
+        # TODO refactor that with somehow linking the sources to the simulator
+        self.process_simulator.set_datasources(self.datasources)
+        self.process_simulator.set_objects(self.objects)
+        self.process_simulator.set_routes(self.routes)
+        self.process_simulator.set_stocks(self.stocks)
+        self.process_simulator.set_workforce_start_positions(self.workforce_start_positions)
+        self.process_simulator.complete_init()
+
         for simulation in self.simulations:
-            self.simulations[simulation].run_simulation(self.process_simulator, self.datasources, self.sinks, self.objects, self.routes,
-                                                        self.stocks, self.workforce_start_positions, content_root, hook)
+            self.simulations[simulation].run_simulation(self.process_simulator, self.datasources, self.sinks, hook)

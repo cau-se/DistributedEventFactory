@@ -1,0 +1,6 @@
+kind: "processSimulator"
+name: "simulator"
+spec:
+  type: "def"
+  caseId: increasing
+  maxConcurrentCases: 10

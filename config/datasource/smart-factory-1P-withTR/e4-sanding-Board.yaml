@@ -21,6 +21,7 @@ spec:
   eventData:
     - activity:
         name: "Sanded board"
+        type: "objectCentric"
         output:
           - object: "board"
             number: 1

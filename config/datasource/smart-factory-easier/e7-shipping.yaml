@@ -4,6 +4,7 @@ spec:
   name: "Shipping"
   group: "factory"
   type: objectCentric
+  workstation: "Shipping"
   selection: genericProbability
   distribution: [ 0.8, 0.2 ]
   input:
@@ -13,7 +14,7 @@ spec:
   eventData:
     - activity:
         name: "Package waits for sending"
-        type: "object"
+        type: "objectCentric"
         output:
           - object: "woodShelf"
             number: 1
@@ -22,7 +23,7 @@ spec:
       duration: 180
     - activity:
         name: "Package sent"
-        type: "object"
+        type: "objectCentric"
         output:
           - object: "woodShelf"
             number: 1

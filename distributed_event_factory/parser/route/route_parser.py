@@ -1,6 +1,5 @@
-from core.route import Route
-from parser.parser import Parser
-
+from distributed_event_factory.core.route import Route
+from distributed_event_factory.parser.parser import Parser
 
 class RouteParser(Parser):
 
@@ -17,7 +16,6 @@ class RouteParser(Parser):
                 route_for_activity=route["routeForActivity"],
                 start=route["start"],
                 end=route["end"],
-                transfer_objects=route["transferObjects"],
                 duration=route["duration"]
             ))
         return route_list

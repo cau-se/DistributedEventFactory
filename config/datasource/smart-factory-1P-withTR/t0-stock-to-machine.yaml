@@ -24,6 +24,7 @@ spec:
   eventData:
     - activity:
         name: "transport: stock -> M1"
+        type: "objectCentric"
         output:
           - object: "barResource"
             number: 2

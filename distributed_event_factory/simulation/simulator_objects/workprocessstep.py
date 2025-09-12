@@ -1,4 +1,4 @@
-from simulation.object_event import ObjectEvent
+from distributed_event_factory.simulation.object_event import ObjectEvent
 from collections import defaultdict
 
 Y_M_D_H_M_S = "%Y-%m-%d %H:%M:%S"

@@ -1,6 +1,6 @@
-from core.object_id import ObjectId
-from core.route import Route
-from simulation.simulator_objects.route_management import RouteManagement
+from distributed_event_factory.core.object_id import ObjectId
+from distributed_event_factory.core.route import Route
+from distributed_event_factory.simulation.simulator_objects.route_management import RouteManagement
 
 
 class Workforce:

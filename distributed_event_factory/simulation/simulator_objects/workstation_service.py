@@ -1,10 +1,10 @@
 import random
 from typing import List
 
-from simulation.simulator_objects.object_storage import ObjectStorage
-from simulation.simulator_objects.route_management import RouteManagement
-from simulation.simulator_objects.workforce_storage import WorkforceStorage
-from simulation.simulator_objects.workstation import WorkStation
+from distributed_event_factory.simulation.simulator_objects.object_storage import ObjectStorage
+from distributed_event_factory.simulation.simulator_objects.route_management import RouteManagement
+from distributed_event_factory.simulation.simulator_objects.workforce_storage import WorkforceStorage
+from distributed_event_factory.simulation.simulator_objects.workstation import WorkStation
 
 
 class WorkstationService:

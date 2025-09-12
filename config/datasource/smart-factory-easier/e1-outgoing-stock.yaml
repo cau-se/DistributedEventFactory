@@ -5,6 +5,7 @@ spec:
   group: "factory"
   type: objectCentric
   selection: parallel
+  workstation: "OutgoingStock"
   input:
     - object: "order"
       number: 1
@@ -12,7 +13,7 @@ spec:
   eventData:
     - activity:
         name: "retrieve resources"
-        type: "object"
+        type: "objectCentric"
         output:
           - object: "barResource"
             number: 1

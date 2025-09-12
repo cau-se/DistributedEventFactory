@@ -1,9 +1,9 @@
 import random
 from typing import List
 from datetime import timedelta
-from simulation.simulator_objects.object_storage import ObjectStorage
-from simulation.simulator_objects.workforce_storage import WorkforceStorage
-from simulation.simulator_objects.workprocessstep import WorkProcessStep
+from distributed_event_factory.simulation.simulator_objects.object_storage import ObjectStorage
+from distributed_event_factory.simulation.simulator_objects.workforce_storage import WorkforceStorage
+from distributed_event_factory.simulation.simulator_objects.workprocessstep import WorkProcessStep
 
 from distributed_event_factory.simulation.simulator_objects.object_storage import ObjectStorage
 from distributed_event_factory.simulation.simulator_objects.workprocessstep import WorkProcessStep

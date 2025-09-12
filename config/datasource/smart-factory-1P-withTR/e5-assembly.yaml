@@ -48,6 +48,7 @@ spec:
   eventData:
     - activity:
         name: "Assembling completed"
+        type: "objectCentric"
         output:
           - object: "woodShelf"
             number: 1

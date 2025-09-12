@@ -25,6 +25,7 @@ spec:
   eventData:
     - activity:
         name: "transport: stock -> assembly"
+        type: "objectCentric"
         output:
           - object: "screw"
             number: 13

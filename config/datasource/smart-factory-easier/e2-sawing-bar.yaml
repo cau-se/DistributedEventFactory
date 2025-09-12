@@ -5,6 +5,7 @@ spec:
   group: "factory"
   type: objectCentric
   selection: genericProbability
+  workstation: "SawingBar"
   distribution: [1.0]
   input:
     - object: "barResource"
@@ -13,7 +14,7 @@ spec:
   eventData:
     - activity:
         name: "Sawed"
-        type: "object"
+        type: "objectCentric"
         output:
           - object: "bar"
             number: 4

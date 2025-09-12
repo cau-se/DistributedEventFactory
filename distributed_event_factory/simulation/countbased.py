@@ -2,7 +2,6 @@ from distributed_event_factory.provider.data.case_provider import CaseIdProvider
 from distributed_event_factory.provider.data.count_provider import CountProvider
 from distributed_event_factory.simulation.abstract_process_simulator import ProcessSimulator
 from distributed_event_factory.simulation.abstract_simulation import Simulation
-from distributed_event_factory.simulation.process_simulation import ProcessSimulator
 
 
 class CountBasedSimulation(Simulation):
@@ -34,6 +33,6 @@ class CountBasedSimulation(Simulation):
         hook=lambda: None
     ):
         self.setup_datasource_sink_mapping(sinks)
-        for data_source in data_sources:
-            process_simulator.add_datasource(name=data_source, data_source=data_sources[data_source])
+        #for data_source in data_sources:
+        #    process_simulator.add_datasource(name=data_source, data_source=data_sources[data_source])
         self.run(process_simulator, int(self.simulation_steps), hook)

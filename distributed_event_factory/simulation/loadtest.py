@@ -49,9 +49,6 @@ class LoadTestSimulation(Simulation):
             case_id_provider=self.case_id_provider,
             data_sources=data_sources,
             max_concurrent_cases=self.max_concurrent_cases,
-            objects=objects,
-            routes = routes,
-            stocks = stocks
         )
         iteration = 0
         while True:

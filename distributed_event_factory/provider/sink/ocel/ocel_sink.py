@@ -2,13 +2,13 @@ from datetime import datetime
 from typing import Dict
 
 import pm4py
+
+from distributed_event_factory.provider.object.size_params_provider import SizeParamsProvider
 from process_mining_core.datastructure.core.event import Event
 
 from distributed_event_factory.provider.sink.sink_provider import Sink, SinkProvider
 import pandas as pd
 import ast
-
-from provider.object.size_params_provider import SizeParamsProvider
 
 
 class OcelConsole(Sink):

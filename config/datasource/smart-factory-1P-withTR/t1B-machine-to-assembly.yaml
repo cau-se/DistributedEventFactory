@@ -24,6 +24,7 @@ spec:
   eventData:
     - activity:
         name: "transport: M1 -> assembly"
+        type: "objectCentric"
         output:
           - object: "board"
             number: 6

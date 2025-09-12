@@ -1,7 +1,6 @@
 from distributed_event_factory.parser.parser import Parser
-from provider.object.input.input_provider import InputObjectProvider
-from provider.object.size_params_provider import SizeParamsProvider
-
+from distributed_event_factory.provider.object.input.input_provider import InputObjectProvider
+from distributed_event_factory.provider.object.size_params_provider import SizeParamsProvider
 
 class InputParser(Parser):
     def __init__(self):
@@ -15,7 +14,7 @@ class InputParser(Parser):
         object_list = []
         for object_element in config["input"]:
             size_params = None
-            if object_element["size"]:
+            if "size" in object_element and object_element["size"]:
                 size_params = SizeParamsProvider(width=object_element["size"]["width"],
                                                  depth=object_element["size"]["depth"],
                                                  length=object_element["size"]["length"])
