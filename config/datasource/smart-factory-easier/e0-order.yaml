@@ -13,6 +13,7 @@ spec:
   eventData:
     - activity:
         name: ""
+        type: "object"
         output:
           - object: "order"
             number: "1"

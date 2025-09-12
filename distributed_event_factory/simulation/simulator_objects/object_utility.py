@@ -1,5 +1,6 @@
-from core.object import GenericObjectSource, ObjectData
 from typing import Dict, List
+
+from distributed_event_factory.core.object import GenericObjectSource, ObjectData
 
 
 class ObjectUtility:

@@ -1,8 +1,8 @@
 import random
 from typing import List
 
-from simulation.simulator_objects.object_storage import ObjectStorage
-from simulation.simulator_objects.workstation import WorkStation
+from distributed_event_factory.simulation.simulator_objects.object_storage import ObjectStorage
+from distributed_event_factory.simulation.simulator_objects.workstation import WorkStation
 
 
 class WorkstationService:

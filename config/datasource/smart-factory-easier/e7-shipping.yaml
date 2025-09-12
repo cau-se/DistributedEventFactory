@@ -13,6 +13,7 @@ spec:
   eventData:
     - activity:
         name: "Package waits for sending"
+        type: "object"
         output:
           - object: "woodShelf"
             number: 1
@@ -21,6 +22,7 @@ spec:
       duration: 180
     - activity:
         name: "Package sent"
+        type: "object"
         output:
           - object: "woodShelf"
             number: 1

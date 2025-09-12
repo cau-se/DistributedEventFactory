@@ -1,8 +1,10 @@
 import random
 from typing import List
 from datetime import timedelta
-from simulation.simulator_objects.object_storage import ObjectStorage
-from simulation.simulator_objects.workprocessstep import WorkProcessStep
+
+from distributed_event_factory.simulation.simulator_objects.object_storage import ObjectStorage
+from distributed_event_factory.simulation.simulator_objects.workprocessstep import WorkProcessStep
+
 
 class WorkStation:
     def __init__(self, work_station_name:str, work_process_steps: List[WorkProcessStep]):

@@ -1,23 +1,20 @@
 from datetime import datetime
 from typing import List, Dict
 
+from distributed_event_factory.core.abstract_datasource import DataSource
+from distributed_event_factory.core.datasource_id import DataSourceId
+from distributed_event_factory.core.object import ObjectData
+from distributed_event_factory.provider.object.input.input_provider import InputObjectProvider
+from distributed_event_factory.simulation.simulator_objects.object_storage import ObjectStorage
+from distributed_event_factory.simulation.simulator_objects.object_utility import ObjectUtility
+from distributed_event_factory.simulation.simulator_objects.workprocessstep import WorkProcessStep
+from distributed_event_factory.simulation.simulator_objects.workstation import WorkStation
+from distributed_event_factory.simulation.simulator_objects.workstation_service import WorkstationService
 from process_mining_core.datastructure.core.event import Event
-
-from core.abstract_datasource import DataSource
-from core.datasource_id import DataSourceId
-from core.object import ObjectData
-from provider.object.input.input_provider import InputObjectProvider
-from simulation.simulator_objects.object_storage import ObjectStorage
-from simulation.simulator_objects.object_utility import ObjectUtility
-from simulation.simulator_objects.workprocessstep import WorkProcessStep
-from simulation.simulator_objects.workstation import WorkStation
-from simulation.simulator_objects.workstation_service import WorkstationService
-
 
 class ProcessSimulationObjectCentric:
     def __init__(
             self,
-            object_storage: ObjectStorage,
             data_sources: Dict[str, DataSource],
             objects: Dict[str, ObjectData],
             stocks: Dict[str, InputObjectProvider]
@@ -25,7 +22,7 @@ class ProcessSimulationObjectCentric:
         self.workstations = []
         self.workstation_service = WorkstationService()
         self.timestamp_history = [datetime.now()]
-        self.object_storage = object_storage
+        self.object_storage = ObjectStorage()
         self.objects = objects
         self.data_sources = data_sources
         self.stocks: Dict[str, InputObjectProvider] = stocks
@@ -100,5 +97,5 @@ class ProcessSimulationObjectCentric:
                                                                   output_objects=e.get_activity_provider().get_output(),
                                                                   duration=e.get_duration()))
 
-                self.workstations.append(WorkStation(work_station_name=workstation ,work_process_steps=workstation_steps))
+                self.workstations.append(WorkStation(work_station_name=workstation, work_process_steps=workstation_steps))
 

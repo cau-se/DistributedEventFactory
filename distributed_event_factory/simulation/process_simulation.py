@@ -7,6 +7,7 @@ import math
 from distributed_event_factory.core.end_datasource import EndDataSource
 from distributed_event_factory.core.object import ObjectData
 from distributed_event_factory.core.route import Route
+from distributed_event_factory.provider.data.constant_count_provider import ConstantCountProvider
 from distributed_event_factory.provider.data.count_provider import CountProvider
 from distributed_event_factory.provider.event.event_provider import EventDataProvider
 from distributed_event_factory.provider.object.input.input_provider import InputObjectProvider
@@ -27,13 +28,13 @@ Y_M_D_H_M_S = "%Y-%m-%d %H:%M:%S"
 # TODO hrei: Check this whole thing here
 class DefProcessSimulator(ProcessSimulator):
     def __init__(
-            self,
-            data_sources: Dict[str, DataSource],
-            case_id_provider: CaseIdProvider,
-            max_concurrent_cases: CountProvider,
-            objects: Dict[str, ObjectData],
-            routes: Dict[str, Route],
-            stocks: Dict[str, InputObjectProvider]
+        self,
+        case_id_provider: CaseIdProvider,
+        max_concurrent_cases: CountProvider = ConstantCountProvider(1),
+        data_sources: Dict[str, DataSource] = dict(),
+        objects: Dict[str, ObjectData] = dict(),
+        routes: Dict[str, Route] = dict(),
+        stocks: Dict[str, InputObjectProvider] = dict()
     ):
         self.max_concurrent_cases = max_concurrent_cases
         self.tokens: PriorityQueue[Token] = PriorityQueue(self.max_concurrent_cases.get())

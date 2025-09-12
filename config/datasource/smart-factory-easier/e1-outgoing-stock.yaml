@@ -12,6 +12,7 @@ spec:
   eventData:
     - activity:
         name: "retrieve resources"
+        type: "object"
         output:
           - object: "barResource"
             number: 1

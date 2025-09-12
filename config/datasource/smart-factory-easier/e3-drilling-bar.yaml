@@ -13,6 +13,7 @@ spec:
   eventData:
     - activity:
         name: "Drilled"
+        type: "object"
         output:
           - object: "bar"
             number: 1

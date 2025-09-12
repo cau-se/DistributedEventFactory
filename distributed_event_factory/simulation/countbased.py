@@ -19,17 +19,21 @@ class CountBasedSimulation(Simulation):
             self.send_event(process_simulator.simulate())
         return
 
-    #TODO hrei: Check that the correct process simulator is used here
+    # TODO hrei: Check that the correct process simulator is used here
     # ProcessSimulationObjectCentric
     def run(self, process_simulator, steps, hook):
         for i in range(steps):
             self.send_event(process_simulator.simulate())
         return
 
-    def run_simulation(self, process_simulator: ProcessSimulator, data_sources, sinks, hook=lambda: None):
+    def run_simulation(
+        self,
+        process_simulator: ProcessSimulator,
+        data_sources,
+        sinks,
+        hook=lambda: None
+    ):
         self.setup_datasource_sink_mapping(sinks)
         for data_source in data_sources:
             process_simulator.add_datasource(name=data_source, data_source=data_sources[data_source])
         self.run(process_simulator, int(self.simulation_steps), hook)
-
-

@@ -14,8 +14,8 @@ class ActivityParser(Parser):
 
     def parse(self, config):
         # TODO hrei: Check how to get rid of instance of
-        if isinstance(config, str):
-            return ConstantActivityProvider(config)
-        elif isinstance(config, dict):
-            return ObjectConstantActivityProvider(config["name"], self.dependencies["output"].parse(config["output"]))
+        #if isinstance(config, str):
+        #    return ConstantActivityProvider(config)
+        #elif isinstance(config, dict):
+        #    return ObjectConstantActivityProvider(config["name"], self.dependencies["output"].parse(config["output"]))
         return self.dependencies[config["type"]].parse(config)

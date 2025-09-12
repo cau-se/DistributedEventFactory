@@ -13,6 +13,7 @@ spec:
   eventData:
     - activity:
         name: "Sanded bar"
+        type: "object"
         output:
           - object: "bar"
             number: 1

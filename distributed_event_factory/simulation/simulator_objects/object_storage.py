@@ -1,9 +1,9 @@
 from typing import List, Dict
 
-from core.object import ObjectData, GenericObjectSource
-from provider.object.input.input_provider import InputObjectProvider
-from provider.transition.output.output_provider import OutputObjectProvider
-from simulation.simulator_objects.object_utility import ObjectUtility
+from distributed_event_factory.core.object import GenericObjectSource, ObjectData
+from distributed_event_factory.provider.object.input.input_provider import InputObjectProvider
+from distributed_event_factory.provider.transition.output.output_provider import OutputObjectProvider
+from distributed_event_factory.simulation.simulator_objects.object_utility import ObjectUtility
 
 
 class ObjectStorage:

@@ -14,5 +14,5 @@ class DefSimulationParser(Parser):
         return DefProcessSimulator(
             case_id_provider=self.dependencies["caseId"].parse(config["caseId"]),
             max_concurrent_cases=self.dependencies["maxConcurrentCases"].parse(config["maxConcurrentCases"]),
-            data_sources=self.dependencies["dataSource"].parse(config["dataSource"])
+            #data_sources=self.dependencies["dataSource"].parse(config["dataSource"])
         )

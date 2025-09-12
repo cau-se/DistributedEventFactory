@@ -15,5 +15,4 @@ if __name__ == '__main__':
             group_id_key="concept:name"
         ))
     )
-
     event_factory.run()

@@ -123,14 +123,13 @@ class EventFactory:
                 self.add_sink(name, parsed_object)
             elif kind == "processSimulator":
                 self.add_process_simulator(parsed_object)
-            # These should also be on the level of the process simulator
+            # TODO hrei: These should also be on the level of the process simulator
             elif kind == "object":
                 self.add_object(name, parsed_object)
             elif kind == "route":
                 self.add_route(name, parsed_object)
             elif kind == "stock":
                 self.add_stock(name, parsed_object)
-
         return self
 
     def run(self, hook=lambda: None):

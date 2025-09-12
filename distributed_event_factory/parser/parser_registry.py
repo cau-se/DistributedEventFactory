@@ -2,6 +2,8 @@ from distributed_event_factory.parser.base.constant_count_parser import Constant
 from distributed_event_factory.parser.datasource.event.activity.activity_parser import ActivityParser
 from distributed_event_factory.parser.datasource.event.activity.constant_activitiy_parser import ConstantActivityParser
 from distributed_event_factory.parser.datasource.event.activity.image_activity_parser import ImageActivityParser
+from distributed_event_factory.parser.datasource.event.activity.object_constant_activity_parser import \
+    ObjectConstantActivityParser
 from distributed_event_factory.parser.datasource.event.duration.constant_duration_parser import \
     ConstantDurationParser
 from distributed_event_factory.parser.datasource.event.duration.duration_parser import DurationParser
@@ -58,7 +60,6 @@ class ParserRegistry:
     def __init__(self):
 
         # Objects
-
         self.output_parser = OutputParser()
         # hrei check this Dummy ObjectParser
         self.dummy_object_parser = DummyObjectParser()
@@ -88,13 +89,13 @@ class ParserRegistry:
                             .add_dependency("kafka", self.kafka_sink_parser))
         ##########
         # Activity
-        self.activity_parser = ActivityParser().add_dependency("output", self.output_parser)
+        self.object_activity_parser = ObjectConstantActivityParser().add_dependency("output", self.output_parser)
         self.constant_activity_parser = ConstantActivityParser()
         self.image_activity_parser = ImageActivityParser()
         self.activity_parser = (ActivityParser()
                                 .add_dependency("constant", self.constant_activity_parser)
+                                .add_dependency("object", self.object_activity_parser)
                                 .add_dependency("image", self.image_activity_parser))
-
 
         # Duration
         self.constant_duration_parser = ConstantDurationParser()
@@ -116,7 +117,6 @@ class ParserRegistry:
 
         # Distribution
         self.distribution_parser = (DistributionParser())
-
         self.uniform_event_selection_parser = (UniformEventSelectionParser())
         self.ordered_event_selection_parser = (OrderedEventSelectionParser())
         self.parallel_event_selection_parser = (ParallelEventSelectionParser()
@@ -207,7 +207,7 @@ class ParserRegistry:
                                         .add_dependency("sink", self.sink_parser)
                                         .add_dependency("datasource", self.datasource_parser)
                                         .add_dependency("simulation", self.simulation_parser)
-                                        .add_dependency("process_simulation", self.process_simulation_parser)
+                                        .add_dependency("processSimulation", self.process_simulation_parser)
                                         .add_dependency("object", self.object_source_parser)
                                         .add_dependency("route", self.route_parser)
                                         .add_dependency("stock", self.warehouse_stock_parser))
