@@ -1,6 +1,7 @@
 import pm4py
 
 from distributed_event_factory.simulation.abstract_process_simulator import ProcessSimulator
+from distributed_event_factory.simulation.abstract_process_simulator_config import ProcessSimulatorConfig
 from process_mining_core.datastructure.core.event import Event
 
 class XesProcessSimulator(ProcessSimulator):
@@ -23,6 +24,9 @@ class XesProcessSimulator(ProcessSimulator):
         self.timestamp_key = timestamp_key
         self.node_key = node_key
         self.group_id_key = group_id_key
+
+    def configure(self, config: ProcessSimulatorConfig):
+        super().configure(config)
 
     def simulate(self) -> Event:
         i = self.index % self.length

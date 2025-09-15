@@ -14,14 +14,18 @@ from distributed_event_factory.parser.sink.sink_parser import SinkParser
 from distributed_event_factory.parser.stock.stock_parser import StockParser
 from distributed_event_factory.parser.workforce.workforce_start_positions import WorkforceStartPositionParser
 from distributed_event_factory.provider.sink.sink_provider import Sink
+from distributed_event_factory.simulation.abstract_process_simulator import ProcessSimulator
+from distributed_event_factory.simulation.process_simulator_config_object_centric import \
+    ProcessSimulatorConfigObjectCentric
 
 
 class EventFactory:
+
     def __init__(self):
         self.sinks = dict()
         self.simulations = dict()
         self.datasources = dict()
-        self.process_simulator = None
+        self.process_simulator: ProcessSimulator = None
         self.datasources["<end>"] = EndDataSource()
         self.parser = ParserRegistry()
         # TODO hrei: Check Whether that is on the correct level
@@ -145,14 +149,16 @@ class EventFactory:
         return self
 
     def run(self, hook=lambda: None):
+        process_simulator_config = ProcessSimulatorConfigObjectCentric()
+        process_simulator_config.add_objects(self.objects)
+        process_simulator_config.add_routes(self.routes)
+        process_simulator_config.add_stocks(self.stocks)
+        process_simulator_config.add_datasources(self.datasources)
+        process_simulator_config.add_workforce_start_position(self.workforce_start_positions)
 
-        # TODO refactor that with somehow linking the sources to the simulator
-        self.process_simulator.set_datasources(self.datasources)
-        self.process_simulator.set_objects(self.objects)
-        self.process_simulator.set_routes(self.routes)
-        self.process_simulator.set_stocks(self.stocks)
-        self.process_simulator.set_workforce_start_positions(self.workforce_start_positions)
-        self.process_simulator.complete_init()
+        self.process_simulator.configure(
+            process_simulator_config
+        )
 
         for simulation in self.simulations:
             self.simulations[simulation].run_simulation(self.process_simulator, self.datasources, self.sinks, hook)

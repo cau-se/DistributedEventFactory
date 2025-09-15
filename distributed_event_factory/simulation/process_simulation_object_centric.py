@@ -8,6 +8,8 @@ from distributed_event_factory.core.route import Route
 from distributed_event_factory.core.workforce import Workforce
 from distributed_event_factory.provider.object.input.input_provider import InputObjectProvider
 from distributed_event_factory.provider.workforce.InputWorkforceProvider import WorkforceStartPositionProvider
+from distributed_event_factory.simulation.abstract_process_simulator import ProcessSimulator
+from distributed_event_factory.simulation.abstract_process_simulator_config import ProcessSimulatorConfig
 from distributed_event_factory.simulation.simulator_objects.object_storage import ObjectStorage
 from distributed_event_factory.simulation.simulator_objects.object_utility import ObjectUtility
 from distributed_event_factory.simulation.simulator_objects.route_management import RouteManagement
@@ -18,7 +20,7 @@ from distributed_event_factory.simulation.simulator_objects.workstation_service 
 from process_mining_core.datastructure.core.event import Event
 
 
-class ProcessSimulationObjectCentric:
+class ProcessSimulationObjectCentric(ProcessSimulator):
     def __init__(
             self,
             object_storage: ObjectStorage,
@@ -30,6 +32,14 @@ class ProcessSimulationObjectCentric:
         self.object_storage = object_storage
         self.prior_step: str = ""
         self.parallel_workstation_step_start_time = []
+
+    def configure(self, config: ProcessSimulatorConfig):
+        self.objects = config.get_configs_of_type("object")
+        self.datasources = config.get_configs_of_type("datasource")
+        self.routes = config.get_configs_of_type("route")
+        self.stocks = config.get_configs_of_type("stock")
+        self.workforce_start_positions = config.get_configs_of_type("workforcePosition")
+        self.complete_init()
 
     def complete_init(self):
         self.routeManagement = RouteManagement(self.routes.get("default"))
@@ -238,4 +248,3 @@ class ProcessSimulationObjectCentric:
                         location=workforce_start_position.location
                     )
                 )
-

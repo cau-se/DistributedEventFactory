@@ -38,11 +38,6 @@ class OcelConsole(Sink):
         if "Failure:" in event.activity:
             self.problem_event_counter += 1
 
-        #if not self.object_types:
-        #    for object_source in object_sources.values():
-        #        if object_source.object_type not in self.object_types:
-        #            self.object_types.append(object_source.object_type)
-
         print("Sensor " + event.node + ": " + str(event))
         self.el.append("Sensor " + event.node + ": " + str(event))
         new_row = {}
@@ -51,12 +46,8 @@ class OcelConsole(Sink):
         new_row["ocel:activity"] = event.activity
         new_row["ocel:node"] = event.node
         new_row["ocel:workstation"]= event.group
+
         #TODO hrei hier bitte mehr Objekt-Typen mit considern
-
-        new_row["ocel:type"] = "MyType" #event.object_types[0]
-
-        new_row["ocel:type2"] = "MyType2" #event.object_types[0]
-
         for input_event in event.input:
             new_row[input_event.get_object_type()] = input_event.get_object_type()
             if input_event.get_object_type() not in self.object_types:
@@ -66,11 +57,7 @@ class OcelConsole(Sink):
                 if output_event.get_object_type() not in self.object_types:
                     self.object_types.append(output_event.get_object_type())
 
-        type_objects: Dict[str, list[ObjectSummary]] = {}
-
-
         self.rowsList.append(new_row)
-        self.contentRoot = "~/Repo/scalablemine"
         self.index += 1
         self.end_time = event.timestamp
 
@@ -80,7 +67,7 @@ class OcelConsole(Sink):
     def end_timeframe(self):
         df = pd.DataFrame.from_records(
             data=self.rowsList
-        )  # .to_csv(self.contentRoot + "/ocel.csv", index=False, sep=";")
+        )
 
         # TODO hrei check here whether we need additional payloads..
         ocel = pm4py.convert.convert_log_to_ocel(
@@ -94,9 +81,7 @@ class OcelConsole(Sink):
 
         petri_net = pm4py.algo.discovery.ocel.ocpn.variants.classic.apply(ocel=ocel, parameters=ocel.parameters)
         pm4py.visualization.ocel.ocpn.visualizer.apply(ocpn=petri_net).view()
-
-        pm4py.objects.ocel.exporter.jsonocel.exporter.apply(ocel=ocel, target_path=self.contentRoot + "/ocel.jsonocel")
-        #pm4py.algo.conformance.alignments.petri_net.variants(obj=df, petri_net=petri_net, initial_marking=None, final_marking=None)
+        #pm4py.objects.ocel.exporter.jsonocel.exporter.apply(ocel=ocel, target_path=self.contentRoot + "/ocel.jsonocel")
 
         start_time_dt = datetime.strptime(self.start_time, "%Y-%m-%d %H:%M:%S")
         end_time_dt = datetime.strptime(self.end_time, "%Y-%m-%d %H:%M:%S")
