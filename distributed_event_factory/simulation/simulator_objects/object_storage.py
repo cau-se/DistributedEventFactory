@@ -203,9 +203,13 @@ class ObjectStorage:
         return next((item for item in self.objects if
                      item.object_id.unique_id == uid), None)
 
-    def manage_input_and_output_of_steps(self, input_objects: List[InputObjectProvider],
-                                         output_objects: List[OutputObjectProvider],
-                                         object_templates: Dict[str, ObjectData], timestamp):
+    def manage_input_and_output_of_steps(
+        self,
+        input_objects: List[InputObjectProvider],
+        output_objects: List[OutputObjectProvider],
+        object_templates: Dict[str, ObjectData],
+        timestamp
+    ):
         ingoing_objects = []
         outgoing_objects = []
         for input_object in input_objects:
@@ -219,7 +223,7 @@ class ObjectStorage:
                         if not self.are_size_params_empty(leftover_size):
                             obj = obj.clone()
                             obj.add_change(ObjectData(timestamp=timestamp.strftime("%Y-%m-%d %H:%M:%S"),
-                                                      object_state="size: "+str(leftover_size),
+                                                      object_state="size: " + str(leftover_size),
                                                       object_id=obj.object_id))
                             obj.size = leftover_size
                             self.add_object(obj)
@@ -227,8 +231,14 @@ class ObjectStorage:
                 else:
                     return ValueError("Object not found")
         ingoing_objects_copy = ingoing_objects[:]
-        outgoing_objects.extend(self.add_output_changed_objects_to_store(ingoing_objects_copy, object_templates, output_objects,
-                                                                    timestamp))
+        outgoing_objects.extend(
+            self.add_output_changed_objects_to_store(
+                ingoing_objects_copy,
+                object_templates,
+                output_objects,
+                timestamp
+            )
+        )
         return ingoing_objects, outgoing_objects
 
     def add_output_changed_objects_to_store(self, objects, object_templates, output_objects, timestamp):
@@ -240,7 +250,7 @@ class ObjectStorage:
                     if output_object.change:
                         obj.add_change(ObjectData(timestamp=timestamp.strftime("%Y-%m-%d %H:%M:%S"),
                                                   object_state=output_object.change,
-                                                     object_id=obj.object_id))
+                                                  object_id=obj.object_id))
                     if output_object.size:
                         obj.size.length = output_object.size.length
                         obj.size.width = output_object.size.width
@@ -249,8 +259,10 @@ class ObjectStorage:
                     outgoing_objects.append(obj)
                     objects.remove(obj)
                 else:
-                    obj = ObjectUtility().convert_object_name_to_generic_object(object_templates,
-                                                                                output_object.objectName).clone()
+                    obj = ObjectUtility().convert_object_name_to_generic_object(
+                        object_templates,
+                        output_object.objectName
+                    ).clone()
                     if output_object.change:
                         obj.add_change(ObjectData(timestamp=timestamp.strftime("%Y-%m-%d %H:%M:%S"),
                                                   object_state=output_object.change,

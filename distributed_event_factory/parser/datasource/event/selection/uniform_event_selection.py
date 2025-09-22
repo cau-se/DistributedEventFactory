@@ -3,10 +3,15 @@ from distributed_event_factory.provider.eventselection.uniform_selction_provider
 
 
 class UniformEventSelectionParser(Parser):
+
+    def __init__(self):
+        self.dependencies = dict()
+
     def add_dependency(self, key: str, dependency):
-        pass
+        self.dependencies[key] = dependency
+        return self
 
     def parse(self, config):
         return UniformEventSelectionProvider(
-            potential_events=config["eventData"]
+            potential_events=self.dependencies[config["type"]].parse(config["eventData"])
         )

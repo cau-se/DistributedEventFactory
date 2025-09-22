@@ -8,38 +8,39 @@ spec:
   start: "ST"
   end: "ST"
   workstation: "ST"
-  selection: parallel
+  selection: genericProbability
+  distribution: [ 1.0 ]
+  eventType: genericDecisions
   input:
     - object: "resourceOrder"
       number: 1
       lastState: ""
       size:
   eventData:
-    - activity:
-        name: "retrieve resources"
-        type: "objectCentric"
-        output:
-          - object: "barResource"
-            number: 2
-            change: ""
-            size:
-              length: "4"
-              width: ""
-              depth: ""
-          - object: "boardResource"
-            number: 1
-            change: ""
-            size:
-              length: ""
-              width: "30"
-              depth: "30"
-          - object: "screw"
-            number: 13
-            change: ""
-            size:
-          - object: "bolt"
-            number: 13
-            change: ""
-            size:
+    - type: "oc"
+      activity: "retrieve resources"
       duration: 5
       transition: ""
+      output:
+        - object: "barResource"
+          number: 2
+          change: ""
+          size:
+            length: "4"
+            width: ""
+            depth: ""
+        - object: "boardResource"
+          number: 1
+          change: ""
+          size:
+            length: ""
+            width: "30"
+            depth: "30"
+        - object: "screw"
+          number: 13
+          change: ""
+          size:
+        - object: "bolt"
+          number: 13
+          change: ""
+          size:

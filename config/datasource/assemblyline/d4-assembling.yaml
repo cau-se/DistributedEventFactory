@@ -8,15 +8,19 @@ spec:
   distribution: [ 0.8, 0.1, 0.08, 0.02 ]
   eventData:
     - activity: "Assembling completed"
+      type: "case"
       duration: 10
       transition: "QualityControl"
     - activity: "Overheating"
+      type: "case"
       transition: "<end>"
       duration: 2
     - activity: "Item broke"
+      type: "case"
       transition: "<end>"
       duration: 1
     - activity: "Internal Error"
+      type: "case"
       transition: "Assembling"
       duration:
         type: gaussian

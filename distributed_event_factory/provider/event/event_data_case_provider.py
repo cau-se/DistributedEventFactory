@@ -14,17 +14,6 @@ class EventDataProvider(ABC):
     def get_event_data(self):
         pass
 
-
-class ConcreteEventDataProvider(EventDataProvider):
-    def __init__(self, list_of_events: List[EventDataProvider]):
-        self.index = 0
-        self.list_of_events = list_of_events
-
-    def get_event_data(self):
-        self.index = (self.index + 1) % len(self.list_of_events)
-        return self.list_of_events[self.index].get_event_data()
-
-
 class CustomEventDataProvider(EventDataProvider):
     def __init__(
             self,

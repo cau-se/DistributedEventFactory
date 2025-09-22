@@ -10,20 +10,20 @@ spec:
   workstation: "A"
   selection: genericProbability
   distribution: [ 1.0 ]
+  eventType: genericDecisions
   input:
     - object: "woodShelf"
       number: 1
       lastState: "assembled"
       size:
   eventData:
-    - activity:
-        name: "Quality check passed"
-        type: "objectCentric"
-        output:
-          - object: "woodShelf"
-            number: 1
-            change: "proofed"
-            size:
+    - activity: "Quality check passed"
+      type: "oc"
+      output:
+        - object: "woodShelf"
+          number: 1
+          change: "proofed"
+          size:
       transition: "Shipping"
       duration: 2
 

@@ -8,5 +8,6 @@ spec:
   distribution: [ 1.0 ]
   eventData:
     - activity: "Packaging completed"
+      type: "case"
       transition: "Shipping"
       duration: 3

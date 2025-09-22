@@ -1,9 +1,6 @@
 from distributed_event_factory.parser.base.constant_count_parser import ConstantCountParser
 from distributed_event_factory.parser.datasource.event.activity.activity_parser import ActivityParser
 from distributed_event_factory.parser.datasource.event.activity.constant_activitiy_parser import ConstantActivityParser
-from distributed_event_factory.parser.datasource.event.activity.image_activity_parser import ImageActivityParser
-from distributed_event_factory.parser.datasource.event.activity.object_constant_activity_parser import \
-    ObjectConstantActivityParser
 from distributed_event_factory.parser.datasource.event.duration.constant_duration_parser import \
     ConstantDurationParser
 from distributed_event_factory.parser.datasource.event.duration.duration_parser import DurationParser
@@ -11,6 +8,10 @@ from distributed_event_factory.parser.datasource.event.duration.gaussian_duratio
     GaussianDurationParser
 from distributed_event_factory.parser.datasource.event.duration.uniform_duration_parser import \
     UniformDurationParser
+from distributed_event_factory.parser.datasource.event.event_data_case_parser import EventDataCaseParser
+from distributed_event_factory.parser.datasource.event.event_data_oc_parser import EventDataOcParser
+from distributed_event_factory.parser.datasource.event.event_selection_parser import EventSelectionParser
+from distributed_event_factory.parser.datasource.event.generic_decisions_parser import GenericDecisionsParser
 from distributed_event_factory.parser.datasource.event.input.input_parser import InputParser
 from distributed_event_factory.parser.datasource.event.output.output_parser import OutputParser, DummyObjectParser
 from distributed_event_factory.parser.datasource.event.selection.drifting_probability_event_selection_parser import \
@@ -30,14 +31,15 @@ from distributed_event_factory.parser.simulation.case.case_id_parser import Case
 from distributed_event_factory.parser.datasource.data_source_parser import DataSourceParser
 from distributed_event_factory.parser.datasource.event.distribution_parser import DistributionParser
 from distributed_event_factory.parser.datasource.event.event_data_list_parser import EventDataListParser
-from distributed_event_factory.parser.datasource.event.event_selection_parser import EventSelectionParser
 from distributed_event_factory.parser.kind_parser import KindParser
 from distributed_event_factory.parser.simulation.load.constant_load_parser import ConstantLoadParser
 from distributed_event_factory.parser.simulation.load.gradual_load_parser import GradualLoadParser
 from distributed_event_factory.parser.simulation.load.load_parser import LoadParser
 from distributed_event_factory.parser.simulation.load.sinus_load_parser import SinusLoadParser
 from distributed_event_factory.parser.simulation.simulation_parser import SimulationParser
-from distributed_event_factory.parser.simulation.simulator.def_simulator_parser import DefSimulationParser
+
+from distributed_event_factory.parser.simulation.simulator.def_simulation_parser import DefSimulationParser
+from distributed_event_factory.parser.simulation.simulator.oc_simulator_parser import ObjectCentricSimulationParser
 from distributed_event_factory.parser.simulation.simulator.process_simulation_parser import ProcessSimulationParser
 from distributed_event_factory.parser.simulation.simulator.xes_simulator_parser import XesSimulationParser
 from distributed_event_factory.parser.simulation.variant.countbased_simulation_parser import CountBasedSimulationParser
@@ -52,7 +54,6 @@ from distributed_event_factory.parser.sink.load_test_http_sink_parser import Loa
 from distributed_event_factory.parser.sink.print_console_sink_parser import PrintConsoleSinkParser
 from distributed_event_factory.parser.sink.sink_parser import SinkParser
 from distributed_event_factory.parser.sink.ui_sink_parser import UiSinkParser
-from distributed_event_factory.parser.stock.stock_parser import StockParser
 from distributed_event_factory.provider.data.increasing_case import IncreasingCaseIdProvider
 from distributed_event_factory.parser.datasource.event.input.input_parser import InputParser
 from distributed_event_factory.parser.datasource.event.output.output_parser import OutputParser, DummyObjectParser
@@ -64,13 +65,10 @@ from distributed_event_factory.parser.workforce.workforce_start_positions import
 
 
 class ParserRegistry:
-
     def __init__(self):
         # Objects
-        self.output_parser = OutputParser()
         # hrei check this Dummy ObjectParser
         self.dummy_object_parser = DummyObjectParser()
-        self.input_parser = InputParser()
         self.workforce_parser = WorkforceParser()
         self.dummy_workforce_parser = DummyWorkforceParser()
 
@@ -100,12 +98,15 @@ class ParserRegistry:
                             .add_dependency("ocel", self.ocel_console_sink_parser))
         ##########
         # Activity
-        self.object_centric_activity_parser = (
-            ObjectConstantActivityParser().add_dependency("output", self.output_parser)
-        )
+        #self.object_centric_activity_parser = (
+        #    ObjectConstantActivityParser().add_dependency("output", self.output_parser)
+        #)
+        self.constant_activity_parser = ConstantActivityParser()
 
         self.activity_parser = (ActivityParser()
-                                .add_dependency("objectCentric", self.object_centric_activity_parser))
+                                .add_dependency("constant", self.constant_activity_parser)
+                                #.add_dependency("objectCentric", self.object_centric_activity_parser)
+                                )
 
         # Duration
         self.constant_duration_parser = ConstantDurationParser()
@@ -119,43 +120,89 @@ class ParserRegistry:
         # Transition
         self.transition_parser = TransitionParser()
 
-        # Event Data List
-        self.event_data_list_parser = (EventDataListParser()
-                                       .add_dependency("duration", self.duration_parser)
-                                       .add_dependency("activity", self.activity_parser)
-                                       .add_dependency("transition", self.transition_parser))
-
         # Distribution
         self.distribution_parser = (DistributionParser())
 
-        self.uniform_event_selection_parser = (UniformEventSelectionParser())
+        # Input
+        self.input_parser = InputParser()
+
+        # Output
+        self.output_parser = OutputParser()
+
+        self.event_data_case_parser = (
+            EventDataCaseParser()
+            .add_dependency("duration", self.duration_parser)
+            .add_dependency("activity", self.activity_parser)
+            .add_dependency("transition", self.transition_parser)
+        )
+
+        self.event_data_oc_parser = (
+            EventDataOcParser()
+            .add_dependency("duration", self.duration_parser)
+            .add_dependency("activity", self.activity_parser)
+            .add_dependency("transition", self.transition_parser)
+            .add_dependency("input", self.input_parser)
+            .add_dependency("output", self.output_parser)
+        )
+
+        # Event Data List
+        self.event_data_list_parser = (
+            EventDataListParser()
+            .add_dependency("oc", self.event_data_oc_parser)
+            .add_dependency("case", self.event_data_case_parser)
+        )
+
+        self.uniform_event_selection_parser = (
+            UniformEventSelectionParser()
+             .add_dependency("oc", self.event_data_oc_parser)
+             .add_dependency("case", self.event_data_list_parser)
+        )
         self.ordered_event_selection_parser = (OrderedEventSelectionParser())
-        self.parallel_event_selection_parser = (ParallelEventSelectionParser()
-                                                .add_dependency("eventData", self.event_data_list_parser))
+        self.parallel_event_selection_parser = (
+            ParallelEventSelectionParser()
+            .add_dependency("eventData", self.event_data_list_parser)
+        )
 
-        self.drifting_selection_parser = (DriftingProbabilityEventSelectionParser()
-                                          .add_dependency("distribution", self.distribution_parser)
-                                          .add_dependency("eventData", self.event_data_list_parser))
+        self.drifting_selection_parser = (
+            DriftingProbabilityEventSelectionParser()
+            .add_dependency("distribution", self.distribution_parser)
+            .add_dependency("eventData", self.event_data_list_parser)
+        )
 
-        self.probability_selection_parser = (GenericProbabilityEventSelectionParser()
-                                             .add_dependency("distribution", self.distribution_parser)
-                                             .add_dependency("eventData", self.event_data_list_parser))
+        self.probability_selection_parser = (
+            GenericProbabilityEventSelectionParser()
+            .add_dependency("distribution", self.distribution_parser)
+            .add_dependency("eventData", self.event_data_list_parser)
+        )
 
         # Event Selection
-        self.event_selection_parser = (EventSelectionParser()
-                                       .add_dependency("ordered", self.ordered_event_selection_parser)
-                                       .add_dependency("uniform", self.uniform_event_selection_parser)
-                                       .add_dependency("genericProbability", self.probability_selection_parser)
-                                       .add_dependency("driftingProbability", self.drifting_selection_parser)
-                                       .add_dependency("parallel", self.parallel_event_selection_parser)
-                                       .add_dependency("objectCentric", self.input_parser)
-                                       .add_dependency("hasWorkforce", self.workforce_parser)
-                                       .add_dependency("noWorkforce", self.dummy_workforce_parser)
-                                       .add_dependency("default", self.dummy_object_parser))
+        self.generic_decisions_parser = (
+            GenericDecisionsParser()
+                .add_dependency("ordered", self.ordered_event_selection_parser)
+                .add_dependency("uniform", self.uniform_event_selection_parser)
+                .add_dependency("genericProbability", self.probability_selection_parser)
+                .add_dependency("driftingProbability", self.drifting_selection_parser)
+                .add_dependency("parallel", self.parallel_event_selection_parser)
+                .add_dependency("objectCentric", self.input_parser)
+                .add_dependency("hasWorkforce", self.workforce_parser)
+                .add_dependency("noWorkforce", self.dummy_workforce_parser)
+                .add_dependency("default", self.dummy_object_parser)
+        )
+
+        self.event_data_selection_parser = (
+            EventSelectionParser()
+                .add_dependency("ordered", self.ordered_event_selection_parser)
+                .add_dependency("uniform", self.uniform_event_selection_parser)
+                .add_dependency("genericProbability", self.probability_selection_parser)
+                .add_dependency("driftingProbability", self.drifting_selection_parser)
+        )
 
         # DataSource
-        self.datasource_parser = (DataSourceParser()
-                                  .add_dependency("eventData", self.event_selection_parser))
+        self.datasource_parser = (
+            DataSourceParser()
+            .add_dependency("genericDecisions", self.generic_decisions_parser)
+            .add_dependency("eventData", self.event_data_selection_parser)
+        )
 
         # Input
         self.object_source_parser = ObjectSourceParser()
@@ -175,6 +222,7 @@ class ParserRegistry:
 
         # Process Simulation
         self.xes_simulation_parser = XesSimulationParser()
+        self.oc_simulation_parser = ObjectCentricSimulationParser()
         self.def_simulation_parser = DefSimulationParser()
 
         self.def_simulation_parser.add_dependency("caseId", self.case_id_parser)
@@ -183,6 +231,7 @@ class ParserRegistry:
         self.process_simulation_parser = (ProcessSimulationParser()
             .add_dependency("xes", self.xes_simulation_parser)
             .add_dependency("def", self.def_simulation_parser)
+            .add_dependency("oc", self.oc_simulation_parser)
         )
 
         # Load
@@ -190,10 +239,12 @@ class ParserRegistry:
         self.gradual_load_parser = GradualLoadParser()
         self.gaussian_load_parser = GradualLoadParser()
         self.sinus_load_parser = SinusLoadParser()
-        self.load_parser: LoadParser = (LoadParser()
-                                        .add_dependency("constant", self.constant_load_parser)
-                                        .add_dependency("gradual", self.gradual_load_parser)
-                                        .add_dependency("sinus", self.sinus_load_parser))
+        self.load_parser: LoadParser = (
+            LoadParser()
+            .add_dependency("constant", self.constant_load_parser)
+            .add_dependency("gradual", self.gradual_load_parser)
+            .add_dependency("sinus", self.sinus_load_parser)
+        )
 
         # Simulation
         self.count_based_simulation: CountBasedSimulationParser = (CountBasedSimulationParser()

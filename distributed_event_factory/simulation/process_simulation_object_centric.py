@@ -19,7 +19,6 @@ from distributed_event_factory.simulation.simulator_objects.workstation import W
 from distributed_event_factory.simulation.simulator_objects.workstation_service import WorkstationService
 from process_mining_core.datastructure.core.event import Event
 
-
 class ProcessSimulationObjectCentric(ProcessSimulator):
     def __init__(
             self,
@@ -131,8 +130,10 @@ class ProcessSimulationObjectCentric(ProcessSimulator):
 
     def get_next_workstation_and_step(self, available_workstations):
         workstation_step_pairs_ascending = self.workstation_service.get_next_workstations_and_step_sorted_duration_ascending(
-            object_storage=self.object_storage, workstations=available_workstations,
-            workforce_storage=self.workforce_storage)
+            object_storage=self.object_storage,
+            workstations=available_workstations,
+            workforce_storage=self.workforce_storage
+        )
 
         if self.prior_step:
             next_available_steps = self._get_next_step_by_event_provider(self.prior_step)
@@ -146,6 +147,7 @@ class ProcessSimulationObjectCentric(ProcessSimulator):
                 )
 
                 if not next_workstation_step_pairs:
+                    # TODO hrei: Fix that situation down stream
                     return ValueError("No available workstations")
                 elif len(next_workstation_step_pairs) == 1:
                     next_workstation, next_step = next_workstation_step_pairs[0]
@@ -208,20 +210,21 @@ class ProcessSimulationObjectCentric(ProcessSimulator):
                 start_location = event_provider.start
                 end_location = event_provider.end
                 workstation_steps = []
-                for event in events:
-                    workstation_steps.append(
-                        WorkProcessStep(
-                            activity=event.get_activity_provider().get_activity(),
-                            node=data_source_id.get_name(),
-                            group_id=self._get_sensor_with_id(data_source_id).group_id,
-                            input_objects=input_objects,
-                            output_objects=event.get_activity_provider().get_output(),
-                            duration=event.get_duration(),
-                            workforces_needed=workforce,
-                            start_location=start_location,
-                            end_location=end_location
-                        )
+                #for event in events:
+                workstation_steps.append(
+                    WorkProcessStep(
+                        activity=events.activity_provider.get_activity(),
+                        node=data_source_id.get_name(),
+                        group_id=self._get_sensor_with_id(data_source_id).group_id,
+                        input_objects=input_objects,
+                        # TODO hrei add a proper event abstraction
+                        output_objects=events.output_provider,
+                        duration=events.duration_provider.get_duration(),
+                        workforces_needed=workforce,
+                        start_location=start_location,
+                        end_location=end_location
                     )
+                )
                 matching_workstation = self.workstation_service.get_workstation_by_name(
                     workstation,
                     self.workstations

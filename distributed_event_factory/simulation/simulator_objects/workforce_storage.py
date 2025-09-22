@@ -21,8 +21,12 @@ class WorkforceStorage:
                 return workforce_set
         return workforce_set
 
-    def get_all_workforces_at_location_available(self, workforces_input: List[InputWorkforceProvider], location: str,
-                                                 workforce_storage):
+    def get_all_workforces_at_location_available(
+            self,
+            workforces_input: List[InputWorkforceProvider],
+            location: str,
+            workforce_storage
+    ):
         workforce_set = []
         is_complete = True
         for workforce in workforces_input:
@@ -85,15 +89,23 @@ class WorkforceStorage:
         return self.contains_workforces_near_by(currently_not_at_location, possible_workstation_step_pairs,
                                                 routeManagement, workforce_forecast)
 
-    def contains_workforces_near_by(self, currently_not_at_location, possible_workstation_step_pairs, routeManagement,
-                                    workforce_forecast):
+    def contains_workforces_near_by(
+            self,
+            currently_not_at_location,
+            possible_workstation_step_pairs,
+            routeManagement,
+            workforce_forecast
+    ):
         for workstation, step in currently_not_at_location:
             all_workforces_at_location = True
             steps_with_duration = []
             for workforce in step.workforces_needed:
-                workforce, route = self.get_available_workforce_closest_to_location(step.start_location,
-                                                                                    workforce.name,
-                                                                                    workforce_forecast, routeManagement)
+                workforce, route = self.get_available_workforce_closest_to_location(
+                    step.start_location,
+                    workforce.name,
+                    workforce_forecast,
+                    routeManagement
+                )
                 if workforce:
                     step = step.clone()
                     step.duration = step.duration + route.duration
@@ -108,8 +120,10 @@ class WorkforceStorage:
 
     def manage_workforce_changes(self, step, routeManagement: RouteManagement):
         if step.start_location != step.end_location and step.workforces_needed:
-            workforces, is_complete = self.get_all_workforces_at_location_available(step.workforces_needed, step.start_location,
-                                                                       self.workforces)
+            workforces, is_complete = self.get_all_workforces_at_location_available(
+                step.workforces_needed,
+                step.start_location,
+                self.workforces)
             if workforces:
                 for workforce in workforces:
                     self.workforces.remove(workforce)
@@ -117,10 +131,12 @@ class WorkforceStorage:
                     self.workforces.append(workforce)
             else:
                 for workforce in step.workforces_needed:
-                    workforce, _ = self.get_available_workforce_closest_to_location(step.start_location,
-                                                                                    workforce.name,
-                                                                                    self.workforces,
-                                                                                    routeManagement)
+                    workforce, _ = self.get_available_workforce_closest_to_location(
+                        step.start_location,
+                        workforce.name,
+                        self.workforces,
+                        routeManagement
+                    )
                     self.workforces.remove(workforce)
                     workforce.location = step.end_location
                     self.workforces.append(workforce)

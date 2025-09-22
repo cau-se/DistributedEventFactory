@@ -1,10 +1,11 @@
 import abc
+from typing import List
 
 from process_mining_core.datastructure.core.event import Event
 
-
 class Sink:
-    def __init__(self, data_source_ref):
+
+    def __init__(self, data_source_ref: List[str]):
         self.data_source_ref = data_source_ref
 
     @abc.abstractmethod

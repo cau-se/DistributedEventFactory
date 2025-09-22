@@ -1,8 +1,4 @@
 from distributed_event_factory.parser.parser import Parser
-from distributed_event_factory.provider.activity.activity_provider import ConstantActivityProvider
-from distributed_event_factory.provider.activity.activity_provider import ConstantActivityProvider, \
-    ObjectConstantActivityProvider
-
 
 class ActivityParser(Parser):
 
@@ -14,4 +10,6 @@ class ActivityParser(Parser):
         return self
 
     def parse(self, config):
+        if isinstance(config, str):
+            return self.dependencies["constant"].parse(config)
         return self.dependencies[config["type"]].parse(config)

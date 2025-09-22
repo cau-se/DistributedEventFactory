@@ -8,5 +8,6 @@ spec:
   distribution: [1.0]
   eventData:
     - activity: ""
+      type: "case"
       transition: "GoodsDelivery"
       duration: 0

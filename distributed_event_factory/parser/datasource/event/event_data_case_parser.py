@@ -1,8 +1,7 @@
 from distributed_event_factory.parser.parser import Parser
 from distributed_event_factory.provider.event.event_data_case_provider import CustomEventDataProvider
 
-
-class EventDataListParser(Parser):
+class EventDataCaseParser(Parser):
 
     def __init__(self):
         self.dependencies = dict()
@@ -12,9 +11,8 @@ class EventDataListParser(Parser):
         return self
 
     def parse(self, config):
-        event_list = []
-        for event in config:
-            if not "type" in event:
-                print("")
-            event_list.append(self.dependencies[event["type"]].parse(event))
-        return event_list
+        return CustomEventDataProvider(
+            activity_provider=self.dependencies["activity"].parse(config["activity"]),
+            duration_provider=self.dependencies["duration"].parse(config["duration"]),
+            transition_provider=self.dependencies["transition"].parse(config["transition"])
+        )

@@ -10,6 +10,7 @@ spec:
   workstation: "SA"
   selection: genericProbability
   distribution: [1.0]
+  eventType: genericDecisions
   input:
     - object: "board"
       number: 1
@@ -19,16 +20,15 @@ spec:
         width: "5"
         depth: "5"
   eventData:
-    - activity:
-        name: "Sanded board"
-        type: "objectCentric"
-        output:
-          - object: "board"
-            number: 1
-            change: "sanded"
-            size:
-              length: ""
-              width: "5"
-              depth: "5"
+    - activity: "Sanded board"
+      type: "oc"
+      output:
+        - object: "board"
+          number: 1
+          change: "sanded"
+          size:
+            length: ""
+            width: "5"
+            depth: "5"
       transition: "TransportM1AB"
       duration: 2

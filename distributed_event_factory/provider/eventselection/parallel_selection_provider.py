@@ -1,8 +1,7 @@
 from typing import List
 
-from distributed_event_factory.provider.event.event_provider import EventDataProvider
+from distributed_event_factory.provider.event.event_data_case_provider import EventDataProvider
 from distributed_event_factory.provider.eventselection.event_selection_provider import EventSelectionProvider
-
 
 class ParallelEventSelectionProvider(EventSelectionProvider):
 

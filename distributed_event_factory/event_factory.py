@@ -161,4 +161,9 @@ class EventFactory:
         )
 
         for simulation in self.simulations:
-            self.simulations[simulation].run_simulation(self.process_simulator, self.datasources, self.sinks, hook)
+            self.simulations[simulation].run_simulation(
+                self.process_simulator,
+                self.datasources,
+                self.sinks,
+                hook
+            )

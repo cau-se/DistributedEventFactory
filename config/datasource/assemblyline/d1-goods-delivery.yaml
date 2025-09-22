@@ -10,15 +10,18 @@ spec:
   steps: 1000
   eventData:
     - activity: "Reject"
+      type: "case"
       transition: "<end>"
       duration: 1
     - activity: "Store"
+      type: "case"
       transition: "GoodsDelivery"
       duration:
         type: gaussian
         mu: 720
         sigma: 120
     - activity: "Pass To Production"
+      type: "case"
       transition: "MaterialPreparation"
       duration:
         type: uniform

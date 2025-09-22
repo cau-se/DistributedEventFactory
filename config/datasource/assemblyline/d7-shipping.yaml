@@ -8,8 +8,10 @@ spec:
   distribution: [ 0.8, 0.2 ]
   eventData:
     - activity: "Package waits for sending"
+      type: "case"
       transition: "Shipping"
       duration: 180
     - activity: "Package sent"
+      type: "case"
       transition: "<end>"
       duration: 1

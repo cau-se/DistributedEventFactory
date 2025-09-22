@@ -8,15 +8,18 @@ spec:
   distribution: [ 0.25, 0.7, 0.05 ]
   eventData:
     - activity: "MaterialPreparation - Finished"
+      type: "case"
       duration:
         type: uniform
         lowerBound: 1
         upperBound: 2
       transition: "AssemblyLineSetup"
     - activity: "Waiting for Material"
+      type: "case"
       transition: "MaterialPreparation"
       duration: 1
     - activity: "Internal Error"
+      type: "case"
       transition: "MaterialPreparation"
       duration:
         type: gaussian

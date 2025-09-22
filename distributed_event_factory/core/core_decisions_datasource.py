@@ -1,12 +1,12 @@
 class GenericDecisions:
     def __init__(
-            self,
-            simulation_provider,
-            input_objects,
-            workstation,
-            workforce,
-            start,
-            end
+        self,
+        simulation_provider,
+        input_objects,
+        workstation,
+        workforce,
+        start,
+        end
     ):
         self.simulation_provider = simulation_provider
         self.input_objects= input_objects

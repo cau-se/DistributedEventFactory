@@ -28,38 +28,34 @@ class WorkProcessStep:
         self.end_location = end_location
 
     def clone(self):
-        return WorkProcessStep(self.activity,
-                               self.input_objects,
-                               self.output_objects,
-                               self.duration,
-                               self.node,
-                               self.group_id,
-                               self.workforces_needed,
-                               self.start_location,
-                               self.end_location)
+        return WorkProcessStep(
+            self.activity,
+            self.input_objects,
+            self.output_objects,
+            self.duration,
+            self.node,
+            self.group_id,
+            self.workforces_needed,
+            self.start_location,
+            self.end_location
+        )
 
-    def produce_event(self, current_timestamp, workstation, ingoing_objects, outgoing_objects) -> ObjectEvent:
-        #ingoing_summary = self.summary_of_objects(objects=ingoing_objects)
-        #outgoing_summary = self.summary_of_objects(objects=outgoing_objects)
+    def produce_event(
+            self,
+            current_timestamp,
+            workstation,
+            ingoing_objects,
+            outgoing_objects
+    ) -> ObjectEvent:
         return ObjectEvent(
             timestamp=current_timestamp.strftime(Y_M_D_H_M_S),
             activity=self.activity,
             node=self.node,
             group_id=workstation,
-            #input=ingoing_summary,
-            #output=outgoing_summary
             input=ingoing_objects,
             output=outgoing_objects
         )
 
-    def summary_of_objects(self, objects):
-        summary = ""
-        counter = ObjectCounter(objects)
-        result = counter.count_and_memorize()
-        for key, value in result.items():
-            summary += str(key) + ": Count = {" + str(value['count']) + "}, Unique IDs = {" + str(
-                value['uniqueIds']) + "}, "
-        return summary[:-2]
 
 
 class ObjectCounter:

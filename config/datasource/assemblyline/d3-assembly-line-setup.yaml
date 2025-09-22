@@ -8,21 +8,26 @@ spec:
   distribution: [ 0.3, 0.4, 0.15, 0.05, 0.1 ]
   eventData:
     - activity: "Material Not Set Up as expected"
+      type: "case"
       transition: "MaterialPreparation"
       duration:
         type: uniform
         lowerBound: 2
         upperBound: 5
     - activity: "Assembly Line Setup successfully"
+      type: "case"
       transition: "Assembling"
       duration: 3
     - activity: "Material in wrong order. Reordering.."
+      type: "case"
       transition: "AssemblyLineSetup"
       duration: 1
     - activity: "Maximum Material count exceeded. Remove item"
+      type: "case"
       transition: "AssemblyLineSetup"
       duration: 1
     - activity: "Internal Error"
+      type: "case"
       transition: "Assembling"
       duration:
         type: gaussian

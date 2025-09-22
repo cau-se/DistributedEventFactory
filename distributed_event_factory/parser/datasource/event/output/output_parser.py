@@ -16,12 +16,19 @@ class OutputParser(Parser):
         for object_element in config:
             size_params = None
             if "size" in object_element and object_element["size"]:
-                size_params = SizeParamsProvider(width=object_element["size"]["width"],
-                                                depth=object_element["size"]["depth"],
-                                                length=object_element["size"]["length"])
+                size_params = SizeParamsProvider(
+                    width=object_element["size"]["width"],
+                    depth=object_element["size"]["depth"],
+                    length=object_element["size"]["length"]
+                )
             object_list.append(
-                OutputObjectProvider(object_element["object"], object_element["number"], object_element["change"],
-                                     size_params))
+                OutputObjectProvider(
+                    object_element["object"],
+                    object_element["number"],
+                    object_element["change"],
+                    size_params
+                )
+            )
         return object_list
 
 

@@ -1,7 +1,5 @@
 kind: "processSimulator"
 name: "simulator"
 spec:
-  type: "def"
+  type: "oc"
   caseId: increasing
-  steps: 30
-  maxConcurrentCases: 10

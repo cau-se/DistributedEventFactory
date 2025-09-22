@@ -8,12 +8,15 @@ spec:
   distribution: [ 0.3, 0.1, 0.6 ]
   eventData:
     - activity: "Item Needs Corrections"
+      type: "case"
       transition: "Assembling"
       duration: 2
     - activity: "Quality Insufficient"
+      type: "case"
       transition: "<end>"
       duration: 2
     - activity: "Quality check passed"
+      type: "case"
       transition: "Packaging"
       duration:
         type: uniform

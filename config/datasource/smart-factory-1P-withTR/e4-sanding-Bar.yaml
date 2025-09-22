@@ -10,6 +10,7 @@ spec:
   workstation: "SA"
   selection: genericProbability
   distribution: [1.0]
+  eventType: genericDecisions
   input:
     - object: "bar"
       number: 1
@@ -19,16 +20,15 @@ spec:
         width: ""
         depth: ""
   eventData:
-    - activity:
-        name: "Sanded bar"
-        type: "objectCentric"
-        output:
-          - object: "bar"
-            number: 1
-            change: "sanded"
-            size:
-              length: "2"
-              width: ""
-              depth: ""
+    - activity: "Sanded bar"
+      type: "oc"
+      output:
+        - object: "bar"
+          number: 1
+          change: "sanded"
+          size:
+            length: "2"
+            width: ""
+            depth: ""
       transition: "TransportM1A"
       duration: 2

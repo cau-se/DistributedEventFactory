@@ -4,25 +4,29 @@ from queue import PriorityQueue
 from typing import Dict
 
 from distributed_event_factory.provider.data.count_provider import CountProvider
+from distributed_event_factory.simulation.abstract_process_simulator import ProcessSimulator
+from distributed_event_factory.simulation.abstract_process_simulator_config import ProcessSimulatorConfig
 from process_mining_core.datastructure.core.event import Event
 
 from distributed_event_factory.core.datasource import DataSource
 from distributed_event_factory.core.datasource_id import START_SENSOR_ID, END_DATA_SOURCE_ID, DataSourceId
 from distributed_event_factory.provider.data.case_provider import CaseIdProvider
 
-class DefProcessSimulator:
+
+class DefProcessSimulator(ProcessSimulator):
     def __init__(
             self,
-            data_sources: Dict[str, DataSource],
             case_id_provider: CaseIdProvider,
             max_concurrent_cases: CountProvider
     ):
 
         self.max_concurrent_cases = max_concurrent_cases
         self.tokens: PriorityQueue[Token] = PriorityQueue(self.max_concurrent_cases.get())
-        self.datasources: Dict[str, DataSource] = data_sources
         self.case_id_provider = case_id_provider
         self.last_timestamp = datetime.now()
+
+    def configure(self, config: ProcessSimulatorConfig):
+        self.datasources = config.get_configs_of_type("datasource")
 
     def simulate(self) -> Event:
         emit_event = None
@@ -37,12 +41,14 @@ class DefProcessSimulator:
                 token = self.start_new_case()
 
             if token.data_source_id == START_SENSOR_ID:
-                token.data_source_id = DataSourceId(self._get_sensor_with_id(START_SENSOR_ID).get_event_data().get_transition())
+                token.data_source_id = DataSourceId(
+                    self._get_sensor_with_id(START_SENSOR_ID).get_event_data().get_transition()
+                )
 
             current_data_source = self._get_sensor_with_id(token.data_source_id)
             event = current_data_source.get_event_data()
             next_datasource = event.get_transition()
-            activity = event.get_activity()
+            activity = event.activity_provider.get_activity()
             token.add_to_last_timestamp(event.get_duration())
             token.set_data_source_id(self.datasources[next_datasource].get_id())
             self.last_timestamp = token.last_timestamp

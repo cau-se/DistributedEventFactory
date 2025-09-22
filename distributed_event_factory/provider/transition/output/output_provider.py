@@ -1,4 +1,5 @@
 class OutputObjectProvider:
+
     def __init__(self, objectName, numberOfObject, change, size):
         self.objectName = objectName
         self.numberOfObject = numberOfObject
