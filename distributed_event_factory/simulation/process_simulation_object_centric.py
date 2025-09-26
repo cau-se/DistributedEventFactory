@@ -118,15 +118,15 @@ class ProcessSimulationObjectCentric(ProcessSimulator):
         return event
 
     def _get_next_step_by_event_provider(self, data_source) -> List[str]:
-        events = self._get_sensor_with_id(DataSourceId(data_source)).get_event_data()
-        if len(events) == 1:
-            return [events[0].transition_provider.next_sensor_index]
-        elif len(events) > 1:
-            next_sensors = []
-            for e in events:
-                next_sensors.append(e.transition_provider.next_sensor_index)
-            return next_sensors
-        return None
+        return self._get_sensor_with_id(DataSourceId(data_source)).get_event_data().transition_provider.get_transition()
+        #if len(events) == 1:
+        #    return [events[0].transition_provider.next_sensor_index]
+        #elif len(events) > 1:
+        #    next_sensors = []
+        #    for e in events:
+        #        next_sensors.append(e.transition_provider.next_sensor_index)
+        #    return next_sensors
+        #return None
 
     def get_next_workstation_and_step(self, available_workstations):
         workstation_step_pairs_ascending = self.workstation_service.get_next_workstations_and_step_sorted_duration_ascending(
@@ -137,7 +137,7 @@ class ProcessSimulationObjectCentric(ProcessSimulator):
 
         if self.prior_step:
             next_available_steps = self._get_next_step_by_event_provider(self.prior_step)
-            if next_available_steps[0]:
+            if next_available_steps:
                 next_workstation_step_pairs = self.workstation_service.get_next_workstation_step_pair_parallel(
                     next_available_steps,
                     workstation_step_pairs_ascending,

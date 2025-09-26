@@ -2,6 +2,6 @@ kind: simulation
 name: countBasedSimulation
 spec:
   type: countBased
-  steps: 30
+  steps: 500
   caseId: increasing
   maxConcurrentCases: 10

@@ -40,5 +40,4 @@ class XesProcessSimulator(ProcessSimulator):
         )
         self.index = self.index + 1
         self.nodes.add(node)
-        print(self.nodes)
         return event

@@ -6,6 +6,7 @@ spec:
   type: default
   selection: genericProbability
   distribution: [ 0.8, 0.2 ]
+  eventType: eventData
   eventData:
     - activity: "Package waits for sending"
       type: "case"

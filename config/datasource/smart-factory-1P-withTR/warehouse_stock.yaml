@@ -3,6 +3,6 @@ name: "default"
 spec:
   stocks:
     - object: "order"
-      number: 3
+      number: 100
       lastState:
       size:

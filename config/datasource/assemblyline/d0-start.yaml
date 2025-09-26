@@ -6,6 +6,7 @@ spec:
   type: default
   selection: genericProbability
   distribution: [1.0]
+  eventType: eventData
   eventData:
     - activity: ""
       type: "case"

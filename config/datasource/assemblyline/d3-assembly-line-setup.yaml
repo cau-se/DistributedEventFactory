@@ -6,6 +6,7 @@ spec:
   type: default
   selection: genericProbability
   distribution: [ 0.3, 0.4, 0.15, 0.05, 0.1 ]
+  eventType: eventData
   eventData:
     - activity: "Material Not Set Up as expected"
       type: "case"
