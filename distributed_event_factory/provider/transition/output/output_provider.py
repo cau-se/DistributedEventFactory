@@ -2,6 +2,8 @@ class OutputObjectProvider:
 
     def __init__(self, objectName, numberOfObject, change, size):
         self.objectName = objectName
+        #TODO hrei remove that ugly workaround
+        self.object_type = objectName
         self.numberOfObject = numberOfObject
         self.change = change
         self.size = size

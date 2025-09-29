@@ -2,6 +2,7 @@ import random
 from typing import List
 from datetime import timedelta
 from distributed_event_factory.simulation.simulator_objects.object_storage import ObjectStorage
+from distributed_event_factory.simulation.simulator_objects.object_storage_v2 import ObjectStorageV2
 from distributed_event_factory.simulation.simulator_objects.workforce_storage import WorkforceStorage
 from distributed_event_factory.simulation.simulator_objects.workprocessstep import WorkProcessStep
 
@@ -22,11 +23,13 @@ class WorkStation:
 
         return False
 
-    def _is_activatable_including_workforce(self, object_storage: ObjectStorage, workforce_storage: WorkforceStorage):
+    def _is_activatable_including_workforce(self, object_storage: ObjectStorageV2, workforce_storage: WorkforceStorage):
         for workstation_step in self.work_process_steps:
-            if object_storage.contains_all_object_of_data(
-                    workstation_step.input_objects) and workforce_storage.are_all_workforces_types_available(
-                workstation_step.workforces_needed):
+            if (object_storage.are_all_inputs_available(
+                    workstation_step.input_objects
+            )
+                    and workforce_storage.are_all_workforces_types_available(
+                        workstation_step.workforces_needed)):
                 return True
 
         return False
@@ -40,12 +43,12 @@ class WorkStation:
 
         return activatable_workstations
 
-    def get_activatable_work_steps_including_workforce(self, object_storage: ObjectStorage,
+    def get_activatable_work_steps_including_workforce(self, object_storage: ObjectStorageV2,
                                                        workforce_storage: WorkforceStorage):
         activatable_workstations = []
 
         for workstation_step in self.work_process_steps:
-            if object_storage.contains_all_object_of_data(
+            if object_storage.are_all_inputs_available(
                     workstation_step.input_objects) and workforce_storage.are_all_workforces_types_available(
                 workstation_step.workforces_needed):
                 activatable_workstations.append(workstation_step)
@@ -66,9 +69,12 @@ class WorkStation:
 
         return work_step_selected[random.randint(0, len(work_step_selected) - 1)]
 
-    def workstation_has_preselected_activatable_steps(self, object_storage: ObjectStorage,
-                                                      prefered_workstation_steps: List[str],
-                                                      workforce_storage: WorkforceStorage = None) -> bool:
+    def workstation_has_preselected_activatable_steps(
+            self,
+            object_storage: ObjectStorage,
+            prefered_workstation_steps: List[str],
+            workforce_storage: WorkforceStorage = None
+    ) -> bool:
         if workforce_storage:
             activatable_steps = self.get_activatable_work_steps_including_workforce(object_storage, workforce_storage)
         else:
@@ -80,8 +86,10 @@ class WorkStation:
 
         return False
 
-    def get_random_activatable_workstation_step(self, object_storage: ObjectStorage,
-                                                workforce_storage: WorkforceStorage = None) -> WorkProcessStep:
+    def get_random_activatable_workstation_step(
+            self,
+            object_storage: ObjectStorageV2,
+            workforce_storage: WorkforceStorage = None) -> WorkProcessStep:
         if workforce_storage:
             activatable_steps = self.get_activatable_work_steps_including_workforce(object_storage, workforce_storage)
         else:

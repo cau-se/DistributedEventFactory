@@ -11,6 +11,7 @@ from distributed_event_factory.provider.workforce.InputWorkforceProvider import 
 from distributed_event_factory.simulation.abstract_process_simulator import ProcessSimulator
 from distributed_event_factory.simulation.abstract_process_simulator_config import ProcessSimulatorConfig
 from distributed_event_factory.simulation.simulator_objects.object_storage import ObjectStorage
+from distributed_event_factory.simulation.simulator_objects.object_storage_v2 import ObjectStorageV2
 from distributed_event_factory.simulation.simulator_objects.object_utility import ObjectUtility
 from distributed_event_factory.simulation.simulator_objects.route_management import RouteManagement
 from distributed_event_factory.simulation.simulator_objects.workforce_storage import WorkforceStorage
@@ -28,7 +29,7 @@ class ProcessSimulationObjectCentric(ProcessSimulator):
         self.workstation_service = WorkstationService()
         self.workforce_storage = None
         self.last_timestamp = datetime.now()
-        self.object_storage = object_storage
+        self.object_storage: ObjectStorageV2 = ObjectStorageV2()
         self.prior_step: str = ""
         self.parallel_workstation_step_start_time = []
 
@@ -78,7 +79,7 @@ class ProcessSimulationObjectCentric(ProcessSimulator):
 
     def simulate(self) -> Event:
         if self.parallel_workstation_step_start_time:
-            next_workstation, next_step, self.last_timestamp = self.parallel_workstation_step_start_time[0]
+            next_step, self.last_timestamp = self.parallel_workstation_step_start_time[0]
             self.parallel_workstation_step_start_time = self.parallel_workstation_step_start_time[1:]
         else:
             available_workstations: List[WorkStation] = (
@@ -88,20 +89,16 @@ class ProcessSimulationObjectCentric(ProcessSimulator):
                     self.workforce_storage
                 )
             )
-            next_step, next_workstation = self.get_next_workstation_and_step(available_workstations)
+            next_step = self.get_next_workstation_and_step(available_workstations)
+
+        next_workstation = self.workstation_service.get_workstation_by_name(self.workstations, next_step.end_location)
         self.prior_step = next_step.node
         self.last_timestamp = next_workstation.add_to_last_timestamp(
             self.last_timestamp,
             next_step.duration
         )
-        ingoing_objects, outgoing_objects = (
-            self.object_storage.manage_input_and_output_of_steps(
-                next_step.input_objects,
-                next_step.output_objects,
-                self.objects,
-                self.last_timestamp
-            )
-        )
+
+        self.object_storage.process_event(next_step)
 
         if self.workforce_storage:
             self.workforce_storage.manage_workforce_changes(
@@ -112,21 +109,15 @@ class ProcessSimulationObjectCentric(ProcessSimulator):
         event = next_step.produce_event(
             self.last_timestamp,
             next_workstation.work_station_name,
-            ingoing_objects,
-            outgoing_objects
+            next_step.input_objects,
+            next_step.output_objects
         )
+
         return event
 
-    def _get_next_step_by_event_provider(self, data_source) -> List[str]:
+    def _get_next_step_by_event_provider(self, data_source) -> str:
         return self._get_sensor_with_id(DataSourceId(data_source)).get_event_data().transition_provider.get_transition()
-        #if len(events) == 1:
-        #    return [events[0].transition_provider.next_sensor_index]
-        #elif len(events) > 1:
-        #    next_sensors = []
-        #    for e in events:
-        #        next_sensors.append(e.transition_provider.next_sensor_index)
-        #    return next_sensors
-        #return None
+
 
     def get_next_workstation_and_step(self, available_workstations):
         workstation_step_pairs_ascending = self.workstation_service.get_next_workstations_and_step_sorted_duration_ascending(
@@ -135,15 +126,20 @@ class ProcessSimulationObjectCentric(ProcessSimulator):
             workforce_storage=self.workforce_storage
         )
 
+        workstations = [
+            self.workstation_service.get_workstation_by_name(self.workstations, next_available_step.end_location)
+            for next_available_step in workstation_step_pairs_ascending
+        ]
+
         if self.prior_step:
-            next_available_steps = self._get_next_step_by_event_provider(self.prior_step)
-            if next_available_steps:
+            next_available_step = self._get_next_step_by_event_provider(self.prior_step)
+            if next_available_step:
                 next_workstation_step_pairs = self.workstation_service.get_next_workstation_step_pair_parallel(
-                    next_available_steps,
-                    workstation_step_pairs_ascending,
-                    self.object_storage,
-                    self.workforce_storage,
-                    self.routeManagement
+                    workstations=workstations,
+                    next_available_steps=workstation_step_pairs_ascending,
+                    object_storage=self.object_storage,
+                    workforce_storage=self.workforce_storage,
+                    route_management=self.routeManagement
                 )
 
                 if not next_workstation_step_pairs:
@@ -151,35 +147,36 @@ class ProcessSimulationObjectCentric(ProcessSimulator):
                     return ValueError("No available workstations")
                 elif len(next_workstation_step_pairs) == 1:
                     next_workstation, next_step = next_workstation_step_pairs[0]
-                    return next_step, next_workstation
+                    return next_step
                 elif len(next_workstation_step_pairs) > 1:
-                    next_workstation, next_step = next_workstation_step_pairs[0]
-                    next_workstation_step_pairs.remove((next_workstation, next_step))
-                    for workstation, step in next_workstation_step_pairs:
-                        self.parallel_workstation_step_start_time.append((workstation, step, self.last_timestamp))
-                    return next_step, next_workstation
+                    next_step = next_workstation_step_pairs[0]
+                    next_workstation_step_pairs.remove(next_step)
+                    for step in next_workstation_step_pairs:
+                        self.parallel_workstation_step_start_time.append((step, self.last_timestamp))
+                    return next_step
 
-        next_step, next_workstation = self.get_random_workstation_step_or_parallel_start(
-            workstation_step_pairs_ascending)
-        return next_step, next_workstation
+        next_step = self.get_random_workstation_step_or_parallel_start(
+            workstation_step_pairs_ascending
+        )
+        return next_step
 
     def get_random_workstation_step_or_parallel_start(self, workstation_steps_ascending):
         if len(workstation_steps_ascending) > 1:
             parallel_workstation_step_time = []
 
-            possible_step = self.object_storage.contains_all_object_of_data_for_steps(workstation_steps_ascending)
+            possible_step = self.object_storage.filter_executable_events(workstation_steps_ascending)
             if self.workforce_storage:
                 possible_step = self.workforce_storage.contains_all_workforces_for_steps(
                     steps=workstation_steps_ascending, routeManagement=self.routeManagement)
             if possible_step:
-                for workstation, step in possible_step:
+                for step in possible_step:
                     parallel_workstation_step_time.append(
-                        (workstation, step, self.last_timestamp))
+                        (step, self.last_timestamp))
             self.parallel_workstation_step_start_time.extend(parallel_workstation_step_time[1:])
-            next_workstation, next_step, _ = parallel_workstation_step_time[0]
+            next_step, _ = parallel_workstation_step_time[0]
         else:
-            next_workstation, next_step = workstation_steps_ascending[0]
-        return next_step, next_workstation
+            next_step = workstation_steps_ascending[0]
+        return next_step
 
     def _get_sensor_with_id(self, data_source_id) -> DataSource:
         for sensor in self.datasources:
@@ -210,7 +207,11 @@ class ProcessSimulationObjectCentric(ProcessSimulator):
                 start_location = event_provider.start
                 end_location = event_provider.end
                 workstation_steps = []
-                #for event in events:
+
+                matching_workstation = self.workstation_service.get_workstation_by_name(
+                    self.workstations,
+                    workstation
+                )
                 workstation_steps.append(
                     WorkProcessStep(
                         activity=events.activity_provider.get_activity(),
@@ -224,10 +225,6 @@ class ProcessSimulationObjectCentric(ProcessSimulator):
                         start_location=start_location,
                         end_location=end_location
                     )
-                )
-                matching_workstation = self.workstation_service.get_workstation_by_name(
-                    workstation,
-                    self.workstations
                 )
                 if matching_workstation:
                     matching_workstation.add_steps_to_workstation(workstation_steps)
@@ -243,11 +240,12 @@ class ProcessSimulationObjectCentric(ProcessSimulator):
         if not workforce_start_positions:
             return
         self.workforce_storage = WorkforceStorage()
-        for workforce_start_position in workforce_start_positions.get("default"):
-            for i in range(workforce_start_position.numberOfWorkforce):
-                self.workforce_storage.add_workforce(
-                    Workforce(
-                        name=workforce_start_position.name,
-                        location=workforce_start_position.location
+        for workforce_start_position in workforce_start_positions:
+            for workforce in workforce_start_positions[workforce_start_position]:
+                for _ in range(workforce.numberOfWorkforce):
+                    self.workforce_storage.add_workforce(
+                        Workforce(
+                            name=workforce.name,
+                            location=workforce.location
+                        )
                     )
-                )

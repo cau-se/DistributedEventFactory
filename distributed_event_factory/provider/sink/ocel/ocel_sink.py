@@ -49,13 +49,13 @@ class OcelConsole(Sink):
 
         #TODO hrei hier bitte mehr Objekt-Typen mit considern
         for input_event in event.input:
-            new_row[input_event.get_object_type()] = input_event.get_object_type()
-            if input_event.get_object_type() not in self.object_types:
-                self.object_types.append(input_event.get_object_type())
+            new_row[input_event.objectName] = input_event.objectName
+            if input_event.objectName not in self.object_types:
+                self.object_types.append(input_event.objectName)
         for output_event in event.output:
-                new_row[output_event.get_object_type()] = output_event.get_object_type()
-                if output_event.get_object_type() not in self.object_types:
-                    self.object_types.append(output_event.get_object_type())
+                new_row[output_event.objectName] = output_event.objectName
+                if output_event.objectName not in self.object_types:
+                    self.object_types.append(output_event.objectName)
 
         self.rowsList.append(new_row)
         self.index += 1

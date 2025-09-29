@@ -9,8 +9,12 @@ class WorkforceStorage:
     def __init__(self):
         self.workforces: List[Workforce] = []
 
-    def get_workforce_at_location_available(self, workforce_input: InputWorkforceProvider, location: str,
-                                            workforce_storage):
+    def get_workforce_at_location_available(
+        self,
+        workforce_input: InputWorkforceProvider,
+        location: str,
+        workforce_storage
+    ):
         number_of_matching_workforces = 0
         workforce_set = []
         for workforce in workforce_storage:
@@ -60,34 +64,48 @@ class WorkforceStorage:
                     return workforce, route
         return None, None
 
-    def contains_all_workforces_for_steps(self, steps, routeManagement: RouteManagement, preselected=None):
+    def contains_all_workforces_for_steps(
+        self,
+        steps,
+        routeManagement: RouteManagement,
+        preselected=None
+    ):
         workforce_forecast = self.workforces.copy()
         possible_workstation_step_pairs = []
         currently_not_at_location = []
-        for workstation, step in steps:
+        for step in steps:
             if step.workforces_needed:
-                reserved_workforces, is_complete = self.get_all_workforces_at_location_available(step.workforces_needed,
-                                                                                                 step.start_location,
-                                                                                                 workforce_forecast)
+                reserved_workforces, is_complete = self.get_all_workforces_at_location_available(
+                    step.workforces_needed,
+                    step.start_location,
+                    workforce_forecast
+                )
                 if reserved_workforces and is_complete:
                     for reserved_workforce in reserved_workforces:
                         workforce_forecast.remove(reserved_workforce)
-                    possible_workstation_step_pairs.append((workstation, step))
+                    possible_workstation_step_pairs.append(step)
                 elif not is_complete and reserved_workforces:
                     return ValueError(len(reserved_workforces), step)
                 else:
                     if preselected and step.node in preselected:
-                        prefered_currently_not_at_location = [(workstation, step)]
+                        prefered_currently_not_at_location = [step]
                         possible_workstation_step_pairs = self.contains_workforces_near_by(
-                            prefered_currently_not_at_location, possible_workstation_step_pairs, routeManagement,
-                            workforce_forecast)
+                            prefered_currently_not_at_location,
+                            possible_workstation_step_pairs,
+                            routeManagement,
+                            workforce_forecast
+                        )
                     else:
-                        currently_not_at_location.append((workstation, step))
+                        currently_not_at_location.append(step)
             else:
-                possible_workstation_step_pairs.append((workstation, step))
+                possible_workstation_step_pairs.append(step)
 
-        return self.contains_workforces_near_by(currently_not_at_location, possible_workstation_step_pairs,
-                                                routeManagement, workforce_forecast)
+        return self.contains_workforces_near_by(
+            currently_not_at_location,
+            possible_workstation_step_pairs,
+            routeManagement,
+            workforce_forecast
+        )
 
     def contains_workforces_near_by(
             self,
@@ -96,7 +114,7 @@ class WorkforceStorage:
             routeManagement,
             workforce_forecast
     ):
-        for workstation, step in currently_not_at_location:
+        for step in currently_not_at_location:
             all_workforces_at_location = True
             steps_with_duration = []
             for workforce in step.workforces_needed:
@@ -115,7 +133,7 @@ class WorkforceStorage:
                 else:
                     all_workforces_at_location = False
             if all_workforces_at_location and steps_with_duration:
-                possible_workstation_step_pairs.append((workstation, step))
+                possible_workstation_step_pairs.append(step)
         return possible_workstation_step_pairs
 
     def manage_workforce_changes(self, step, routeManagement: RouteManagement):

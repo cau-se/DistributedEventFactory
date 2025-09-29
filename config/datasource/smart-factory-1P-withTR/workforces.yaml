@@ -1,5 +1,5 @@
 kind: workforces
-name: "default"
+name: "robot"
 spec:
   workforces:
     - name: "transportRobot"

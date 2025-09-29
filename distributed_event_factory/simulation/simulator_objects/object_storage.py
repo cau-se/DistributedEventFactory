@@ -13,6 +13,7 @@ class ObjectStorage:
     def __init__(self):
         self.objects: List[GenericObjectSource] = []
 
+
     def contains_all_object_of_data(self, objects: List[InputObjectProvider]):
         for obj in objects:
             if not obj.lastState:
@@ -204,11 +205,11 @@ class ObjectStorage:
                      item.object_id.unique_id == uid), None)
 
     def manage_input_and_output_of_steps(
-        self,
-        input_objects: List[InputObjectProvider],
-        output_objects: List[OutputObjectProvider],
-        object_templates: Dict[str, ObjectData],
-        timestamp
+            self,
+            input_objects: List[InputObjectProvider],
+            output_objects: List[OutputObjectProvider],
+            object_templates: Dict[str, ObjectData],
+            timestamp
     ):
         ingoing_objects = []
         outgoing_objects = []
@@ -264,10 +265,13 @@ class ObjectStorage:
                         output_object.objectName
                     ).clone()
                     if output_object.change:
-                        obj.add_change(ObjectData(timestamp=timestamp.strftime("%Y-%m-%d %H:%M:%S"),
-                                                  object_state=output_object.change,
-                                                  object_id=obj.object_id))
-
+                        obj.add_change(
+                            ObjectData(
+                                timestamp=timestamp.strftime("%Y-%m-%d %H:%M:%S"),
+                                object_state=output_object.change,
+                                object_id=obj.object_id
+                            )
+                        )
                     if output_object.size:
                         obj.size.length = output_object.size.length
                         obj.size.width = output_object.size.width
