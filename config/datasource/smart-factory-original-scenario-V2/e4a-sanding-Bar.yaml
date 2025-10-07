@@ -1,0 +1,36 @@
+kind: datasource
+name: "SandingBarA"
+spec:
+  name: "SandingBarA"
+  group: "factory"
+  type: objectCentric
+  workforce: hasWorkforce
+  start: "Al"
+  end: "Al"
+  workstation: "Al"
+  selection: genericProbability
+  distribution: [1.0]
+  input:
+    - object: "barA"
+      number: 1
+      lastState: "drilled"
+      size:
+        length: "180"
+        width: ""
+        depth: ""
+  workforces:
+    - workforce: "machineWorker"
+      number: 1
+  eventData:
+    - activity:
+        name: "Sanded"
+        output:
+          - object: "barA"
+            number: 1
+            change: "sanded"
+            size:
+              length: "180"
+              width: ""
+              depth: ""
+      transition: ""
+      duration: 2

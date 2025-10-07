@@ -1,0 +1,54 @@
+kind: datasource
+name: "OutgoingStock"
+spec:
+  name: "OutgoingStock"
+  group: "factory"
+  type: objectCentric
+  workforce: noWorkforce
+  start: "ST"
+  end: "ST"
+  workstation: "ST"
+  selection: genericProbability
+  distribution: [ 0.99, 0.01 ]
+  input:
+    - object: "resourceOrder"
+      number: 1
+      lastState: "1"
+      size:
+  eventData:
+    - activity:
+        name: "retrieve resources"
+        output:
+          - object: "barA"
+            number: 2
+            change: "Resource"
+            size:
+              length: "4"
+              width: ""
+              depth: ""
+          - object: "boardW"
+            number: 1
+            change: "Resource"
+            size:
+              length: ""
+              width: "30"
+              depth: "30"
+          - object: "screw1"
+            number: 13
+            change: ""
+            size:
+          - object: "pinW"
+            number: 13
+            change: ""
+            size:
+      duration: 5
+      transition: ""
+    - activity:
+        name: "Failure: Missing resources"
+        output:
+          - object: ""
+            number: 0
+            change: ""
+            size:
+      duration: 2
+      transition: ""

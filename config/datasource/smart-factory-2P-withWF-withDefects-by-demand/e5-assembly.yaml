@@ -1,0 +1,105 @@
+kind: datasource
+name: "Assembly1"
+spec:
+  name: "Assembly1"
+  group: "factory"
+  type: objectCentric
+  workforce: noWorkforce
+  start: "A"
+  end: "A"
+  workstation: "A"
+  selection: genericProbability
+  distribution: [ 0.98, 0.01, 0.01 ]
+  input:
+    - object: "barA"
+      number: 4
+      lastState: "sanded"
+      size:
+        length: "2"
+        width: ""
+        depth: ""
+    - object: "boardW"
+      number: 6
+      lastState: "sanded"
+      size:
+        length: ""
+        width: "5"
+        depth: "5"
+    - object: "screw1"
+      number: 13
+      lastState: ""
+      size:
+    - object: "pinW"
+      number: 13
+      lastState: ""
+      size:
+    - object: "handover"
+      number: 1
+      lastState: "Board"
+      size:
+    - object: "handover"
+      number: 1
+      lastState: "BarA"
+      size:
+    - object: "handover"
+      number: 1
+      lastState: ""
+      size:
+  eventData:
+    - activity:
+        name: "Assembling completed"
+        output:
+          - object: "shelf1"
+            number: 1
+            change: "assembled"
+            size:
+      duration: 15
+      transition: "QualityControl1"
+    - activity:
+        name: "Failure: Overheating"
+        output:
+          - object: "barA"
+            number: 4
+            change: "sanded"
+            size:
+              length: "2"
+              width: ""
+              depth: ""
+          - object: "boardW"
+            number: 6
+            change: "sanded"
+            size:
+              length: ""
+              width: "5"
+              depth: "5"
+          - object: "screw1"
+            number: 13
+            change: ""
+            size:
+          - object: "pinW"
+            number: 13
+            change: ""
+            size:
+          - object: "handover"
+            number: 1
+            change: "Board"
+            size:
+          - object: "handover"
+            number: 1
+            change: "BarA"
+            size:
+          - object: "handover"
+            number: 1
+            change: ""
+            size:
+      transition: ""
+      duration: 5
+    - activity:
+        name: "Failure: Item broke"
+        output:
+          - object: "shelf1"
+            number: 1
+            change: "broke"
+            size:
+      transition: ""
+      duration: 1

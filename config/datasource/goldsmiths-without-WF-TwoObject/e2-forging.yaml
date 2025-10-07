@@ -1,0 +1,36 @@
+kind: datasource
+name: "Forging"
+spec:
+  name: "Forging"
+  group: "factory"
+  type: objectCentric
+  workforce: noWorkforce
+  start: "O"
+  end: "O"
+  workstation: "O"
+  selection: genericProbability
+  distribution: [1.0]
+  input:
+    - object: "gold"
+      number: 1
+      lastState: "gold"
+      size:
+  eventData:
+    - activity:
+        name: "Forged"
+        output:
+          - object: "gold"
+            number: 1
+            change: "shaped"
+            size:
+      transition: "Shipping"
+      duration: 5
+    - activity:
+        name: "Forged"
+        output:
+          - object: "stoe"
+            number: 1
+            change: "shaped"
+            size:
+      transition: "Shipping"
+      duration: 5

@@ -1,0 +1,9 @@
+kind: object
+name: "crossWResource"
+spec:
+  name: "crossWResource"
+  type: "cross"
+  size:
+    length: "500"
+    width:
+    depth:

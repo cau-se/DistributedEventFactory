@@ -1,0 +1,7 @@
+kind: object
+name: "gold"
+spec:
+  name: "gold"
+  type: "object"
+  input:
+  size:

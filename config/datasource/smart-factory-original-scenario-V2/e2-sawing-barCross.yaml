@@ -1,0 +1,110 @@
+kind: datasource
+name: "SawingBarW"
+spec:
+  name: "SawingBarW"
+  group: "factory"
+  type: objectCentric
+  workforce: hasWorkforce
+  start: "W"
+  end: "W"
+  workstation: "W"
+  selection: genericProbability
+  distribution: [0.97, 0.01, 0.02]
+  input:
+    - object: "barWResource"
+      number: 1
+      lastState: ""
+      size:
+        length: "200"
+        width: ""
+        depth: ""
+    - object: "crossWResource"
+      number: 1
+      lastState: ""
+      size:
+        length: "160"
+        width: ""
+        depth: ""
+    - object: "handoverBarR"
+      number: 1
+      lastState: ""
+      size:
+  workforces:
+    - workforce: "machineWorker"
+      number: 1
+  eventData:
+    - activity:
+        name: "Sawed"
+        output:
+          - object: "barW"
+            number: 4
+            change: "divided Resource"
+            size:
+              length: "50"
+              width: ""
+              depth: ""
+          - object: "crossW"
+            number: 6
+            change: "divided Resource"
+            size:
+              length: "20"
+              width: ""
+              depth: ""
+      transition: ""
+      duration: 8
+    - activity:
+        name: "Failure: Sawing machine broken"
+        output:
+          - object: "barWResource"
+            number: 1
+            change: ""
+            size:
+              length: "200"
+              width: ""
+              depth: ""
+          - object: "crossWResource"
+            number: 1
+            change: ""
+            size:
+              length: "160"
+              width: ""
+              depth: ""
+          - object: "handoverBarR"
+            number: 1
+            change: ""
+            size:
+      duration: 20
+      transition: ""
+    - activity:
+        name: "Failure: One piece broken"
+        output:
+          - object: "barW"
+            number: 3
+            change: "divided Resource"
+            size:
+              length: "50"
+              width: ""
+              depth: ""
+          - object: "crossW"
+            number: 4
+            change: "divided Resource"
+            size:
+              length: "20"
+              width: ""
+              depth: ""
+          - object: "barW"
+            number: 1
+            change: "broken"
+            size:
+              length: "41.25"
+              width: ""
+              depth: ""
+          - object: "crossW"
+            number: 2
+            change: "broken"
+            size:
+              length: "17.5"
+              width: ""
+              depth: ""
+      duration: 8
+      transition: ""

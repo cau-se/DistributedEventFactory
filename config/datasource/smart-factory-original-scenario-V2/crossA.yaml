@@ -1,0 +1,9 @@
+kind: object
+name: "crossA"
+spec:
+  name: "crossA"
+  type: "cross"
+  size:
+    length: "500"
+    width: ""
+    depth: ""

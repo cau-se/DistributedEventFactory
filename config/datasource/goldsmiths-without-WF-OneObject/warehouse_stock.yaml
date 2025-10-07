@@ -1,0 +1,8 @@
+kind: stock
+name: "default"
+spec:
+  stocks:
+    - object: "gold"
+      number: 100
+      lastState: "order"
+      size:

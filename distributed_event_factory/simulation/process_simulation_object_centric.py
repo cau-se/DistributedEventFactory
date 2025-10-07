@@ -44,7 +44,7 @@ class ProcessSimulationObjectCentric:
         self.prior_step: str = ""
         self.parallel_workstation_step_start_time = []
 
-    def simulate(self) -> Event:
+    def simulate(self) -> (Event, ObjectStorage):
         if self.parallel_workstation_step_start_time:
             next_workstation, next_step, self.last_timestamp = self.parallel_workstation_step_start_time[0]
             self.parallel_workstation_step_start_time = self.parallel_workstation_step_start_time[1:]

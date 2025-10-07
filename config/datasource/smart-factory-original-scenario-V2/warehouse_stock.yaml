@@ -1,0 +1,70 @@
+kind: stock
+name: "default"
+spec:
+  stocks:
+    - object: "order1"
+      number: 1000
+      lastState:
+      size:
+    - object: "order2"
+      number: 1000
+      lastState:
+      size:
+    - object: "barAResource"
+      number: 150
+      lastState: ""
+      size:
+        length: "500"
+        width: ""
+        depth: ""
+    - object: "barWResource"
+      number: 150
+      lastState: ""
+      size:
+        length: "500"
+        width: ""
+        depth: ""
+    - object: "boardAResource"
+      number: 150
+      lastState: ""
+      size:
+        length: ""
+        width: "500"
+        depth: "500"
+    - object: "boardWResource"
+      number: 150
+      lastState: ""
+      size:
+        length: ""
+        width: "500"
+        depth: "500"
+    - object: "crossAResource"
+      number: 150
+      lastState: ""
+      size:
+        length: "500"
+        width: ""
+        depth: ""
+    - object: "crossWResource"
+      number: 150
+      lastState: ""
+      size:
+        length: "500"
+        width: ""
+        depth: ""
+    - object: "pinA"
+      number: 150
+      lastState: ""
+      size:
+    - object: "pinW"
+      number: 150
+      lastState: ""
+      size:
+    - object: "screw1"
+      number: 150
+      lastState: ""
+      size:
+    - object: "screw2"
+      number: 150
+      lastState: ""
+      size:

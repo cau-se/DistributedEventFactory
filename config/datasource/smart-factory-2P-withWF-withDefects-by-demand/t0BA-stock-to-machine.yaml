@@ -1,0 +1,40 @@
+kind: datasource
+name: "TransportM1BA"
+spec:
+  name: "TransportM1BA"
+  group: "transport"
+  type: objectCentric
+  workforce: hasWorkforce
+  workstation: "R"
+  start: "ST"
+  end: "Al"
+  selection: genericProbability
+  distribution: [1.0]
+  input:
+    - object: "boardA"
+      number: 1
+      lastState: "Resource"
+      size:
+        length: ""
+        width: "30"
+        depth: "30"
+  workforces:
+    - workforce: "transportRobot"
+      number: 1
+  eventData:
+    - activity:
+        name: "transport: stock -> MA"
+        output:
+          - object: "boardA"
+            number: 1
+            change: "Resource"
+            size:
+              length: ""
+              width: "30"
+              depth: "30"
+          - object: "handover"
+            number: 1
+            change: "BoardRA"
+            size:
+      transition: "SawingBoardA"
+      duration: 1

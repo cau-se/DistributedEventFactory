@@ -1,0 +1,75 @@
+kind: datasource
+name: "SawingBoardA"
+spec:
+  name: "SawingBoardA"
+  group: "factory"
+  type: objectCentric
+  workforce: hasWorkforce
+  start: "Al"
+  end: "Al"
+  workstation: "Al"
+  selection: genericProbability
+  distribution: [0.97, 0.01, 0.02]
+  input:
+    - object: "boardAResource"
+      number: 1
+      lastState: ""
+      size:
+        length: ""
+        width: "60"
+        depth: "60"
+    - object: "handoverBoardRA"
+      number: 1
+      lastState: ""
+      size:
+  workforces:
+    - workforce: "machineWorker"
+      number: 1
+  eventData:
+    - activity:
+        name: "Sawed"
+        output:
+          - object: "boardA"
+            number: 3
+            change: "divided Resource"
+            size:
+              length: ""
+              width: "20"
+              depth: "20"
+      transition: ""
+      duration: 9
+    - activity:
+        name: "Failure: Sawing machine broken"
+        output:
+          - object: "boardAResource"
+            number: 1
+            change: ""
+            size:
+              length: ""
+              width: "60"
+              depth: "60"
+          - object: "handoverBoardRA"
+            number: 1
+            change: ""
+            size:
+      duration: 20
+      transition: ""
+    - activity:
+        name: "Failure: One piece broken"
+        output:
+          - object: "boardA"
+            number: 2
+            change: "divided Resource"
+            size:
+              length: ""
+              width: "20"
+              depth: "20"
+          - object: "boardA"
+            number: 1
+            change: "broken"
+            size:
+              length: ""
+              width: "19.32"
+              depth: "14.24"
+      duration: 4
+      transition: ""

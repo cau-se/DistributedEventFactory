@@ -1,0 +1,9 @@
+kind: object
+name: "barA"
+spec:
+  name: "barA"
+  type: "bar"
+  size:
+    length: "2"
+    width: ""
+    depth: ""

@@ -1,0 +1,42 @@
+kind: datasource
+name: "TransportSAAl"
+spec:
+  name: "TransportSAAl"
+  group: "transport"
+  type: objectCentric
+  workforce: hasWorkforce
+  workstation: "R7"
+  start: "ST"
+  end: "A"
+  selection: genericProbability
+  distribution: [1.0]
+  input:
+    - object: "screw2"
+      number: 8
+      lastState: ""
+      size:
+    - object: "pinA"
+      number: 24
+      lastState: ""
+      size:
+  workforces:
+    - workforce: "transportRobot"
+      number: 1
+  eventData:
+    - activity:
+        name: "transport: stock -> assembly"
+        output:
+          - object: "screw2"
+            number: 8
+            change: ""
+            size:
+          - object: "pinA"
+            number: 24
+            change: ""
+            size:
+          - object: "handoverA"
+            number: 1
+            change: ""
+            size:
+      transition: "Assembly"
+      duration: 2

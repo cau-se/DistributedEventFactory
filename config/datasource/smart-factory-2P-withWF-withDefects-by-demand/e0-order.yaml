@@ -1,0 +1,36 @@
+kind: datasource
+name: "OrderPlacement"
+spec:
+  name: "OrderPlacement"
+  group: "factory"
+  type: objectCentric
+  workforce: noWorkforce
+  start: "O"
+  end: "O"
+  workstation: "O"
+  selection: genericProbability
+  distribution: [0.5, 0.5]
+  input:
+    - object: "order"
+      number: 1
+      lastState: ""
+      size:
+  eventData:
+    - activity:
+        name: "order for resources"
+        output:
+          - object: "resourceOrder"
+            number: 1
+            change: "1"
+            size:
+      transition: "OutgoingStock"
+      duration: 0
+    - activity:
+        name: "order for resources"
+        output:
+          - object: "resourceOrder"
+            number: 1
+            change: "2"
+            size:
+      transition: "OutgoingStockA"
+      duration: 0

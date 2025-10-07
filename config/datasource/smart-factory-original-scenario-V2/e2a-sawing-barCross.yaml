@@ -1,0 +1,110 @@
+kind: datasource
+name: "SawingBarA"
+spec:
+  name: "SawingBarA"
+  group: "factory"
+  type: objectCentric
+  workforce: hasWorkforce
+  start: "Al"
+  end: "Al"
+  workstation: "Al"
+  selection: genericProbability
+  distribution: [0.97, 0.01, 0.02]
+  input:
+    - object: "barAResource"
+      number: 2
+      lastState: ""
+      size:
+        length: "360"
+        width: ""
+        depth: ""
+    - object: "crossAResource"
+      number: 3
+      lastState: ""
+      size:
+        length: "380"
+        width: ""
+        depth: ""
+    - object: "handoverBarRA"
+      number: 1
+      lastState: ""
+      size:
+  workforces:
+    - workforce: "machineWorker"
+      number: 1
+  eventData:
+    - activity:
+        name: "Sawed"
+        output:
+          - object: "barA"
+            number: 4
+            change: "divided Resource"
+            size:
+              length: "180"
+              width: ""
+              depth: ""
+          - object: "crossA"
+            number: 6
+            change: "divided Resource"
+            size:
+              length: "190"
+              width: ""
+              depth: ""
+      transition: ""
+      duration: 8
+    - activity:
+        name: "Failure: Sawing machine broken"
+        output:
+          - object: "barAResource"
+            number: 2
+            change: ""
+            size:
+              length: "360"
+              width: ""
+              depth: ""
+          - object: "handoverBarRA"
+            number: 1
+            change: ""
+            size:
+          - object: "crossAResource"
+            number: 3
+            change: ""
+            size:
+              length: "380"
+              width: ""
+              depth: ""
+      duration: 20
+      transition: ""
+    - activity:
+        name: "Failure: One piece broken"
+        output:
+          - object: "barA"
+            number: 3
+            change: "divided Resource"
+            size:
+              length: "180"
+              width: ""
+              depth: ""
+          - object: "barA"
+            number: 1
+            change: "broken"
+            size:
+              length: "179.25"
+              width: ""
+              depth: ""
+          - object: "crossA"
+            number: 5
+            change: "divided Resource"
+            size:
+              length: "190"
+              width: ""
+              depth: ""
+          - object: "crossA"
+            number: 1
+            change: "broken"
+            size:
+              length: "189.25"
+              width: ""
+              depth: ""
+      duration: 8
+      transition: ""
