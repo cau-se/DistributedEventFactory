@@ -13,3 +13,6 @@ class InputObjectProvider:
             for key, value in self.__dict__.items()
             if value
         })
+
+    def __repr__(self):
+        return self.__str__()
