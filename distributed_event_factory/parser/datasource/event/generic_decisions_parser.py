@@ -14,8 +14,5 @@ class GenericDecisionsParser(Parser):
         return GenericDecisions(
             self.dependencies[config['selection']].parse(config),
             self.dependencies[config['type']].parse(config),
-            config['workstation'],
-            self.dependencies[config['workforce']].parse(config),
-            config['start'],
-            config['end']
+            self.dependencies[config['workforce']].parse(config) if 'workforce' in config else []
         )

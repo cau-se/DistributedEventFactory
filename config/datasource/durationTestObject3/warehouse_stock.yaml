@@ -6,3 +6,7 @@ spec:
       number: 1000
       lastState:
       size:
+    - object: "humanWorkforce"
+      number: 2
+      lastState:
+      size:

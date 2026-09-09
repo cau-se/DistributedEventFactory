@@ -4,15 +4,15 @@ spec:
   name: "Forging"
   group: "factory"
   type: objectCentric
-  workforce: noWorkforce
-  start: "M"
-  end: "M"
-  workstation: "M"
   selection: genericProbability
   distribution: [1.0]
   eventType: genericDecisions
   input:
     - object: "gold"
+      number: 1
+      lastState: ""
+      size:
+    - object: "humanWorkforce"
       number: 1
       lastState: ""
       size:
@@ -23,6 +23,10 @@ spec:
         - object: "gold"
           number: 1
           change: "shaped"
+          size:
+        - object: "humanWorkforce"
+          number: 1
+          change: ""
           size:
       transition: ""
       duration: 5

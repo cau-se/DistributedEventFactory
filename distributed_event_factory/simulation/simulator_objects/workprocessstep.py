@@ -14,8 +14,7 @@ class WorkProcessStep:
             node,
             group_id,
             workforces_needed,
-            start_location,
-            end_location
+            transition=None
     ):
         self.input_objects = input_objects
         self.workforces_needed = workforces_needed
@@ -24,8 +23,7 @@ class WorkProcessStep:
         self.activity = activity
         self.node = node
         self.group_id = group_id
-        self.start_location = start_location
-        self.end_location = end_location
+        self.transition = transition
 
     def clone(self):
         return WorkProcessStep(
@@ -36,8 +34,7 @@ class WorkProcessStep:
             self.node,
             self.group_id,
             self.workforces_needed,
-            self.start_location,
-            self.end_location
+            self.transition
         )
 
     def produce_event(
