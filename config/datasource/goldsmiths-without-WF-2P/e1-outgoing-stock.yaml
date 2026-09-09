@@ -10,31 +10,32 @@ spec:
   workstation: "ST"
   selection: genericProbability
   distribution: [ 0.5, 0.5 ]
+  eventType: genericDecisions
   input:
     - object: "resourceOrder"
       number: 1
       lastState: ""
       size:
   eventData:
-    - activity:
-        name: "retrieve resources ring"
-        output:
-          - object: "gold"
-            number: 1
-            change: ""
-            size:
+    - activity: "retrieve resources ring"
+      output:
+        - object: "gold"
+          number: 1
+          change: ""
+          size:
       duration: 3
       transition: "ForgingA"
-    - activity:
-        name: "retrieve resources earrings"
-        output:
-          - object: "gold"
-            number: 2
-            change: ""
-            size:
-          - object: "stone"
-            number: 2
-            change: ""
-            size:
+      type: oc
+    - activity: "retrieve resources earrings"
+      output:
+        - object: "gold"
+          number: 2
+          change: ""
+          size:
+        - object: "stone"
+          number: 2
+          change: ""
+          size:
       duration: 8
       transition: "ForgingB"
+      type: oc

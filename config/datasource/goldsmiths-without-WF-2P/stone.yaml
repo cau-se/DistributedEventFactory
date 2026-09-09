@@ -2,7 +2,7 @@ kind: object
 name: "stone"
 spec:
   name: "stone"
-  type: "object"
+  type: "stone"
   input: 
     - object: "order"
       number: 1

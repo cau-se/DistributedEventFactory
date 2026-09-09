@@ -10,6 +10,7 @@ spec:
   workstation: "M"
   selection: genericProbability
   distribution: [1.0]
+  eventType: genericDecisions
   input:
     - object: "bar"
       number: 1
@@ -22,15 +23,15 @@ spec:
     - workforce: "machineWorker"
       number: 1
   eventData:
-    - activity:
-        name: "Sanded bar"
-        output:
-          - object: "bar"
-            number: 1
-            change: "sanded"
-            size:
-              length: "2"
-              width: ""
-              depth: ""
+    - activity: "Sanded bar"
+      output:
+        - object: "bar"
+          number: 1
+          change: "sanded"
+          size:
+            length: "2"
+            width: ""
+            depth: ""
       transition: "TransportM1A"
       duration: 2
+      type: oc

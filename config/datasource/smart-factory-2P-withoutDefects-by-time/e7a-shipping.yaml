@@ -10,18 +10,19 @@ spec:
   workstation: "S"
   selection: genericProbability
   distribution: [ 1.0 ]
+  eventType: genericDecisions
   input:
     - object: "shelf2"
       number: 1
       lastState: "proofed"
       size:
   eventData:
-    - activity:
-        name: "Package sent"
-        output:
-          - object: "shelf2"
-            number: 1
-            change: "sent"
-            size:
+    - activity: "Package sent"
+      output:
+        - object: "shelf2"
+          number: 1
+          change: "sent"
+          size:
       transition: ""
       duration: 5
+      type: oc

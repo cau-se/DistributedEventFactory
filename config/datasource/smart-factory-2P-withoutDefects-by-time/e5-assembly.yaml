@@ -10,6 +10,7 @@ spec:
   workstation: "A"
   selection: genericProbability
   distribution: [ 1.0 ]
+  eventType: genericDecisions
   input:
     - object: "barA"
       number: 4
@@ -34,12 +35,12 @@ spec:
       lastState: ""
       size:
   eventData:
-    - activity:
-        name: "Assembling completed"
-        output:
-          - object: "shelf1"
-            number: 1
-            change: "assembled"
-            size:
+    - activity: "Assembling completed"
+      output:
+        - object: "shelf1"
+          number: 1
+          change: "assembled"
+          size:
       duration: 15
       transition: "QualityControl1"
+      type: oc

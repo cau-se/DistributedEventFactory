@@ -10,6 +10,7 @@ spec:
   workstation: "W"
   selection: genericProbability
   distribution: [1.0]
+  eventType: genericDecisions
   input:
     - object: "barW"
       number: 1
@@ -19,15 +20,15 @@ spec:
         width: ""
         depth: ""
   eventData:
-    - activity:
-        name: "Drilled"
-        output:
-          - object: "barW"
-            number: 1
-            change: "drilled"
-            size:
-              length: "2"
-              width: ""
-              depth: ""
+    - activity: "Drilled"
+      output:
+        - object: "barW"
+          number: 1
+          change: "drilled"
+          size:
+            length: "2"
+            width: ""
+            depth: ""
       transition: "SandingBarW"
       duration: 3
+      type: oc

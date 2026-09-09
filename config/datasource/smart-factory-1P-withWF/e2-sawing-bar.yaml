@@ -10,6 +10,7 @@ spec:
   workstation: "M"
   selection: genericProbability
   distribution: [1.0]
+  eventType: genericDecisions
   input:
     - object: "barResource"
       number: 2
@@ -26,15 +27,15 @@ spec:
     - workforce: "machineWorker"
       number: 1
   eventData:
-    - activity:
-        name: "Sawed"
-        output:
-          - object: "bar"
-            number: 4
-            change: "divided Resource"
-            size:
-              length: "2"
-              width: ""
-              depth: ""
+    - activity: "Sawed"
+      output:
+        - object: "bar"
+          number: 4
+          change: "divided Resource"
+          size:
+            length: "2"
+            width: ""
+            depth: ""
       transition: "DrillingBar"
       duration: 4
+      type: oc

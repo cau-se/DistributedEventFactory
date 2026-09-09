@@ -10,6 +10,7 @@ spec:
   workstation: "M"
   selection: genericProbability
   distribution: [1.0]
+  eventType: genericDecisions
   input:
     - object: "gold"
       number: 1
@@ -19,12 +20,12 @@ spec:
     - workforce: "humanWorkforce"
       number: 1
   eventData:
-    - activity:
-        name: "Forged"
-        output:
-          - object: "gold"
-            number: 1
-            change: "earring_shaped"
-            size:
+    - activity: "Forged"
+      output:
+        - object: "gold"
+          number: 1
+          change: "earring_shaped"
+          size:
       transition: "Assembly"
       duration: 5
+      type: oc

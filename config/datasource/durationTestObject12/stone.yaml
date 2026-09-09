@@ -2,5 +2,5 @@ kind: object
 name: "stone"
 spec:
   name: "stone"
-  type: "object"
+  type: "stone"
   size:

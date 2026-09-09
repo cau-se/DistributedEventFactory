@@ -5,7 +5,9 @@ spec:
   group: "line"
   selection: genericProbability
   distribution: [1.0]
+  eventType: eventData
   eventData:
     - activity: ""
+      type: "case"
       transition: "A"
       duration: 0

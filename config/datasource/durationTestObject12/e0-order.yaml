@@ -10,6 +10,7 @@ spec:
   workstation: "O"
   selection: genericProbability
   distribution: [1.0]
+  eventType: genericDecisions
   input:
     - object: "order"
       number: 1
@@ -20,16 +21,16 @@ spec:
       lastState: ""
       size:
   eventData:
-    - activity:
-        name: "order for resources"
-        output:
-          - object: "resourceOrder"
-            number: 1
-            change: ""
-            size:
-          - object: "resourceOrder2"
-            number: 1
-            change: ""
-            size:
+    - activity: "order for resources"
+      output:
+        - object: "resourceOrder"
+          number: 1
+          change: ""
+          size:
+        - object: "resourceOrder2"
+          number: 1
+          change: ""
+          size:
       transition: "OutgoingStock"
       duration: 0
+      type: oc

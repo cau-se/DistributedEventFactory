@@ -10,18 +10,19 @@ spec:
   workstation: "M"
   selection: genericProbability
   distribution: [1.0]
+  eventType: genericDecisions
   input:
     - object: "gold"
       number: 1
       lastState: ""
       size:
   eventData:
-    - activity:
-        name: "Forged"
-        output:
-          - object: "gold"
-            number: 1
-            change: "ring_shaped"
-            size:
+    - activity: "Forged"
+      output:
+        - object: "gold"
+          number: 1
+          change: "ring_shaped"
+          size:
       transition: "ShippingA"
       duration: 5
+      type: oc

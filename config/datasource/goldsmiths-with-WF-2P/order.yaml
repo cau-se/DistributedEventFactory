@@ -2,6 +2,6 @@ kind: object
 name: "order"
 spec:
   name: "order"
-  type: "object"
+  type: "order"
   input:
   size:

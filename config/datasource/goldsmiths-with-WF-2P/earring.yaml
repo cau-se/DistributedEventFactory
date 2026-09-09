@@ -2,7 +2,7 @@ kind: object
 name: "earring"
 spec:
   name: "earring"
-  type: "object"
+  type: "earring"
   input: 
     - object: "order"
       number: 1

@@ -10,6 +10,7 @@ spec:
   workstation: "W"
   selection: genericProbability
   distribution: [1.0]
+  eventType: genericDecisions
   input:
     - object: "boardWResource"
       number: 1
@@ -19,15 +20,15 @@ spec:
         width: "30"
         depth: "30"
   eventData:
-    - activity:
-        name: "Sawed"
-        output:
-          - object: "boardW"
-            number: 6
-            change: "divided Resource"
-            size:
-              length: ""
-              width: "5"
-              depth: "5"
+    - activity: "Sawed"
+      output:
+        - object: "boardW"
+          number: 6
+          change: "divided Resource"
+          size:
+            length: ""
+            width: "5"
+            depth: "5"
       transition: "SandingBoardW"
       duration: 9
+      type: oc

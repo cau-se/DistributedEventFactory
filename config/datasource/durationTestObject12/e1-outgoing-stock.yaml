@@ -8,7 +8,9 @@ spec:
   start: "ST"
   end: "ST"
   workstation: "ST"
-  selection: parallel
+  selection: genericProbability
+  distribution: [1.0]
+  eventType: genericDecisions
   input:
     - object: "resourceOrder"
       number: 1
@@ -19,36 +21,36 @@ spec:
       lastState: ""
       size:
   eventData:
-    - activity:
-        name: "retrieve resources"
-        output:
-          - object: "gold"
-            number: 1
-            change: ""
-            size:
-          - object: "whitegold"
-            number: 1
-            change: ""
-            size:
-          - object: "silver"
-            number: 1
-            change: ""
-            size:
-          - object: "stone"
-            number: 1
-            change: ""
-            size:
-          - object: "diamond"
-            number: 1
-            change: ""
-            size:
-          - object: "smaragd"
-            number: 1
-            change: ""
-            size:
-          - object: "rubin"
-            number: 1
-            change: ""
-            size:
+    - activity: "retrieve resources"
+      output:
+        - object: "gold"
+          number: 1
+          change: ""
+          size:
+        - object: "whitegold"
+          number: 1
+          change: ""
+          size:
+        - object: "silver"
+          number: 1
+          change: ""
+          size:
+        - object: "stone"
+          number: 1
+          change: ""
+          size:
+        - object: "diamond"
+          number: 1
+          change: ""
+          size:
+        - object: "smaragd"
+          number: 1
+          change: ""
+          size:
+        - object: "rubin"
+          number: 1
+          change: ""
+          size:
       duration: 3
       transition: "Forging"
+      type: oc

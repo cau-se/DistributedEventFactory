@@ -10,6 +10,7 @@ spec:
   end: "M"
   selection: genericProbability
   distribution: [1.0]
+  eventType: genericDecisions
   input:
     - object: "barResource"
       number: 2
@@ -22,19 +23,19 @@ spec:
     - workforce: "transportRobot"
       number: 1
   eventData:
-    - activity:
-        name: "transport: stock -> M1"
-        output:
-          - object: "barResource"
-            number: 2
-            change: ""
-            size:
-              length: "4"
-              width: ""
-              depth: ""
-          - object: "handoverBarR"
-            number: 1
-            change: ""
-            size:
+    - activity: "transport: stock -> M1"
+      output:
+        - object: "barResource"
+          number: 2
+          change: ""
+          size:
+            length: "4"
+            width: ""
+            depth: ""
+        - object: "handoverBarR"
+          number: 1
+          change: ""
+          size:
       transition: "SawingBar"
       duration: 1
+      type: oc

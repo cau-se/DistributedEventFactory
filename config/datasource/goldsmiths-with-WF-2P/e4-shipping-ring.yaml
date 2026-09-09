@@ -10,6 +10,7 @@ spec:
   workstation: "S"
   selection: genericProbability
   distribution: [ 0.2, 0.8 ]
+  eventType: genericDecisions
   input:
     - object: "gold"
       number: 1
@@ -19,21 +20,21 @@ spec:
     - workforce: "humanWorkforce"
       number: 1
   eventData:
-    - activity:
-        name: "Package waits for sending"
-        output:
-          - object: "gold"
-            number: 1
-            change: "ring_shaped"
-            size:
+    - activity: "Package waits for sending"
+      output:
+        - object: "gold"
+          number: 1
+          change: "ring_shaped"
+          size:
       transition: "Shipping"
       duration: 20
-    - activity:
-        name: "Package sent"
-        output:
-          - object: "gold"
-            number: 1
-            change: "shipped"
-            size:
+      type: oc
+    - activity: "Package sent"
+      output:
+        - object: "gold"
+          number: 1
+          change: "shipped"
+          size:
       transition: ""
       duration: 1
+      type: oc
