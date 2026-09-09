@@ -4,10 +4,6 @@ spec:
   name: "OutgoingStock"
   group: "factory"
   type: objectCentric
-  workforce: noWorkforce
-  start: "ST"
-  end: "ST"
-  workstation: "ST"
   selection: genericProbability
   distribution: [ 1.0 ]
   eventType: genericDecisions
@@ -18,6 +14,7 @@ spec:
       size:
   eventData:
     - type: "oc"
+      type: oc
       activity: "retrieve resources"
       duration: 5
       transition: ""

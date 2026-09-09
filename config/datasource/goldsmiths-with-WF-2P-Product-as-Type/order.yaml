@@ -2,5 +2,5 @@ kind: object
 name: "order"
 spec:
   name: "order"
-  type: "ring"
+  type: "order"
   size:

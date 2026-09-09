@@ -2,7 +2,7 @@ kind: object
 name: "resourceOrder"
 spec:
   name: "resourceOrder"
-  type: "order"
+  type: "resourceOrder"
   input:
   length: ""
   width: ""

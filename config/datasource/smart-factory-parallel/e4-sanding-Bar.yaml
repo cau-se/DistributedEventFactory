@@ -4,19 +4,19 @@ spec:
   name: "SandingBar"
   group: "factory"
   type: objectCentric
-  workstation: "groupname"
   selection: genericProbability
   distribution: [1.0]
+  eventType: genericDecisions
   input:
     - object: "bar"
       number: 1
       lastState: "drilled"
   eventData:
-    - activity:
-        name: "Sanded bar"
-        output:
-          - object: "bar"
-            number: 1
-            change: "sanded"
+    - activity: "Sanded bar"
+      type: oc
+      output:
+        - object: "bar"
+          number: 1
+          change: "sanded"
       transition: "TransportM1A"
       duration: 5

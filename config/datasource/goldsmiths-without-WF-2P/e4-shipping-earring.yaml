@@ -4,10 +4,6 @@ spec:
   name: "ShippingB"
   group: "factory"
   type: objectCentric
-  workforce: noWorkforce
-  start: "S"
-  end: "S"
-  workstation: "S"
   selection: genericProbability
   distribution: [ 0.2, 0.8 ]
   eventType: genericDecisions

@@ -2,7 +2,7 @@ kind: object
 name: "crossAResource"
 spec:
   name: "crossAResource"
-  type: "resource"
+  type: "crossAResource"
   size:
     length: "500"
     width: ""

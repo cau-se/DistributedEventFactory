@@ -4,10 +4,6 @@ spec:
   name: "DrillingBar"
   group: "factory"
   type: objectCentric
-  workforce: noWorkforce
-  start: "D"
-  end: "D"
-  workstation: "D"
   selection: genericProbability
   distribution: [1.0]
   eventType: genericDecisions
@@ -21,6 +17,7 @@ spec:
         depth: ""
   eventData:
     - activity: "Drilled"
+      type: oc
       type: "oc"
       output:
         - object: "bar"

@@ -2,5 +2,5 @@ kind: object
 name: "handoverBarR"
 spec:
   name: "handoverBarR"
-  type: "resource"
+  type: "handoverBarR"
   size:

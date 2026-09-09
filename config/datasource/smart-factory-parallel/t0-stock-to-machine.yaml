@@ -4,22 +4,22 @@ spec:
   name: "TransportM1"
   group: "transport"
   type: objectCentric
-  workstation: "groupname"
   selection: genericProbability
   distribution: [1.0]
+  eventType: genericDecisions
   input:
     - object: "barResource"
       number: 1
       lastState: ""
   eventData:
-    - activity:
-        name: "transport from stock to M1"
-        output:
-          - object: "barResource"
-            number: 1
-            change: ""
-          - object: "handover"
-            number: 1
-            change: ""
+    - activity: "transport from stock to M1"
+      type: oc
+      output:
+        - object: "barResource"
+          number: 1
+          change: ""
+        - object: "handover"
+          number: 1
+          change: ""
       transition: "SawingBar"
       duration: 10

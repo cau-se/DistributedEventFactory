@@ -2,5 +2,5 @@ kind: object
 name: "resourceOrder"
 spec:
   name: "resourceOrder"
-  type: "ring"
+  type: "resourceOrder"
   size:

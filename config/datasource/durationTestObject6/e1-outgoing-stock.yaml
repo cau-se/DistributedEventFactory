@@ -4,10 +4,6 @@ spec:
   name: "OutgoingStock"
   group: "factory"
   type: objectCentric
-  workforce: noWorkforce
-  start: "ST"
-  end: "ST"
-  workstation: "ST"
   selection: genericProbability
   distribution: [1.0]
   eventType: genericDecisions

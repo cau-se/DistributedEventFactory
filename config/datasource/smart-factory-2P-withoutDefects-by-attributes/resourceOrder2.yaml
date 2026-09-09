@@ -2,5 +2,5 @@ kind: object
 name: "resourceOrder2"
 spec:
   name: "resourceOrder2"
-  type: "standard"
+  type: "resourceOrder2"
   size:

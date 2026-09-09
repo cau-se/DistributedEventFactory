@@ -2,7 +2,7 @@ kind: object
 name: "boardResource"
 spec:
   name: "boardResource"
-  type: "resource"
+  type: "boardResource"
   size:
     length: ""
     width: "30"

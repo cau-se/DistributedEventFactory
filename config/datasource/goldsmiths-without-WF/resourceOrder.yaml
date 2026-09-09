@@ -2,6 +2,6 @@ kind: object
 name: "resourceOrder"
 spec:
   name: "resourceOrder"
-  type: "object"
+  type: "resourceOrder"
   input:
   size:

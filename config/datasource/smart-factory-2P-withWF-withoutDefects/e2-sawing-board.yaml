@@ -4,12 +4,9 @@ spec:
   name: "SawingBoardW"
   group: "factory"
   type: objectCentric
-  workforce: hasWorkforce
-  start: "W"
-  end: "W"
-  workstation: "W"
   selection: genericProbability
   distribution: [1.0]
+  eventType: genericDecisions
   input:
     - object: "boardWResource"
       number: 1
@@ -22,19 +19,16 @@ spec:
       number: 1
       lastState: ""
       size:
-  workforces:
-    - workforce: "machineWorker"
-      number: 1
   eventData:
-    - activity:
-        name: "Sawed"
-        output:
-          - object: "boardW"
-            number: 6
-            change: "divided Resource"
-            size:
-              length: ""
-              width: "5"
-              depth: "5"
+    - activity: "Sawed"
+      type: oc
+      output:
+        - object: "boardW"
+          number: 6
+          change: "divided Resource"
+          size:
+            length: ""
+            width: "5"
+            depth: "5"
       transition: "SandingBoardW"
       duration: 9

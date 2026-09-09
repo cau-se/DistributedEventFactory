@@ -2,5 +2,5 @@ kind: object
 name: "screw2"
 spec:
   name: "screw2"
-  type: "smallComponent"
+  type: "screw2"
   size:

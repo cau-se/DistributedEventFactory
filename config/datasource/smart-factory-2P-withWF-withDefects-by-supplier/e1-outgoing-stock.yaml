@@ -4,51 +4,48 @@ spec:
   name: "OutgoingStock"
   group: "factory"
   type: objectCentric
-  workforce: noWorkforce
-  start: "ST"
-  end: "ST"
-  workstation: "ST"
   selection: genericProbability
   distribution: [ 0.99, 0.01 ]
+  eventType: genericDecisions
   input:
     - object: "resourceOrder1"
       number: 1
       lastState: ""
       size:
   eventData:
-    - activity:
-        name: "retrieve resources"
-        output:
-          - object: "barAResource"
-            number: 2
-            change: ""
-            size:
-              length: "4"
-              width: ""
-              depth: ""
-          - object: "boardWResource"
-            number: 1
-            change: ""
-            size:
-              length: ""
-              width: "30"
-              depth: "30"
-          - object: "screw1"
-            number: 13
-            change: ""
-            size:
-          - object: "pinW"
-            number: 13
-            change: ""
-            size:
+    - activity: "retrieve resources"
+      type: oc
+      output:
+        - object: "barAResource"
+          number: 2
+          change: ""
+          size:
+            length: "4"
+            width: ""
+            depth: ""
+        - object: "boardWResource"
+          number: 1
+          change: ""
+          size:
+            length: ""
+            width: "30"
+            depth: "30"
+        - object: "screw1"
+          number: 13
+          change: ""
+          size:
+        - object: "pinW"
+          number: 13
+          change: ""
+          size:
       duration: 5
       transition: ""
-    - activity:
-        name: "Failure: Missing resources"
-        output:
-          - object: ""
-            number: 0
-            change: ""
-            size:
+    - activity: "Failure: Missing resources"
+      type: oc
+      output:
+        - object: ""
+          number: 0
+          change: ""
+          size:
       duration: 2
       transition: ""

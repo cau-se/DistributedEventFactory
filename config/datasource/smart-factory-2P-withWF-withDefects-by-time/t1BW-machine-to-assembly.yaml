@@ -4,12 +4,9 @@ spec:
   name: "TransportMWAB"
   group: "transport"
   type: objectCentric
-  workforce: hasWorkforce
-  workstation: "R"
-  start: "W"
-  end: "A"
   selection: genericProbability
   distribution: [1.0]
+  eventType: genericDecisions
   input:
     - object: "boardW"
       number: 6
@@ -18,23 +15,20 @@ spec:
         length: ""
         width: "5"
         depth: "5"
-  workforces:
-    - workforce: "transportRobot"
-      number: 1
   eventData:
-    - activity:
-        name: "transport: MW -> assembly"
-        output:
-          - object: "boardW"
-            number: 6
-            change: "sanded"
-            size:
-              length: ""
-              width: "5"
-              depth: "5"
-          - object: "handoverBoard"
-            number: 1
-            change: ""
-            size:
+    - activity: "transport: MW -> assembly"
+      type: oc
+      output:
+        - object: "boardW"
+          number: 6
+          change: "sanded"
+          size:
+            length: ""
+            width: "5"
+            depth: "5"
+        - object: "handoverBoard"
+          number: 1
+          change: ""
+          size:
       transition: "Assembly"
       duration: 1

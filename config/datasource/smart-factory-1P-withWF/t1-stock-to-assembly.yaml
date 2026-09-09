@@ -4,10 +4,6 @@ spec:
   name: "TransportSA"
   group: "transport"
   type: objectCentric
-  workforce: hasWorkforce
-  workstation: "R"
-  start: "ST"
-  end: "A"
   selection: genericProbability
   distribution: [1.0]
   eventType: genericDecisions
@@ -20,9 +16,6 @@ spec:
       number: 13
       lastState: ""
       size:
-  workforces:
-    - workforce: "transportRobot"
-      number: 1
   eventData:
     - activity: "transport: stock -> assembly"
       output:

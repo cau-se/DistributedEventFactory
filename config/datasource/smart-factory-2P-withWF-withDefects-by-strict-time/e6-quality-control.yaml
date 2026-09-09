@@ -4,43 +4,40 @@ spec:
   name: "QualityControl1"
   group: "factory"
   type: objectCentric
-  workforce: noWorkforce
-  start: "A"
-  end: "A"
-  workstation: "A"
   selection: genericProbability
   distribution: [ 0.8, 0.15, 0.05]
+  eventType: genericDecisions
   input:
     - object: "shelf1"
       number: 1
       lastState: "assembled"
       size:
   eventData:
-    - activity:
-        name: "Quality check passed"
-        output:
-          - object: "shelf1"
-            number: 1
-            change: "proofed"
-            size:
+    - activity: "Quality check passed"
+      type: oc
+      output:
+        - object: "shelf1"
+          number: 1
+          change: "proofed"
+          size:
       transition: "Shipping1"
       duration: 2
-    - activity:
-        name: "Item Corrections"
-        output:
-          - object: "shelf1"
-            number: 1
-            change: "proofed"
-            size:
+    - activity: "Item Corrections"
+      type: oc
+      output:
+        - object: "shelf1"
+          number: 1
+          change: "proofed"
+          size:
       transition: "Shipping1"
       duration: 12
-    - activity:
-        name: "Failure: Quality Insufficient"
-        output:
-          - object: "shelf1"
-            number: 1
-            change: "damaged"
-            size:
+    - activity: "Failure: Quality Insufficient"
+      type: oc
+      output:
+        - object: "shelf1"
+          number: 1
+          change: "damaged"
+          size:
       transition: ""
       duration: 2
 

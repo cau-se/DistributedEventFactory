@@ -4,29 +4,27 @@ spec:
   name: "Shipping"
   group: "factory"
   type: objectCentric
-  workstation: "Shipping"
   selection: genericProbability
   distribution: [ 0.8, 0.2 ]
+  eventType: genericDecisions
   input:
     - object: "woodShelf"
       number: 1
       lastState: ""
   eventData:
-    - activity:
-        name: "Package waits for sending"
-        type: "objectCentric"
-        output:
-          - object: "woodShelf"
-            number: 1
-            change: ""
+    - activity: "Package waits for sending"
+      type: oc
+      output:
+        - object: "woodShelf"
+          number: 1
+          change: ""
       transition: "Shipping"
       duration: 180
-    - activity:
-        name: "Package sent"
-        type: "objectCentric"
-        output:
-          - object: "woodShelf"
-            number: 1
-            change: ""
+    - activity: "Package sent"
+      type: oc
+      output:
+        - object: "woodShelf"
+          number: 1
+          change: ""
       transition: "<end>"
       duration: 1

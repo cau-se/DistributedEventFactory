@@ -6,18 +6,17 @@ spec:
   type: objectCentric
   selection: genericProbability
   distribution: [1.0]
-  workstation: "SandingBar"
+  eventType: genericDecisions
   input:
     - object: "bar"
       number: 1
       lastState: "drilled"
   eventData:
-    - activity:
-        name: "Sanded bar"
-        type: "objectCentric"
-        output:
-          - object: "bar"
-            number: 1
-            change: "sanded"
+    - activity: "Sanded bar"
+      type: oc
+      output:
+        - object: "bar"
+          number: 1
+          change: "sanded"
       transition: "Assembly"
       duration: 5

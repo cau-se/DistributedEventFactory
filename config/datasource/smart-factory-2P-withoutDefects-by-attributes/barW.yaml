@@ -2,7 +2,7 @@ kind: object
 name: "barW"
 spec:
   name: "barW"
-  type: "length"
+  type: "barW"
   size:
     length: "2"
     width: ""

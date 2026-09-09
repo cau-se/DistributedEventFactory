@@ -5,21 +5,20 @@ spec:
   group: "factory"
   type: objectCentric
   selection: parallel
-  workstation: "OutgoingStock"
+  eventType: genericDecisions
   input:
     - object: "order"
       number: 1
       lastState: ""
   eventData:
-    - activity:
-        name: "retrieve resources"
-        type: "objectCentric"
-        output:
-          - object: "barResource"
-            number: 1
-            change: ""
-          - object: "screw"
-            number: 13
-            change: ""
+    - activity: "retrieve resources"
+      type: oc
+      output:
+        - object: "barResource"
+          number: 1
+          change: ""
+        - object: "screw"
+          number: 13
+          change: ""
       duration: 3
       transition: "<routing>"

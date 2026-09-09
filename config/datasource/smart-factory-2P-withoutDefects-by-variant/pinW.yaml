@@ -2,5 +2,5 @@ kind: object
 name: "pinW"
 spec:
   name: "pinW"
-  type: "shelf1"
+  type: "pinW"
   size:

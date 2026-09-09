@@ -4,9 +4,9 @@ spec:
   name: "Assembly"
   group: "factory"
   type: objectCentric
-  workstation: "Assembly"
   selection: genericProbability
   distribution: [ 0.8, 0.1, 0.1 ]
+  eventType: genericDecisions
   input:
     - object: "bar"
       number: 4
@@ -15,30 +15,27 @@ spec:
       number: 13
       lastState: ""
   eventData:
-    - activity:
-        name: "Assembling completed"
-        type: "objectCentric"
-        output:
-          - object: "woodShelf"
-            number: 1
-            change: "assembled"
+    - activity: "Assembling completed"
+      type: oc
+      output:
+        - object: "woodShelf"
+          number: 1
+          change: "assembled"
       duration: 10
       transition: "Shipping"
-    - activity:
-        name: "Overheating"
-        type: "objectCentric"
-        output:
-          - object: "woodShelf"
-            number: 1
-            change: "overheated"
+    - activity: "Overheating"
+      type: oc
+      output:
+        - object: "woodShelf"
+          number: 1
+          change: "overheated"
       transition: "<end>"
       duration: 2
-    - activity:
-        name: "Item broke"
-        type: "objectCentric"
-        output:
-          - object: "woodShelf"
-            number: 1
-            change: "broke"
+    - activity: "Item broke"
+      type: oc
+      output:
+        - object: "woodShelf"
+          number: 1
+          change: "broke"
       transition: "<end>"
       duration: 1

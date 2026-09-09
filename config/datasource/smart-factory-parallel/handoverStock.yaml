@@ -2,7 +2,7 @@ kind: object
 name: "handoverStock"
 spec:
   name: "handoverStock"
-  type: "transport"
+  type: "handoverStock"
   input: 
     - object:
       number:

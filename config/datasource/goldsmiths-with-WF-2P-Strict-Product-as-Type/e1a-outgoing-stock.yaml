@@ -4,31 +4,25 @@ spec:
   name: "OutgoingStocka"
   group: "factory"
   type: objectCentric
-  workforce: hasWorkforce
-  start: "ST"
-  end: "ST"
-  workstation: "ST"
   selection: genericProbability
   distribution: [ 1 ]
+  eventType: genericDecisions
   input:
     - object: "earringResourceOrder"
       number: 1
       lastState: ""
       size:
-  workforces:
-    - workforce: "humanWorkforce"
-      number: 1
   eventData:
-    - activity:
-        name: "retrieve resources earrings"
-        output:
-          - object: "earringGold"
-            number: 2
-            change: ""
-            size:
-          - object: "stone"
-            number: 2
-            change: ""
-            size:
+    - activity: "retrieve resources earrings"
+      type: oc
+      output:
+        - object: "earringGold"
+          number: 2
+          change: ""
+          size:
+        - object: "stone"
+          number: 2
+          change: ""
+          size:
       duration: 8
       transition: "ForgingB"

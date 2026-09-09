@@ -2,7 +2,7 @@ kind: object
 name: "barResource"
 spec:
   name: "barResource"
-  type: "resource"
+  type: "barResource"
   size:
     length: "5"
     width: ""

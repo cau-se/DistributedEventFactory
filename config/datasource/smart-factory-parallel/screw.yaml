@@ -2,7 +2,7 @@ kind: object
 name: "screw"
 spec:
   name: "screw"
-  type: "smallComponent"
+  type: "screw"
   input: 
     - object: "order"
       number: 1

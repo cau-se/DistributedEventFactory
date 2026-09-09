@@ -4,10 +4,6 @@ spec:
   name: "QualityControl"
   group: "factory"
   type: objectCentric
-  workforce: noWorkforce
-  start: "A"
-  end: "A"
-  workstation: "A"
   selection: genericProbability
   distribution: [ 1.0 ]
   eventType: genericDecisions

@@ -4,12 +4,9 @@ spec:
   name: "TransportMAlA"
   group: "transport"
   type: objectCentric
-  workforce: hasWorkforce
-  workstation: "R6"
-  start: "Al"
-  end: "A"
   selection: genericProbability
   distribution: [1.0]
+  eventType: genericDecisions
   input:
     - object: "barA"
       number: 4
@@ -25,30 +22,27 @@ spec:
         length: "190"
         width: ""
         depth: ""
-  workforces:
-    - workforce: "transportRobot"
-      number: 1
   eventData:
-    - activity:
-        name: "transport: MA -> assembly"
-        output:
-          - object: "barA"
-            number: 4
-            change: "sanded"
-            size:
-              length: "180"
-              width: ""
-              depth: ""
-          - object: "crossA"
-            number: 6
-            change: "sanded"
-            size:
-              length: "190"
-              width: ""
-              depth: ""
-          - object: "handoverBarA"
-            number: 1
-            change: ""
-            size:
+    - activity: "transport: MA -> assembly"
+      type: oc
+      output:
+        - object: "barA"
+          number: 4
+          change: "sanded"
+          size:
+            length: "180"
+            width: ""
+            depth: ""
+        - object: "crossA"
+          number: 6
+          change: "sanded"
+          size:
+            length: "190"
+            width: ""
+            depth: ""
+        - object: "handoverBarA"
+          number: 1
+          change: ""
+          size:
       transition: "Assembly"
       duration: 1

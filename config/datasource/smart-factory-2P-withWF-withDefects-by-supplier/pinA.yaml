@@ -2,5 +2,5 @@ kind: object
 name: "pinA"
 spec:
   name: "pinA"
-  type: "smallComponent"
+  type: "pinA"
   size:

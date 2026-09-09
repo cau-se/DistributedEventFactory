@@ -4,12 +4,9 @@ spec:
   name: "TransportSA"
   group: "transport"
   type: objectCentric
-  workforce: hasWorkforce
-  workstation: "R5"
-  start: "STS"
-  end: "A"
   selection: genericProbability
   distribution: [1.0]
+  eventType: genericDecisions
   input:
     - object: "screw1"
       number: 15
@@ -19,24 +16,21 @@ spec:
       number: 20
       lastState: ""
       size:
-  workforces:
-    - workforce: "transportRobot"
-      number: 1
   eventData:
-    - activity:
-        name: "transport: stock -> assembly"
-        output:
-          - object: "screw1"
-            number: 15
-            change: ""
-            size:
-          - object: "pinW"
-            number: 20
-            change: ""
-            size:
-          - object: "handover"
-            number: 1
-            change: ""
-            size:
+    - activity: "transport: stock -> assembly"
+      type: oc
+      output:
+        - object: "screw1"
+          number: 15
+          change: ""
+          size:
+        - object: "pinW"
+          number: 20
+          change: ""
+          size:
+        - object: "handover"
+          number: 1
+          change: ""
+          size:
       transition: "Assembly"
       duration: 2

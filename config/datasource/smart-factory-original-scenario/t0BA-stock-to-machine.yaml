@@ -4,12 +4,9 @@ spec:
   name: "TransportM1BA"
   group: "transport"
   type: objectCentric
-  workforce: hasWorkforce
-  workstation: "R2"
-  start: "STA"
-  end: "Al"
   selection: genericProbability
   distribution: [1.0]
+  eventType: genericDecisions
   input:
     - object: "boardAResource"
       number: 1
@@ -18,23 +15,20 @@ spec:
         length: ""
         width: "60"
         depth: "60"
-  workforces:
-    - workforce: "transportRobot"
-      number: 1
   eventData:
-    - activity:
-        name: "transport: stock -> MA"
-        output:
-          - object: "boardAResource"
-            number: 1
-            change: ""
-            size:
-              length: ""
-              width: "60"
-              depth: "60"
-          - object: "handoverBoardRA"
-            number: 1
-            change: ""
-            size:
+    - activity: "transport: stock -> MA"
+      type: oc
+      output:
+        - object: "boardAResource"
+          number: 1
+          change: ""
+          size:
+            length: ""
+            width: "60"
+            depth: "60"
+        - object: "handoverBoardRA"
+          number: 1
+          change: ""
+          size:
       transition: "SawingBoardA"
       duration: 1

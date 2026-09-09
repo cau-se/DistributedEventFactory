@@ -5,19 +5,18 @@ spec:
   group: "factory"
   type: objectCentric
   selection: genericProbability
-  workstation: "SawingBar"
   distribution: [1.0]
+  eventType: genericDecisions
   input:
     - object: "barResource"
       number: 1
       lastState: ""
   eventData:
-    - activity:
-        name: "Sawed"
-        type: "objectCentric"
-        output:
-          - object: "bar"
-            number: 4
-            change: "divided Resource"
+    - activity: "Sawed"
+      type: oc
+      output:
+        - object: "bar"
+          number: 4
+          change: "divided Resource"
       transition: "DrillingBar"
       duration: 5

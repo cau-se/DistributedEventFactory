@@ -4,12 +4,9 @@ spec:
   name: "SawingBarA"
   group: "factory"
   type: objectCentric
-  workforce: hasWorkforce
-  start: "Al"
-  end: "Al"
-  workstation: "Al"
   selection: genericProbability
   distribution: [0.97, 0.01, 0.02]
+  eventType: genericDecisions
   input:
     - object: "barAResource"
       number: 2
@@ -22,54 +19,51 @@ spec:
       number: 1
       lastState: ""
       size:
-  workforces:
-    - workforce: "machineWorker"
-      number: 1
   eventData:
-    - activity:
-        name: "Sawed"
-        output:
-          - object: "barA"
-            number: 4
-            change: "divided Resource"
-            size:
-              length: "2"
-              width: ""
-              depth: ""
+    - activity: "Sawed"
+      type: oc
+      output:
+        - object: "barA"
+          number: 4
+          change: "divided Resource"
+          size:
+            length: "2"
+            width: ""
+            depth: ""
       transition: "DrillingBarA"
       duration: 4
-    - activity:
-        name: "Failure: Sawing machine broken"
-        output:
-          - object: "barAResource"
-            number: 2
-            change: ""
-            size:
-              length: "4"
-              width: ""
-              depth: ""
-          - object: "handoverBarRA"
-            number: 1
-            change: ""
-            size:
+    - activity: "Failure: Sawing machine broken"
+      type: oc
+      output:
+        - object: "barAResource"
+          number: 2
+          change: ""
+          size:
+            length: "4"
+            width: ""
+            depth: ""
+        - object: "handoverBarRA"
+          number: 1
+          change: ""
+          size:
       duration: 20
       transition: ""
-    - activity:
-        name: "Failure: One piece broken"
-        output:
-          - object: "barA"
-            number: 3
-            change: "divided Resource"
-            size:
-              length: "2"
-              width: ""
-              depth: ""
-          - object: "barA"
-            number: 1
-            change: "broken"
-            size:
-              length: "1.25"
-              width: ""
-              depth: ""
+    - activity: "Failure: One piece broken"
+      type: oc
+      output:
+        - object: "barA"
+          number: 3
+          change: "divided Resource"
+          size:
+            length: "2"
+            width: ""
+            depth: ""
+        - object: "barA"
+          number: 1
+          change: "broken"
+          size:
+            length: "1.25"
+            width: ""
+            depth: ""
       duration: 4
       transition: "DrillingBarA"

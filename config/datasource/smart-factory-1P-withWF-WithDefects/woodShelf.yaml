@@ -2,5 +2,5 @@ kind: object
 name: "woodShelf"
 spec:
   name: "woodShelf"
-  type: "product"
+  type: "woodShelf"
   size:

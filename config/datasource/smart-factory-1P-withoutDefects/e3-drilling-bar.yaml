@@ -4,12 +4,9 @@ spec:
   name: "DrillingBar"
   group: "factory"
   type: objectCentric
-  workforce: noWorkforce
-  start: "D"
-  end: "D"
-  workstation: "D"
   selection: genericProbability
   distribution: [1.0]
+  eventType: genericDecisions
   input:
     - object: "bar"
       number: 1
@@ -19,15 +16,15 @@ spec:
         width: ""
         depth: ""
   eventData:
-    - activity:
-        name: "Drilled"
-        output:
-          - object: "bar"
-            number: 1
-            change: "drilled"
-            size:
-              length: "2"
-              width: ""
-              depth: ""
+    - activity: "Drilled"
+      type: oc
+      output:
+        - object: "bar"
+          number: 1
+          change: "drilled"
+          size:
+            length: "2"
+            width: ""
+            depth: ""
       transition: "SandingBar"
       duration: 3

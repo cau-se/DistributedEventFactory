@@ -2,7 +2,7 @@ kind: object
 name: "board"
 spec:
   name: "board"
-  type: "processedResource"
+  type: "board"
   size:
     length:
     width: "5"

@@ -2,5 +2,5 @@ kind: object
 name: "handoverA"
 spec:
   name: "handoverA"
-  type: "transport"
+  type: "handoverA"
   size:

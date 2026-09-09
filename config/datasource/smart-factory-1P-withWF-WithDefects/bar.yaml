@@ -2,7 +2,7 @@ kind: object
 name: "bar"
 spec:
   name: "bar"
-  type: "processedResource"
+  type: "bar"
   size:
     length: "2"
     width: ""

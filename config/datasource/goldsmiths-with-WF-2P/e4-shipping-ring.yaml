@@ -4,10 +4,6 @@ spec:
   name: "ShippingA"
   group: "factory"
   type: objectCentric
-  workforce: hasWorkforce
-  start: "S"
-  end: "S"
-  workstation: "S"
   selection: genericProbability
   distribution: [ 0.2, 0.8 ]
   eventType: genericDecisions
@@ -16,9 +12,6 @@ spec:
       number: 1
       lastState: "ring_shaped"
       size:
-  workforces:
-    - workforce: "humanWorkforce"
-      number: 1
   eventData:
     - activity: "Package waits for sending"
       output:

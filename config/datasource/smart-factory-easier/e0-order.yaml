@@ -6,17 +6,17 @@ spec:
   type: objectCentric
   selection: genericProbability
   distribution: [1.0]
+  eventType: genericDecisions
   input:
     - object: "order"
       number: 1
       lastState: ""
   eventData:
-    - activity:
-        name: ""
-        type: "objectCentric"
-        output:
-          - object: "order"
-            number: "1"
-            change: ""
+    - activity: ""
+      type: oc
+      output:
+        - object: "order"
+          number: "1"
+          change: ""
       transition: "OutgoingStock"
       duration: 0

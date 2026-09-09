@@ -4,24 +4,21 @@ spec:
   name: "B"
   group: "factory"
   type: objectCentric
-  workforce: noWorkforce
-  start: "A"
-  end: "A"
-  workstation: "A"
   selection: genericProbability
   distribution: [1.0]
+  eventType: genericDecisions
   input:
     - object: "order"
       number: 1
       lastState: ""
       size:
   eventData:
-    - activity:
-        name: "order for resources"
-        output:
-          - object: "resourceOrder"
-            number: 1
-            change: ""
-            size:
+    - activity: "order for resources"
+      type: oc
+      output:
+        - object: "resourceOrder"
+          number: 1
+          change: ""
+          size:
       transition: "OutgoingStock"
       duration: 0

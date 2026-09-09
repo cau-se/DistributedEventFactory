@@ -2,7 +2,7 @@ kind: object
 name: "crossW"
 spec:
   name: "crossW"
-  type: "processedResource"
+  type: "crossW"
   size:
     length:
     width: "5"

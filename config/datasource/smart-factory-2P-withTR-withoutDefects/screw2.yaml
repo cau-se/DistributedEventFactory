@@ -2,5 +2,5 @@ kind: object
 name: "screw2"
 spec:
   name: "screw2"
-  type: "resource"
+  type: "screw2"
   size:

@@ -4,12 +4,9 @@ spec:
   name: "Assembly"
   group: "factory"
   type: objectCentric
-  workforce: noWorkforce
-  start: "M"
-  end: "M"
-  workstation: "M"
   selection: genericProbability
   distribution: [ 0.9, 0.1 ]
+  eventType: genericDecisions
   input:
     - object: "gold"
       number: 2
@@ -20,21 +17,21 @@ spec:
       lastState: ""
       size:
   eventData:
-    - activity:
-        name: "Assembling completed"
-        output:
-          - object: "earring"
-            number: 2
-            change: "assembled"
-            size:
+    - activity: "Assembling completed"
+      type: oc
+      output:
+        - object: "earring"
+          number: 2
+          change: "assembled"
+          size:
       duration: 10
       transition: "ShippingB"
-    - activity:
-        name: "Failure: Item broke"
-        output:
-          - object: "earring"
-            number: 2
-            change: "broke"
-            size:
+    - activity: "Failure: Item broke"
+      type: oc
+      output:
+        - object: "earring"
+          number: 2
+          change: "broke"
+          size:
       transition: ""
       duration: 2

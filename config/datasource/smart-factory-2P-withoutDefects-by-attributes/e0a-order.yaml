@@ -4,27 +4,21 @@ spec:
   name: "OrderPlacementA"
   group: "factory"
   type: objectCentric
-  workforce: hasWorkforce
-  start: "O"
-  end: "O"
-  workstation: "O"
   selection: genericProbability
   distribution: [1.0]
+  eventType: genericDecisions
   input:
     - object: "order2"
       number: 1
       lastState: ""
       size:
-  workforces:
-    - workforce: "manager"
-      number: 1
   eventData:
-    - activity:
-        name: "order for resources"
-        output:
-          - object: "resourceOrder2"
-            number: 1
-            change: ""
-            size:
+    - activity: "order for resources"
+      type: oc
+      output:
+        - object: "resourceOrder2"
+          number: 1
+          change: ""
+          size:
       transition: "OutgoingStockA"
       duration: 0

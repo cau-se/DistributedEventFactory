@@ -2,7 +2,7 @@ kind: object
 name: "bar"
 spec:
   name: "bar"
-  type: "processedResource"
+  type: "bar"
   input: 
     - object: "barResource"
       number: 1

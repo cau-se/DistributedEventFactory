@@ -2,5 +2,5 @@ kind: object
 name: "earringResourceOrder"
 spec:
   name: "earringResourceOrder"
-  type: "earring"
+  type: "earringResourceOrder"
   size:

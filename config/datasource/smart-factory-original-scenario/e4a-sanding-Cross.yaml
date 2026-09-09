@@ -4,12 +4,9 @@ spec:
   name: "SandingCrossA"
   group: "factory"
   type: objectCentric
-  workforce: hasWorkforce
-  start: "Al"
-  end: "Al"
-  workstation: "Al"
   selection: genericProbability
   distribution: [1.0]
+  eventType: genericDecisions
   input:
     - object: "crossA"
       number: 1
@@ -18,19 +15,16 @@ spec:
         length: "190"
         width: ""
         depth: ""
-  workforces:
-    - workforce: "machineWorker"
-      number: 1
   eventData:
-    - activity:
-        name: "Sanded"
-        output:
-          - object: "crossA"
-            number: 1
-            change: "sanded"
-            size:
-              length: "190"
-              width: ""
-              depth: ""
+    - activity: "Sanded"
+      type: oc
+      output:
+        - object: "crossA"
+          number: 1
+          change: "sanded"
+          size:
+            length: "190"
+            width: ""
+            depth: ""
       transition: ""
       duration: 2

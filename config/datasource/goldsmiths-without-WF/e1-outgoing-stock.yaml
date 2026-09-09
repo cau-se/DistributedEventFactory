@@ -4,23 +4,20 @@ spec:
   name: "OutgoingStock"
   group: "factory"
   type: objectCentric
-  workforce: noWorkforce
-  start: "ST"
-  end: "ST"
-  workstation: "ST"
   selection: parallel
+  eventType: genericDecisions
   input:
     - object: "resourceOrder"
       number: 1
       lastState: ""
       size:
   eventData:
-    - activity:
-        name: "retrieve resources"
-        output:
-          - object: "gold"
-            number: 1
-            change: ""
-            size:
+    - activity: "retrieve resources"
+      type: oc
+      output:
+        - object: "gold"
+          number: 1
+          change: ""
+          size:
       duration: 3
       transition: "Forging"

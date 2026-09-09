@@ -4,12 +4,9 @@ spec:
   name: "SandingBarW"
   group: "factory"
   type: objectCentric
-  workforce: hasWorkforce
-  start: "W"
-  end: "W"
-  workstation: "W"
   selection: genericProbability
   distribution: [1.0]
+  eventType: genericDecisions
   input:
     - object: "barW"
       number: 1
@@ -18,19 +15,16 @@ spec:
         length: "2"
         width: ""
         depth: ""
-  workforces:
-    - workforce: "machineWorker"
-      number: 1
   eventData:
-    - activity:
-        name: "Sanded"
-        output:
-          - object: "barW"
-            number: 1
-            change: "sanded"
-            size:
-              length: "2"
-              width: ""
-              depth: ""
+    - activity: "Sanded"
+      type: oc
+      output:
+        - object: "barW"
+          number: 1
+          change: "sanded"
+          size:
+            length: "2"
+            width: ""
+            depth: ""
       transition: "Assembly2"
       duration: 2

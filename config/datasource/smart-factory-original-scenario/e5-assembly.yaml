@@ -4,12 +4,9 @@ spec:
   name: "Assembly1"
   group: "factory"
   type: objectCentric
-  workforce: noWorkforce
-  start: "A"
-  end: "A"
-  workstation: "A"
   selection: genericProbability
   distribution: [ 0.94, 0.03, 0.03 ]
+  eventType: genericDecisions
   input:
     - object: "barA"
       number: 4
@@ -53,30 +50,30 @@ spec:
       lastState: ""
       size:
   eventData:
-    - activity:
-        name: "Assembling completed"
-        output:
-          - object: "shelf1"
-            number: 1
-            change: "assembled"
-            size:
+    - activity: "Assembling completed"
+      type: oc
+      output:
+        - object: "shelf1"
+          number: 1
+          change: "assembled"
+          size:
       duration: 15
       transition: "QualityControl1"
-    - activity:
-        name: "Failure: Overheating"
-        output:
-          - object: "shelf1"
-            number: 1
-            change: "overheated"
-            size:
+    - activity: "Failure: Overheating"
+      type: oc
+      output:
+        - object: "shelf1"
+          number: 1
+          change: "overheated"
+          size:
       transition: ""
       duration: 2
-    - activity:
-        name: "Failure: Item broke"
-        output:
-          - object: "shelf1"
-            number: 1
-            change: "broke"
-            size:
+    - activity: "Failure: Item broke"
+      type: oc
+      output:
+        - object: "shelf1"
+          number: 1
+          change: "broke"
+          size:
       transition: ""
       duration: 1

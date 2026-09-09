@@ -2,7 +2,7 @@ kind: object
 name: "boardWResource"
 spec:
   name: "boardWResource"
-  type: "shelf1"
+  type: "boardWResource"
   size:
     length: ""
     width: "30"

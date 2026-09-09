@@ -2,7 +2,7 @@ kind: object
 name: "barWResource"
 spec:
   name: "barWResource"
-  type: "shelf2"
+  type: "barWResource"
   size:
     length: "5"
     width: ""

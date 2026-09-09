@@ -2,7 +2,7 @@ kind: object
 name: "barW"
 spec:
   name: "barW"
-  type: "shelf2"
+  type: "barW"
   size:
     length: "2"
     width: ""

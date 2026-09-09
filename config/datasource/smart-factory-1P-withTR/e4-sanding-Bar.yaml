@@ -4,10 +4,6 @@ spec:
   name: "SandingBar"
   group: "factory"
   type: objectCentric
-  workforce: noWorkforce
-  start: "SA"
-  end: "SA"
-  workstation: "SA"
   selection: genericProbability
   distribution: [1.0]
   eventType: genericDecisions
@@ -21,6 +17,7 @@ spec:
         depth: ""
   eventData:
     - activity: "Sanded bar"
+      type: oc
       type: "oc"
       output:
         - object: "bar"

@@ -4,12 +4,9 @@ spec:
   name: "SawingBarW"
   group: "factory"
   type: objectCentric
-  workforce: noWorkforce
-  start: "W"
-  end: "W"
-  workstation: "W"
   selection: genericProbability
   distribution: [1.0]
+  eventType: genericDecisions
   input:
     - object: "barWResource"
       number: 2
@@ -19,15 +16,15 @@ spec:
         width: ""
         depth: ""
   eventData:
-    - activity:
-        name: "Sawed"
-        output:
-          - object: "barW"
-            number: 4
-            change: "divided Resource"
-            size:
-              length: "2"
-              width: ""
-              depth: ""
+    - activity: "Sawed"
+      type: oc
+      output:
+        - object: "barW"
+          number: 4
+          change: "divided Resource"
+          size:
+            length: "2"
+            width: ""
+            depth: ""
       transition: "DrillingBarW"
       duration: 4

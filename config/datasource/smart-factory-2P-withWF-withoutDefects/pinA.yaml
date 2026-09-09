@@ -2,5 +2,5 @@ kind: object
 name: "pinA"
 spec:
   name: "pinA"
-  type: "resource"
+  type: "pinA"
   size:

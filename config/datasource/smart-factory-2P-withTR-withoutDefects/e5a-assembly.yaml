@@ -4,12 +4,9 @@ spec:
   name: "Assembly2"
   group: "factory"
   type: objectCentric
-  workforce: noWorkforce
-  start: "A"
-  end: "A"
-  workstation: "A"
   selection: genericProbability
   distribution: [ 1.0 ]
+  eventType: genericDecisions
   input:
     - object: "barW"
       number: 4
@@ -46,12 +43,12 @@ spec:
       lastState: ""
       size:
   eventData:
-    - activity:
-        name: "Assembling completed"
-        output:
-          - object: "shelf2"
-            number: 1
-            change: "assembled"
-            size:
+    - activity: "Assembling completed"
+      type: oc
+      output:
+        - object: "shelf2"
+          number: 1
+          change: "assembled"
+          size:
       duration: 15
       transition: "QualityControl2"

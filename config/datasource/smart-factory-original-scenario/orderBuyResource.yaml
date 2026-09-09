@@ -2,5 +2,5 @@ kind: object
 name: "orderBuyResource"
 spec:
   name: "orderBuyResource"
-  type: "order"
+  type: "orderBuyResource"
   size:

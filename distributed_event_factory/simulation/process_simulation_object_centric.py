@@ -20,6 +20,8 @@ class ProcessSimulationObjectCentric(ProcessSimulator):
         self.last_timestamp = datetime.now()
         self.object_storage: ObjectStorageV2 = ObjectStorageV2()
         self.work_steps: List[WorkProcessStep] = []
+        self.available_datasource_ids: List[DataSourceId] = []
+        self.parallel_work_steps_with_start: List[tuple[WorkProcessStep, datetime]] = []
         self.next_step_id = None
 
     def configure(self, config: ProcessSimulatorConfig):
@@ -51,27 +53,82 @@ class ProcessSimulationObjectCentric(ProcessSimulator):
         self.stocks = stock_dict
 
     def simulate(self):
-        executable_steps = self.object_storage.filter_executable_events(self.work_steps)
-        if not executable_steps:
+        if self.parallel_work_steps_with_start:
+            parallel_step, parallel_start_time = self.parallel_work_steps_with_start[0]
+            self.parallel_work_steps_with_start = self.parallel_work_steps_with_start[1:]
+            self.last_timestamp = parallel_start_time
+            return self._execute_step(parallel_step)
+
+        executable_datasources_with_steps = self.get_executable_datasources_with_steps()
+        if not executable_datasources_with_steps:
             raise ValueError("No executable object-centric step available")
 
         if self.next_step_id:
-            preferred = [step for step in executable_steps if step.node == self.next_step_id]
+            preferred = [
+                datasource_with_steps
+                for datasource_with_steps in executable_datasources_with_steps
+                if datasource_with_steps[0].get_name() == self.next_step_id
+            ]
             if preferred:
-                executable_steps = preferred
+                executable_datasources_with_steps = preferred
 
-        executable_steps.sort(key=lambda step: step.duration)
-        next_step = executable_steps[0]
-        self.last_timestamp = self.last_timestamp + timedelta(seconds=next_step.duration)
-        self.next_step_id = next_step.transition
+        executable_datasources_with_steps.sort(key=lambda datasource_with_steps: datasource_with_steps[1][0].duration)
+        _, steps = executable_datasources_with_steps[0]
 
-        self.object_storage.process_event(next_step)
+        if len(steps) > 1:
+            parallel_start_time = self.last_timestamp
+            self.parallel_work_steps_with_start.extend(
+                [(step, parallel_start_time) for step in steps[1:]]
+            )
 
-        return next_step.produce_event(
+        return self._execute_step(steps[0])
+
+    def _execute_step(self, step: WorkProcessStep):
+        self.last_timestamp = self.last_timestamp + timedelta(seconds=step.duration)
+        self.next_step_id = step.transition
+        self.object_storage.process_event(step)
+        return step.produce_event(
             self.last_timestamp,
-            next_step.group_id,
-            next_step.input_objects,
-            next_step.output_objects
+            step.group_id,
+            step.input_objects,
+            step.output_objects
+        )
+
+    def get_executable_datasources_with_steps(self):
+        executable_datasources_with_steps = []
+
+        for data_source_id in self.available_datasource_ids:
+            datasource = self._get_sensor_with_id(data_source_id)
+            input_objects = datasource.event_provider.input_objects
+            if not self.object_storage.are_all_inputs_available(input_objects):
+                continue
+
+            steps = self.get_steps_for_datasource(datasource, data_source_id, input_objects)
+            if steps:
+                steps.sort(key=lambda step: step.duration)
+                executable_datasources_with_steps.append((data_source_id, steps))
+
+        return executable_datasources_with_steps
+
+    def get_steps_for_datasource(self, datasource: DataSource, data_source_id: DataSourceId, input_objects):
+        events = datasource.get_event_data()
+        if isinstance(events, list):
+            return [
+                self.build_work_step(data_source_id, datasource, input_objects, event)
+                for event in events
+            ]
+        return [self.build_work_step(data_source_id, datasource, input_objects, events)]
+
+    def build_work_step(self, data_source_id: DataSourceId, datasource: DataSource, input_objects, event):
+        return WorkProcessStep(
+            activity=event.activity_provider.get_activity(),
+            node=data_source_id.get_name(),
+            group_id=datasource.group_id,
+            input_objects=input_objects,
+            output_objects=event.output_provider,
+            duration=event.duration_provider.get_duration(),
+            workforces_needed=[],
+            transition=event.transition_provider.get_transition()
         )
 
     def _get_sensor_with_id(self, data_source_id: DataSourceId) -> DataSource:
@@ -91,24 +148,8 @@ class ProcessSimulationObjectCentric(ProcessSimulator):
             )
 
     def configure_work_steps(self):
+        self.available_datasource_ids = []
         for data_source in self.datasources:
             if data_source == "<end>":
                 continue
-
-            data_source_id = DataSourceId(data_source)
-            datasource = self._get_sensor_with_id(data_source_id)
-            event_provider = datasource.event_provider
-            events = datasource.get_event_data()
-
-            self.work_steps.append(
-                WorkProcessStep(
-                    activity=events.activity_provider.get_activity(),
-                    node=data_source_id.get_name(),
-                    group_id=datasource.group_id,
-                    input_objects=event_provider.input_objects,
-                    output_objects=events.output_provider,
-                    duration=events.duration_provider.get_duration(),
-                    workforces_needed=[],
-                    transition=events.transition_provider.get_transition()
-                )
-            )
+            self.available_datasource_ids.append(DataSourceId(data_source))

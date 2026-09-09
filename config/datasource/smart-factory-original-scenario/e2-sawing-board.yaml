@@ -4,12 +4,9 @@ spec:
   name: "SawingBoardW"
   group: "factory"
   type: objectCentric
-  workforce: hasWorkforce
-  start: "W"
-  end: "W"
-  workstation: "W"
   selection: genericProbability
   distribution: [0.97, 0.01, 0.02]
+  eventType: genericDecisions
   input:
     - object: "boardWResource"
       number: 1
@@ -22,54 +19,51 @@ spec:
       number: 1
       lastState: ""
       size:
-  workforces:
-    - workforce: "machineWorker"
-      number: 1
   eventData:
-    - activity:
-        name: "Sawed"
-        output:
-          - object: "boardW"
-            number: 5
-            change: "divided Resource"
-            size:
-              length: ""
-              width: "40"
-              depth: "30"
+    - activity: "Sawed"
+      type: oc
+      output:
+        - object: "boardW"
+          number: 5
+          change: "divided Resource"
+          size:
+            length: ""
+            width: "40"
+            depth: "30"
       transition: ""
       duration: 9
-    - activity:
-        name: "Failure: Sawing machine broken"
-        output:
-          - object: "boardWResource"
-            number: 1
-            change: ""
-            size:
-              length: ""
-              width: "200"
-              depth: "150"
-          - object: "handoverBoardR"
-            number: 1
-            change: ""
-            size:
+    - activity: "Failure: Sawing machine broken"
+      type: oc
+      output:
+        - object: "boardWResource"
+          number: 1
+          change: ""
+          size:
+            length: ""
+            width: "200"
+            depth: "150"
+        - object: "handoverBoardR"
+          number: 1
+          change: ""
+          size:
       duration: 20
       transition: ""
-    - activity:
-        name: "Failure: One piece broken"
-        output:
-          - object: "boardW"
-            number: 4
-            change: "divided Resource"
-            size:
-              length: ""
-              width: "40"
-              depth: "30"
-          - object: "boardW"
-            number: 1
-            change: "broken"
-            size:
-              length: ""
-              width: "35.32"
-              depth: "25.24"
+    - activity: "Failure: One piece broken"
+      type: oc
+      output:
+        - object: "boardW"
+          number: 4
+          change: "divided Resource"
+          size:
+            length: ""
+            width: "40"
+            depth: "30"
+        - object: "boardW"
+          number: 1
+          change: "broken"
+          size:
+            length: ""
+            width: "35.32"
+            depth: "25.24"
       duration: 4
       transition: ""

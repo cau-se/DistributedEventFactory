@@ -2,7 +2,7 @@ kind: object
 name: "boardA"
 spec:
   name: "boardA"
-  type: "aluminum"
+  type: "boardA"
   size:
     length:
     width: "5"

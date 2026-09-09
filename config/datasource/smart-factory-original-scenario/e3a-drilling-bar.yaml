@@ -4,12 +4,9 @@ spec:
   name: "DrillingBarA"
   group: "factory"
   type: objectCentric
-  workforce: hasWorkforce
-  start: "Al"
-  end: "Al"
-  workstation: "Al"
   selection: genericProbability
   distribution: [0.99, 0.01]
+  eventType: genericDecisions
   input:
     - object: "barA"
       number: 1
@@ -18,31 +15,28 @@ spec:
         length: "180"
         width: ""
         depth: ""
-  workforces:
-    - workforce: "machineWorker"
-      number: 1
   eventData:
-    - activity:
-        name: "Drilled"
-        output:
-          - object: "barA"
-            number: 1
-            change: "drilled"
-            size:
-              length: "180"
-              width: ""
-              depth: ""
+    - activity: "Drilled"
+      type: oc
+      output:
+        - object: "barA"
+          number: 1
+          change: "drilled"
+          size:
+            length: "180"
+            width: ""
+            depth: ""
       transition: ""
       duration: 3
-    - activity:
-        name: "Failure: Drilling machine broken"
-        output:
-          - object: "barA"
-            number: 1
-            change: "divided Resource"
-            size:
-              length: "180"
-              width: ""
-              depth: ""
+    - activity: "Failure: Drilling machine broken"
+      type: oc
+      output:
+        - object: "barA"
+          number: 1
+          change: "divided Resource"
+          size:
+            length: "180"
+            width: ""
+            depth: ""
       duration: 20
       transition: ""

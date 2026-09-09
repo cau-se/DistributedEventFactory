@@ -1,7 +1,0 @@
-kind: workforces
-name: "default"
-spec:
-  workforces:
-    - name: "transportRobot"
-      startLocation: "ST"
-      number: 3

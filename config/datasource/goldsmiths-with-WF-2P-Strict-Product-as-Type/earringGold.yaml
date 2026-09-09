@@ -2,5 +2,5 @@ kind: object
 name: "earringGold"
 spec:
   name: "earringGold"
-  type: "earring"
+  type: "earringGold"
   size:
