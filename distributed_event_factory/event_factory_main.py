@@ -10,6 +10,7 @@ if __name__ == '__main__':
     datasource = os.environ["DATASOURCE"]
     sink = os.environ["SINK"]
     simulation = os.environ["SIMULATION"]
+    process = os.environ["PROCESS"]
     content_root = os.environ["ROOT"]
     event_factory = EventFactory()
 
@@ -23,4 +24,5 @@ if __name__ == '__main__':
      .add_directory(f"{content_root}/config/datasource/{datasource}")
      .add_file(f"{content_root}/config/simulation/{simulation}")
      .add_file(f"{content_root}/config/sink/{sink}")
-     ).run(content_root = content_root)
+     .add_file(f"{content_root}/config/process_simulation/{process}")
+     ).run()
