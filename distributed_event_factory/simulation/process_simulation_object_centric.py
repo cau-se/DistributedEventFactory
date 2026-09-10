@@ -7,7 +7,7 @@ from distributed_event_factory.core.object import ObjectData
 from distributed_event_factory.provider.object.input.input_provider import InputObjectProvider
 from distributed_event_factory.simulation.abstract_process_simulator import ProcessSimulator
 from distributed_event_factory.simulation.abstract_process_simulator_config import ProcessSimulatorConfig
-from distributed_event_factory.simulation.simulator_objects.object_storage_v2 import ObjectStorageV2
+from distributed_event_factory.simulation.simulator_objects.object_storage import ObjectStorage
 from distributed_event_factory.simulation.simulator_objects.object_utility import ObjectUtility
 from distributed_event_factory.simulation.simulator_objects.workprocessstep import WorkProcessStep
 
@@ -15,7 +15,7 @@ from distributed_event_factory.simulation.simulator_objects.workprocessstep impo
 class ProcessSimulationObjectCentric(ProcessSimulator):
     def __init__(self):
         self.last_timestamp = datetime.now()
-        self.object_storage: ObjectStorageV2 = ObjectStorageV2()
+        self.object_storage: ObjectStorage = ObjectStorage()
         self.work_steps: List[WorkProcessStep] = []
         self.available_datasource_ids: List[DataSourceId] = []
         self.parallel_work_steps_with_start: List[tuple[WorkProcessStep, datetime]] = []

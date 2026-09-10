@@ -3,7 +3,7 @@ from typing import List
 from distributed_event_factory.core.object import ObjectData
 from distributed_event_factory.simulation.simulator_objects.workprocessstep import WorkProcessStep
 
-class ObjectStorageV2:
+class ObjectStorage:
 
     def __init__(self):
         self.objects: List[ObjectData] = []
