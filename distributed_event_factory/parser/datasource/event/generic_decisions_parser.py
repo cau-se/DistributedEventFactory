@@ -13,6 +13,5 @@ class GenericDecisionsParser(Parser):
     def parse(self, config):
         return GenericDecisions(
             self.dependencies[config['selection']].parse(config),
-            self.dependencies[config['type']].parse(config),
-            self.dependencies[config['workforce']].parse(config) if 'workforce' in config else []
+            self.dependencies[config['type']].parse(config)
         )

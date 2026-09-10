@@ -1,12 +1,9 @@
 from typing import Dict
 
 from distributed_event_factory.core.datasource import DataSource
-from distributed_event_factory.core.object import ObjectData
-from distributed_event_factory.core.route import Route
 from distributed_event_factory.provider.data.case_provider import CaseIdProvider
 from distributed_event_factory.provider.data.count_provider import CountProvider
 from distributed_event_factory.provider.load.load_provider import LoadProvider
-from distributed_event_factory.provider.object.input.input_provider import InputObjectProvider
 from distributed_event_factory.provider.sink.loadtest.loadtest_sink import LoadTestHttpSink
 from distributed_event_factory.simulation.abstract_simulation import Simulation
 from distributed_event_factory.simulation.process_simulation import DefProcessSimulator
@@ -39,15 +36,13 @@ class LoadTestSimulation(Simulation):
         for sink in self.sink:
             sink.start()
 
-    def run_simulation(self, data_sources: Dict[str, DataSource], datasource_sink_mapping: Dict[str, LoadTestHttpSink], objects: Dict[str, ObjectData], routes: Dict[str, Route], stocks: Dict[str, InputObjectProvider],
-                       hook=lambda: None):
+    def run_simulation(self, process_simulator, data_sources: Dict[str, DataSource], datasource_sink_mapping: Dict[str, LoadTestHttpSink], hook=lambda: None):
         self.setup_datasource_sink_mapping(datasource_sink_mapping)
         for sink in datasource_sink_mapping:
             self.sink.append(datasource_sink_mapping[sink])
 
         process_simulator = DefProcessSimulator(
             case_id_provider=self.case_id_provider,
-            data_sources=data_sources,
             max_concurrent_cases=self.max_concurrent_cases,
         )
         iteration = 0

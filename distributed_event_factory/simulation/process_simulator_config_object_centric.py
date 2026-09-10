@@ -20,11 +20,5 @@ class ProcessSimulatorConfigObjectCentric(ProcessSimulatorConfig):
     def add_objects(self, object_config: Dict[str, Any]):
         self.configs["object"] = object_config
 
-    def add_routes(self, route_config: Dict[str, Any]):
-        self.configs["route"] = route_config
-
     def add_stocks(self, stock_config: Dict[str, Any]):
         self.configs["stock"] = stock_config
-
-    def add_workforce_start_position(self, workforce_start_position: Dict[str, Any]):
-        self.configs["workforcePosition"] = workforce_start_position

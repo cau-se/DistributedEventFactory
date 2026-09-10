@@ -14,5 +14,4 @@ class DataSourceId:
 
 START_SENSOR_ID = DataSourceId("<start>")
 END_DATA_SOURCE_ID = DataSourceId("<end>")
-# TODO hrei: Why do we need that?
-ROUTING_ID = DataSourceId("<routing>")
+

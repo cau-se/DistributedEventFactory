@@ -7,12 +7,10 @@ from distributed_event_factory.parser.datasource.event.output.output_parser impo
 from distributed_event_factory.parser.datasource.event.transition.transition_parser import TransitionParser
 from distributed_event_factory.parser.object.object_source_parser import ObjectSourceParser
 from distributed_event_factory.parser.parser_registry import ParserRegistry
-from distributed_event_factory.parser.route.route_parser import RouteParser
 from distributed_event_factory.parser.simulation.case.case_id_parser import CaseIdParser
 from distributed_event_factory.parser.simulation.load.load_parser import LoadParser
 from distributed_event_factory.parser.sink.sink_parser import SinkParser
 from distributed_event_factory.parser.stock.stock_parser import StockParser
-from distributed_event_factory.parser.workforce.workforce_start_positions import WorkforceStartPositionParser
 from distributed_event_factory.provider.sink.sink_provider import Sink
 from distributed_event_factory.simulation.abstract_process_simulator import ProcessSimulator
 from distributed_event_factory.simulation.process_simulator_config_object_centric import \
@@ -30,9 +28,7 @@ class EventFactory:
         self.parser = ParserRegistry()
         # TODO hrei: Check Whether that is on the correct level
         self.objects = dict()
-        self.routes = dict()
         self.stocks = dict()
-        self.workforce_start_positions = dict()
 
     def add_load_parser(self, key: str, parser: LoadParser):
         self.parser.load_parser.add_dependency(key, parser)
@@ -70,12 +66,6 @@ class EventFactory:
     def add_object_source_parser(self, key: str, parser: ObjectSourceParser):
         self.parser.object_source_parser.add_dependency(key, parser)
 
-    def add_route_parser(self, key: str, parser: RouteParser):
-        self.parser.route_parser.add_dependency(key, parser)
-
-    def add_workforce_start_position_parser(self, key: str, parser: WorkforceStartPositionParser):
-        self.parser.workforce_start_position_parser.add_dependency(key, parser)
-
     def add_stock_parser(self, key: str, parser: StockParser):
         self.parser.warehouse_stock_parser.add_dependency(key, parser)
 
@@ -111,16 +101,8 @@ class EventFactory:
         self.objects[name] = object_source
         return self
 
-    def add_route(self, name, routes):
-        self.routes[name] = routes
-        return self
-
     def add_stock(self, name, stock):
         self.stocks[name] = stock
-        return self
-
-    def add_workforce_start_positions(self, name, workforce_start_positions):
-        self.workforce_start_positions[name] = workforce_start_positions
         return self
 
     def add_file(self, filename):
@@ -140,21 +122,15 @@ class EventFactory:
             # TODO hrei: These should also be on the level of the process simulator
             elif kind == "object":
                 self.add_object(name, parsed_object)
-            elif kind == "route":
-                self.add_route(name, parsed_object)
             elif kind == "stock":
                 self.add_stock(name, parsed_object)
-            elif kind == "workforces":
-                self.add_workforce_start_positions(name, parsed_object)
         return self
 
     def run(self, hook=lambda: None):
         process_simulator_config = ProcessSimulatorConfigObjectCentric()
         process_simulator_config.add_objects(self.objects)
-        process_simulator_config.add_routes(self.routes)
         process_simulator_config.add_stocks(self.stocks)
         process_simulator_config.add_datasources(self.datasources)
-        process_simulator_config.add_workforce_start_position(self.workforce_start_positions)
 
         self.process_simulator.configure(
             process_simulator_config

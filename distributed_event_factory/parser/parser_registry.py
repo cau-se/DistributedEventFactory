@@ -26,7 +26,6 @@ from distributed_event_factory.parser.datasource.event.selection.uniform_event_s
     UniformEventSelectionParser
 from distributed_event_factory.parser.datasource.event.transition.transition_parser import TransitionParser
 from distributed_event_factory.parser.object.object_source_parser import ObjectSourceParser
-from distributed_event_factory.parser.route.route_parser import RouteParser
 from distributed_event_factory.parser.simulation.case.case_id_parser import CaseIdParser
 from distributed_event_factory.parser.datasource.data_source_parser import DataSourceParser
 from distributed_event_factory.parser.datasource.event.distribution_parser import DistributionParser
@@ -57,11 +56,8 @@ from distributed_event_factory.parser.sink.ui_sink_parser import UiSinkParser
 from distributed_event_factory.provider.data.increasing_case import IncreasingCaseIdProvider
 from distributed_event_factory.parser.datasource.event.input.input_parser import InputParser
 from distributed_event_factory.parser.datasource.event.output.output_parser import OutputParser, DummyObjectParser
-from distributed_event_factory.parser.route.route_parser import RouteParser
 from distributed_event_factory.parser.sink.ocel_sink_parser import OcelConsoleSinkParser
 from distributed_event_factory.parser.stock.stock_parser import StockParser
-from distributed_event_factory.parser.workforce.workforce_parser import WorkforceParser, DummyWorkforceParser
-from distributed_event_factory.parser.workforce.workforce_start_positions import WorkforceStartPositionParser
 
 
 class ParserRegistry:
@@ -69,8 +65,6 @@ class ParserRegistry:
         # Objects
         # hrei check this Dummy ObjectParser
         self.dummy_object_parser = DummyObjectParser()
-        self.workforce_parser = WorkforceParser()
-        self.dummy_workforce_parser = DummyWorkforceParser()
 
         # Count
         self.constant_count_parser = ConstantCountParser()
@@ -184,8 +178,6 @@ class ParserRegistry:
                 .add_dependency("driftingProbability", self.drifting_selection_parser)
                 .add_dependency("parallel", self.parallel_event_selection_parser)
                 .add_dependency("objectCentric", self.input_parser)
-                .add_dependency("hasWorkforce", self.workforce_parser)
-                .add_dependency("noWorkforce", self.dummy_workforce_parser)
                 .add_dependency("default", self.dummy_object_parser)
         )
 
@@ -206,10 +198,6 @@ class ParserRegistry:
 
         # Input
         self.object_source_parser = ObjectSourceParser()
-        self.workforce_start_position_parser = WorkforceStartPositionParser()
-
-        # Route
-        self.route_parser = RouteParser()
 
         # Warehouse Stocks
         self.warehouse_stock_parser = StockParser()
@@ -276,6 +264,4 @@ class ParserRegistry:
                                         .add_dependency("simulation", self.simulation_parser)
                                         .add_dependency("processSimulator", self.process_simulation_parser)
                                         .add_dependency("object", self.object_source_parser)
-                                        .add_dependency("route", self.route_parser)
-                                        .add_dependency("stock", self.warehouse_stock_parser)
-                                        .add_dependency("workforces", self.workforce_start_position_parser))
+                                        .add_dependency("stock", self.warehouse_stock_parser))
