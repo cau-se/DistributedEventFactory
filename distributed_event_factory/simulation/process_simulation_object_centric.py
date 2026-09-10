@@ -13,10 +13,7 @@ from distributed_event_factory.simulation.simulator_objects.workprocessstep impo
 
 
 class ProcessSimulationObjectCentric(ProcessSimulator):
-    def __init__(
-            self,
-            object_storage,
-    ):
+    def __init__(self):
         self.last_timestamp = datetime.now()
         self.object_storage: ObjectStorageV2 = ObjectStorageV2()
         self.work_steps: List[WorkProcessStep] = []

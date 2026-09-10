@@ -13,7 +13,6 @@ class CountBasedSimulation(Simulation):
         self.sinks = dict()
         self.max_concurrent_cases = max_concurrent_cases
 
-    # TODO hrei: Check that the correct process simulator is used here
     def run(self, process_simulator, steps, hook):
         for i in range(steps):
             self.send_event(process_simulator.simulate())
@@ -27,6 +26,4 @@ class CountBasedSimulation(Simulation):
         hook=lambda: None
     ):
         self.setup_datasource_sink_mapping(sinks)
-        #for data_source in data_sources:
-        #    process_simulator.add_datasource(name=data_source, data_source=data_sources[data_source])
         self.run(process_simulator, int(self.simulation_steps), hook)

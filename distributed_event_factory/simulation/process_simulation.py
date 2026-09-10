@@ -1,7 +1,6 @@
 import string
 from datetime import datetime, timedelta
 from queue import PriorityQueue
-from typing import Dict
 
 from distributed_event_factory.provider.data.count_provider import CountProvider
 from distributed_event_factory.simulation.abstract_process_simulator import ProcessSimulator
@@ -19,7 +18,6 @@ class DefProcessSimulator(ProcessSimulator):
             case_id_provider: CaseIdProvider,
             max_concurrent_cases: CountProvider
     ):
-
         self.max_concurrent_cases = max_concurrent_cases
         self.tokens: PriorityQueue[Token] = PriorityQueue(self.max_concurrent_cases.get())
         self.case_id_provider = case_id_provider
