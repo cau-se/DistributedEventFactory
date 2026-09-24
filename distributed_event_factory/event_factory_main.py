@@ -10,6 +10,7 @@ if __name__ == '__main__':
     datasource = os.environ["DATASOURCE"]
     sink = os.environ["SINK"]
     simulation = os.environ["SIMULATION"]
+    postprocessor = os.environ.get("POSTPROCESSOR")
     content_root = os.environ["ROOT"]
     event_factory = EventFactory()
 
@@ -17,10 +18,13 @@ if __name__ == '__main__':
     print(f"datasource directory: {datasource}")
     print(f"Sink: {sink}")
     print(f"Simulation: {simulation}")
+    if postprocessor:
+        print(f"PostProcessor: {postprocessor}")
     print(f"Content root: {content_root}")
 
-    (event_factory
-     .add_directory(f"{content_root}/config/datasource/{datasource}")
-     .add_file(f"{content_root}/config/simulation/{simulation}")
-     .add_file(f"{content_root}/config/sink/{sink}")
-     ).run()
+    event_factory.add_directory(f"{content_root}/config/datasource/{datasource}")
+    event_factory.add_file(f"{content_root}/config/simulation/{simulation}")
+    if postprocessor:
+        event_factory.add_file(f"{content_root}/config/postprocessor/{postprocessor}")
+    event_factory.add_file(f"{content_root}/config/sink/{sink}")
+    event_factory.run()

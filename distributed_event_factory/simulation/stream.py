@@ -20,8 +20,9 @@ class StreamSimulation(Simulation):
         self.max_concurrent_cases=max_concurrent_cases
         self.sinks = dict()
 
-    def run_simulation(self, datasources, sinks, hook):
+    def run_simulation(self, datasources, sinks, hook, post_processors=None):
         self.setup_datasource_sink_mapping(sinks)
+        self.setup_post_processors(post_processors or {})
         process_simulator = ProcessSimulator(
             case_id_provider=self.case_id_provider,
             data_sources=datasources,

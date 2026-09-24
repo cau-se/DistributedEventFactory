@@ -3,11 +3,13 @@ import yaml
 
 from distributed_event_factory.core.end_datasource import EndDataSource
 from distributed_event_factory.parser.datasource.event.activity.activity_parser import ActivityParser
+from distributed_event_factory.parser.postprocessor.post_processor_parser import PostProcessorParser
 from distributed_event_factory.parser.datasource.event.transition.transition_parser import TransitionParser
 from distributed_event_factory.parser.parser_registry import ParserRegistry
 from distributed_event_factory.parser.simulation.case.case_id_parser import CaseIdParser
 from distributed_event_factory.parser.simulation.load.load_parser import LoadParser
 from distributed_event_factory.parser.sink.sink_parser import SinkParser
+from distributed_event_factory.provider.postprocessor.post_processor import PostProcessor
 from distributed_event_factory.provider.sink.sink_provider import Sink
 
 
@@ -16,6 +18,7 @@ class EventFactory:
         self.sinks = dict()
         self.simulations = dict()
         self.datasources = dict()
+        self.post_processors = dict()
         self.datasources["<end>"] = EndDataSource()
         self.parser = ParserRegistry()
 
@@ -37,6 +40,10 @@ class EventFactory:
 
     def add_sink_parser(self, key: str, parser: SinkParser):
         self.parser.sink_parser.add_dependency(key, parser)
+        return self
+
+    def add_post_processor_parser(self, key: str, parser: PostProcessorParser):
+        self.parser.post_processor_parser.add_dependency(key, parser)
         return self
 
     def add_selection_parser(self, key: str, parser: SinkParser):
@@ -67,6 +74,10 @@ class EventFactory:
         self.simulations[name] = simulation
         return self
 
+    def add_post_processor(self, name, post_processor: PostProcessor):
+        self.post_processors[name] = post_processor
+        return self
+
     def add_file(self, filename):
         with open(filename) as file:
             configuration = yaml.safe_load(file)
@@ -79,8 +90,15 @@ class EventFactory:
                 self.add_datasource(name, parsed_object)
             elif kind == "sink":
                 self.add_sink(name, parsed_object)
+            elif kind == "postProcessor":
+                self.add_post_processor(name, parsed_object)
         return self
 
     def run(self, hook=lambda: None):
         for simulation in self.simulations:
-            self.simulations[simulation].run_simulation(self.datasources, self.sinks, hook)
+            self.simulations[simulation].run_simulation(
+                self.datasources,
+                self.sinks,
+                hook=hook,
+                post_processors=self.post_processors
+            )

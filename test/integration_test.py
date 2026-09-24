@@ -16,3 +16,15 @@ class IntegrationTest(unittest.TestCase):
          .run())
         sink_mock: TestSink = event_factory.get_sink("test")
         self.assertEqual(100, len(sink_mock.event_log))
+
+    def test_integration_with_post_processor_drop_all(self):
+        event_factory = EventFactory()
+        event_factory.add_sink_parser("test", TestSinkParser())
+        (event_factory
+         .add_directory(directory="config/datasource/assemblyline")
+         .add_file("config/simulation/countbased.yaml")
+         .add_file("config/postprocessor/drop-all.yaml")
+         .add_file("config/sink/test-sink.yaml")
+         .run())
+        sink_mock: TestSink = event_factory.get_sink("test")
+        self.assertEqual(0, len(sink_mock.event_log))

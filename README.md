@@ -167,8 +167,38 @@ event_factory = EventFactory()
 (event_factory
  .add_directory("config/datasource/assemblyline")
  .add_file("config/simulation/stream.yaml")
+ .add_file("config/postprocessor/drop-all.yaml")
  .add_file("config/sink/sink.yaml")
  ).run()
 ```
+
+### Optional Post Processing
+
+The DEF can apply global post processing to all generated events before they are sent to sinks.
+
+Example post processor config:
+
+```yaml
+kind: postProcessor
+name: drop-all
+spec:
+  type: dropRate
+  dropRate: 1.0
+```
+
+With `dropRate`, every event is dropped with the given probability from `0.0` to `1.0`.
+
+If you run DEF via `event_factory_main.py`, the post processor can be loaded via the optional `POSTPROCESSOR`
+environment variable. The value must point to a file in `config/postprocessor/`.
+
+Example:
+
+```env
+POSTPROCESSOR=drop-all.yaml
+```
+
+Additional example configuration:
+
+`config/postprocessor/drop-10pct.yaml`
 
 ## Advanced configuration

@@ -16,6 +16,8 @@ from distributed_event_factory.parser.datasource.event.selection.ordered_event_s
 from distributed_event_factory.parser.datasource.event.selection.uniform_event_selection import \
     UniformEventSelectionParser
 from distributed_event_factory.parser.datasource.event.transition.transition_parser import TransitionParser
+from distributed_event_factory.parser.postprocessor.drop_rate_post_processor_parser import DropRatePostProcessorParser
+from distributed_event_factory.parser.postprocessor.post_processor_parser import PostProcessorParser
 from distributed_event_factory.parser.simulation.case.case_id_parser import CaseIdParser
 from distributed_event_factory.parser.datasource.data_source_parser import DataSourceParser
 from distributed_event_factory.parser.datasource.event.distribution_parser import DistributionParser
@@ -65,6 +67,11 @@ class ParserRegistry:
                             .add_dependency("ui", self.ui_sink_parser)
                             .add_dependency("http", self.http_sink_parser)
                             .add_dependency("kafka", self.kafka_sink_parser))
+
+        # Post Processor
+        self.drop_rate_post_processor_parser = DropRatePostProcessorParser()
+        self.post_processor_parser = (PostProcessorParser()
+                                      .add_dependency("dropRate", self.drop_rate_post_processor_parser))
         ##########
         # Activity
         self.activity_parser = ActivityParser()
@@ -155,4 +162,5 @@ class ParserRegistry:
         self.kind_parser: KindParser = (KindParser()
                                         .add_dependency("sink", self.sink_parser)
                                         .add_dependency("datasource", self.datasource_parser)
-                                        .add_dependency("simulation", self.simulation_parser))
+                                        .add_dependency("simulation", self.simulation_parser)
+                                        .add_dependency("postProcessor", self.post_processor_parser))

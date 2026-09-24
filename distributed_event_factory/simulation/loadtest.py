@@ -36,8 +36,9 @@ class LoadTestSimulation(Simulation):
            sink.start()
 
     def run_simulation(self, data_sources: Dict[str, DataSource], datasource_sink_mapping: Dict[str, LoadTestHttpSink],
-                       hook=lambda: None):
+                       hook=lambda: None, post_processors=None):
         self.setup_datasource_sink_mapping(datasource_sink_mapping)
+        self.setup_post_processors(post_processors or {})
         for sink in datasource_sink_mapping:
             self.sink.append(datasource_sink_mapping[sink])
 
