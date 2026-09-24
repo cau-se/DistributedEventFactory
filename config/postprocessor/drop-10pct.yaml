@@ -1,0 +1,5 @@
+kind: postProcessor
+name: drop-10pct
+spec:
+  type: dropRate
+  dropRate: 0.1
