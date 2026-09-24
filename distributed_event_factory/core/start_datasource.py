@@ -13,7 +13,7 @@ class StartDataSource(DataSource):
         self.event_log = []
         self.transition_provider = transition_provider
 
-    def get_event_data(self) -> EventDataProvider:
+    def get_event_data(self, payload=None) -> EventDataProvider:
         return StartEventProvider(self.transition_provider).get_event_data()
 
     def emit_event(self, case, activity, timestamp) -> AbstractEvent:

@@ -18,7 +18,7 @@ class DriftingProbabilityEventSelectionProvider(EventSelectionProvider):
         self.steps = steps
         self.step = 0
 
-    def get_event_data(self):
+    def get_event_data(self, payload=None):
         self.step = self.step + 1
         r = self.step / self.steps
         if r < 1:

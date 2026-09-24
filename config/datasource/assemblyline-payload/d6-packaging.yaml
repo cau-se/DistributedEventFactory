@@ -1,0 +1,14 @@
+kind: datasource
+name: "Packaging"
+spec:
+  name: "Packaging"
+  group: "factory"
+  selection: payloadAware
+  distribution: [1.0]
+  eventData:
+    - activity: "Packaging completed"
+      transition: "Shipping"
+      duration: 3
+      payloadUpdate:
+        type: fixed
+        value: -5

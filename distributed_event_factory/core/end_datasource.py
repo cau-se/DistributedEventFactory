@@ -15,7 +15,7 @@ class EndDataSource(DataSource):
         event = EndEvent(case)
         self.event_log.append(event)
 
-    def get_event_data(self) -> EventDataProvider:
+    def get_event_data(self, payload=None) -> EventDataProvider:
         return EndEventProvider().get_event_data()
 
     def get_sensor_transition(self) -> tuple[int, int]:

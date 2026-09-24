@@ -13,8 +13,16 @@ from distributed_event_factory.parser.datasource.event.selection.generic_probabi
     GenericProbabilityEventSelectionParser
 from distributed_event_factory.parser.datasource.event.selection.ordered_event_selection_parser import \
     OrderedEventSelectionParser
+from distributed_event_factory.parser.datasource.event.selection.payload_aware_event_selection_parser import \
+    PayloadAwareEventSelectionParser
 from distributed_event_factory.parser.datasource.event.selection.uniform_event_selection import \
     UniformEventSelectionParser
+from distributed_event_factory.parser.datasource.event.payload.fixed_payload_update_parser import FixedPayloadUpdateParser
+from distributed_event_factory.parser.datasource.event.payload.gaussian_payload_update_parser import \
+    GaussianPayloadUpdateParser
+from distributed_event_factory.parser.datasource.event.payload.payload_update_parser import PayloadUpdateParser
+from distributed_event_factory.parser.datasource.event.payload.uniform_payload_update_parser import \
+    UniformPayloadUpdateParser
 from distributed_event_factory.parser.datasource.event.transition.transition_parser import TransitionParser
 from distributed_event_factory.parser.postprocessor.drop_rate_post_processor_parser import DropRatePostProcessorParser
 from distributed_event_factory.parser.postprocessor.post_processor_parser import PostProcessorParser
@@ -88,17 +96,30 @@ class ParserRegistry:
         # Transition
         self.transition_parser = TransitionParser()
 
+        # Payload update
+        self.fixed_payload_update_parser = FixedPayloadUpdateParser()
+        self.uniform_payload_update_parser = UniformPayloadUpdateParser()
+        self.gaussian_payload_update_parser = GaussianPayloadUpdateParser()
+        self.payload_update_parser = (PayloadUpdateParser()
+                                      .add_dependency("fixed", self.fixed_payload_update_parser)
+                                      .add_dependency("uniform", self.uniform_payload_update_parser)
+                                      .add_dependency("gaussian", self.gaussian_payload_update_parser))
+
         # Event Data List
         self.event_data_list_parser = (EventDataListParser()
                                        .add_dependency("duration", self.duration_parser)
                                        .add_dependency("activity", self.activity_parser)
-                                       .add_dependency("transition", self.transition_parser))
+                                       .add_dependency("transition", self.transition_parser)
+                                       .add_dependency("payloadUpdate", self.payload_update_parser))
 
         # Distribution
         self.distribution_parser = (DistributionParser())
 
         self.uniform_event_selection_parser = (UniformEventSelectionParser())
         self.ordered_event_selection_parser = (OrderedEventSelectionParser())
+        self.payload_aware_selection_parser = (PayloadAwareEventSelectionParser()
+                                               .add_dependency("distribution", self.distribution_parser)
+                                               .add_dependency("eventData", self.event_data_list_parser))
 
         self.drifting_selection_parser = (DriftingProbabilityEventSelectionParser()
                                           .add_dependency("distribution", self.distribution_parser)
@@ -113,7 +134,8 @@ class ParserRegistry:
                                        .add_dependency("ordered", self.ordered_event_selection_parser)
                                        .add_dependency("uniform", self.uniform_event_selection_parser)
                                        .add_dependency("genericProbability", self.probability_selection_parser)
-                                       .add_dependency("driftingProbability", self.drifting_selection_parser))
+                                       .add_dependency("driftingProbability", self.drifting_selection_parser)
+                                       .add_dependency("payloadAware", self.payload_aware_selection_parser))
 
         # DataSource
         self.datasource_parser = (DataSourceParser()

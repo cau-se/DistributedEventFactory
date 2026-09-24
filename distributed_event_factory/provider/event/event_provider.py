@@ -3,6 +3,8 @@ from typing import List
 
 from distributed_event_factory.provider.activity.activity_provider import ConstantActivityProvider, ActivityProvider
 from distributed_event_factory.provider.event.event_data import EventData
+from distributed_event_factory.provider.payload.fixed_payload_update import FixedPayloadUpdateProvider
+from distributed_event_factory.provider.payload.payload_update_provider import PayloadUpdateProvider
 from distributed_event_factory.provider.transition.duration.constant_duration import ConstantDurationProvider
 from distributed_event_factory.provider.transition.duration.duration_provider import DurationProvider
 from distributed_event_factory.provider.transition.transition.constant_transition import ConstantTransitionProvider
@@ -30,17 +32,20 @@ class CustomEventDataProvider(EventDataProvider):
             self,
             duration_provider: DurationProvider,
             activity_provider: ActivityProvider,
-            transition_provider: TransitionProvider
+            transition_provider: TransitionProvider,
+            payload_update_provider: PayloadUpdateProvider
     ):
         self.duration_provider = duration_provider
         self.activity_provider = activity_provider
         self.transition_provider = transition_provider
+        self.payload_update_provider = payload_update_provider
 
     def get_event_data(self):
         return EventData(
             self.duration_provider,
             self.activity_provider,
-            self.transition_provider
+            self.transition_provider,
+            self.payload_update_provider
         )
 
     def get_activity(self):
@@ -52,6 +57,9 @@ class CustomEventDataProvider(EventDataProvider):
     def get_transition(self):
         return self.transition_provider.get_transition()
 
+    def get_payload_delta(self):
+        return self.payload_update_provider.get_payload_delta()
+
 
 class StartEventProvider(EventDataProvider):
 
@@ -62,7 +70,8 @@ class StartEventProvider(EventDataProvider):
         return EventData(
             ConstantDurationProvider(0),
             ConstantActivityProvider("start"),
-            self.transtition_provider
+            self.transtition_provider,
+            FixedPayloadUpdateProvider(0)
         )
 
 
@@ -71,5 +80,6 @@ class EndEventProvider(EventDataProvider):
         return EventData(
             ConstantDurationProvider(0),
             ConstantActivityProvider("end"),
-            ConstantTransitionProvider(0)
+            ConstantTransitionProvider(0),
+            FixedPayloadUpdateProvider(0)
         )

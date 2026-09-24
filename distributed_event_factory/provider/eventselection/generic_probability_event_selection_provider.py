@@ -11,6 +11,6 @@ class GenericProbabilityEventSelectionProvider(EventSelectionProvider):
         self.probability_distribution = probability_distribution
         self.potential_events = potential_events
 
-    def get_event_data(self):
+    def get_event_data(self, payload=None):
         index = random.choice(len(self.potential_events), p=self.probability_distribution)
         return self.potential_events[index]

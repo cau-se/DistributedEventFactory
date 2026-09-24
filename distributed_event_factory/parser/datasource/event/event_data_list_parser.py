@@ -15,5 +15,6 @@ class EventDataListParser(Parser):
             event_list.append(CustomEventDataProvider(
                 duration_provider=self.dependencies["duration"].parse(event["duration"]),
                 activity_provider=self.dependencies["activity"].parse(event["activity"]),
-                transition_provider=self.dependencies["transition"].parse(event["transition"])))
+                transition_provider=self.dependencies["transition"].parse(event["transition"]),
+                payload_update_provider=self.dependencies["payloadUpdate"].parse(event.get("payloadUpdate"))))
         return event_list
