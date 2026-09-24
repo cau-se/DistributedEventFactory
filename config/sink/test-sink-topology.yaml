@@ -1,0 +1,13 @@
+kind: sink
+name: test-topology
+spec:
+  type: test
+  id: "test-topology"
+  dataSourceRefs:
+    - "<start>"
+    - "AutoDS1"
+    - "AutoDS2"
+    - "AutoDS3"
+    - "AutoDS4"
+    - "AutoDS5"
+    - "AutoDS6"

@@ -1,0 +1,16 @@
+kind: topology
+name: simple-topology
+spec:
+  constraints:
+    traceLength:
+      target: 7
+      tolerance: 1
+    distinctTraces:
+      target: 10
+      tolerance: 2
+  generation:
+    initialDatasourceCount: 6
+    initialBranching: 2
+  optimize:
+    maxIterations: 10
+    sampleSize: 500

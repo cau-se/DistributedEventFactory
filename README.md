@@ -172,6 +172,40 @@ event_factory = EventFactory()
  ).run()
 ```
 
+### Start via `event_factory_main.py`
+
+`event_factory_main.py` loads configs from environment variables.
+
+Required:
+- `ROOT`
+- `SIMULATION`
+- `SINK`
+- either `DATASOURCE` or `TOPOLOGY`
+
+Optional:
+- `POSTPROCESSOR`
+
+Example with datasource directory:
+
+```env
+ROOT=/path/to/DistributedEventFactory
+DATASOURCE=assemblyline
+SIMULATION=countbased.yaml
+SINK=test-sink.yaml
+POSTPROCESSOR=drop-all.yaml
+```
+
+Example with topology:
+
+```env
+ROOT=/path/to/DistributedEventFactory
+TOPOLOGY=simple-topology.yaml
+SIMULATION=countbased.yaml
+SINK=test-sink-topology.yaml
+```
+
+Topology config files are expected in `config/topology/`.
+
 ### Optional Post Processing
 
 The DEF can apply global post processing to all generated events before they are sent to sinks.

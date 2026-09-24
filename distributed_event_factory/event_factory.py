@@ -1,4 +1,6 @@
 import os
+from datetime import datetime
+
 import yaml
 
 from distributed_event_factory.core.end_datasource import EndDataSource
@@ -10,7 +12,14 @@ from distributed_event_factory.parser.simulation.case.case_id_parser import Case
 from distributed_event_factory.parser.simulation.load.load_parser import LoadParser
 from distributed_event_factory.parser.sink.sink_parser import SinkParser
 from distributed_event_factory.provider.postprocessor.post_processor import PostProcessor
+from distributed_event_factory.provider.data.constant_count_provider import ConstantCountProvider
+from distributed_event_factory.provider.data.increasing_case import IncreasingCaseIdProvider
 from distributed_event_factory.provider.sink.sink_provider import Sink
+from distributed_event_factory.simulation.process_simulation import ProcessSimulator
+from distributed_event_factory.topology.actions.topology_actions import TopologyActionGenerator
+from distributed_event_factory.topology.evaluator.topology_evaluator import TopologyEvaluator
+from distributed_event_factory.topology.generator.topology_datasource_generator import TopologyDatasourceGenerator
+from distributed_event_factory.topology.optimizer.topology_optimizer import TopologyOptimizer
 
 
 class EventFactory:
@@ -19,6 +28,7 @@ class EventFactory:
         self.simulations = dict()
         self.datasources = dict()
         self.post_processors = dict()
+        self.topologies = dict()
         self.datasources["<end>"] = EndDataSource()
         self.parser = ParserRegistry()
 
@@ -78,6 +88,10 @@ class EventFactory:
         self.post_processors[name] = post_processor
         return self
 
+    def add_topology(self, name: str, topology_spec):
+        self.topologies[name] = topology_spec
+        return self
+
     def add_file(self, filename):
         with open(filename) as file:
             configuration = yaml.safe_load(file)
@@ -92,9 +106,14 @@ class EventFactory:
                 self.add_sink(name, parsed_object)
             elif kind == "postProcessor":
                 self.add_post_processor(name, parsed_object)
+            elif kind == "topology":
+                self.add_topology(name, parsed_object)
         return self
 
     def run(self, hook=lambda: None):
+        if len(self.topologies) > 0:
+            self._run_topology_pipeline()
+
         for simulation in self.simulations:
             self.simulations[simulation].run_simulation(
                 self.datasources,
@@ -102,3 +121,114 @@ class EventFactory:
                 hook=hook,
                 post_processors=self.post_processors
             )
+
+    def _run_topology_pipeline(self):
+        topology_spec = next(iter(self.topologies.values()))
+        generator = TopologyDatasourceGenerator()
+        evaluator = TopologyEvaluator()
+        action_generator = TopologyActionGenerator()
+        optimizer = TopologyOptimizer(evaluator=evaluator, action_generator=action_generator)
+
+        def simulate_fn(graph, sample_size):
+            topology_datasources = generator.build_datasource_objects(graph, self.parser.datasource_parser)
+            topology_datasources["<end>"] = EndDataSource()
+            return self._simulate_for_topology(topology_datasources, topology_spec.trace_length.target, sample_size)
+
+        optimization_result = optimizer.optimize(topology_spec, simulate_fn)
+        optimized_datasources = generator.build_datasource_objects(
+            optimization_result.best_graph,
+            self.parser.datasource_parser
+        )
+        optimized_datasources["<end>"] = EndDataSource()
+        self.datasources = optimized_datasources
+
+        topology_summary = self._format_topology_summary(optimization_result.best_graph)
+        optimization_summary = self._format_optimization_summary(optimization_result)
+        optimization_log = self._format_optimization_log(optimization_result.optimization_log)
+
+        print("[topology] Final topology:")
+        print(topology_summary)
+        print("[topology] Optimization summary:")
+        print(optimization_summary)
+        print("[topology] Complete optimization log:")
+        print(optimization_log)
+
+        log_path = self._write_topology_log_file(
+            topology_summary=topology_summary,
+            optimization_summary=optimization_summary,
+            optimization_log=optimization_log,
+        )
+        print(f"[topology] Full optimization log written to {log_path}")
+
+    def _simulate_for_topology(self, datasources: dict, trace_length_target: int, sample_size: int):
+        process_simulator = ProcessSimulator(
+            data_sources=datasources,
+            case_id_provider=IncreasingCaseIdProvider(),
+            max_concurrent_cases=ConstantCountProvider(1)
+        )
+
+        events = []
+        completed_cases = set()
+        max_event_count = max(sample_size, 1) * max(trace_length_target, 1) * 5
+
+        while len(completed_cases) < sample_size and len(events) < max_event_count:
+            event = process_simulator.simulate()
+            if event is None or not hasattr(event, "activity"):
+                continue
+
+            events.append(event)
+            if "-><end>-" in event.activity:
+                completed_cases.add(event.caseid)
+
+        return events
+
+    def _format_topology_summary(self, graph):
+        lines = []
+        lines.append("nodes:")
+        ordered_nodes = sorted(graph.nodes.values(), key=lambda node: (node.level, node.name))
+        for node in ordered_nodes:
+            lines.append(f"  - {node.name} (level={node.level})")
+
+        lines.append("edges:")
+        sorted_edges = sorted(graph.edge_list(), key=lambda edge: (graph.nodes[edge[0]].level, edge[0], edge[1]))
+        for src, dst in sorted_edges:
+            lines.append(f"  - {src} -> {dst}")
+        return "\n".join(lines)
+
+    def _format_optimization_summary(self, optimization_result):
+        score = optimization_result.best_score
+        metrics = optimization_result.best_metrics
+        return (
+            f"iterations={optimization_result.iterations}\n"
+            f"score={score.total:.3f}\n"
+            f"tracePenalty={score.trace_length_penalty:.3f}\n"
+            f"distinctPenalty={score.distinct_traces_penalty:.3f}\n"
+            f"withinTarget={score.is_within_target}\n"
+            f"avgTraceLen={metrics.avg_trace_length:.2f}\n"
+            f"distinctTraces={metrics.distinct_traces_count}\n"
+            f"traceLenMin={metrics.min_trace_length}\n"
+            f"traceLenMax={metrics.max_trace_length}\n"
+            f"traceLenInIntervalRatio={metrics.traces_in_length_interval_ratio:.3f}"
+        )
+
+    def _format_optimization_log(self, optimization_log):
+        lines = []
+        for index, entry in enumerate(optimization_log, start=1):
+            content = ", ".join(f"{key}={value}" for key, value in entry.items())
+            lines.append(f"{index:03d}: {content}")
+        return "\n".join(lines)
+
+    def _write_topology_log_file(self, topology_summary: str, optimization_summary: str, optimization_log: str):
+        log_dir = "logs"
+        os.makedirs(log_dir, exist_ok=True)
+        timestamp = datetime.now().strftime("%Y%m%d-%H%M%S")
+        log_path = os.path.join(log_dir, f"topology-optimization-{timestamp}.log")
+        with open(log_path, "w") as log_file:
+            log_file.write("[topology] Final topology\n")
+            log_file.write(topology_summary)
+            log_file.write("\n\n[topology] Optimization summary\n")
+            log_file.write(optimization_summary)
+            log_file.write("\n\n[topology] Complete optimization log\n")
+            log_file.write(optimization_log)
+            log_file.write("\n")
+        return log_path

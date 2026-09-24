@@ -48,6 +48,7 @@ from distributed_event_factory.parser.sink.kafka.partition_parser import Partiti
 from distributed_event_factory.parser.sink.print_console_sink_parser import PrintConsoleSinkParser
 from distributed_event_factory.parser.sink.sink_parser import SinkParser
 from distributed_event_factory.parser.sink.ui_sink_parser import UiSinkParser
+from distributed_event_factory.parser.topology.topology_parser import TopologyParser
 from distributed_event_factory.provider.data.constant_count_provider import ConstantCountProvider
 from distributed_event_factory.provider.data.increasing_case import IncreasingCaseIdProvider
 
@@ -181,8 +182,10 @@ class ParserRegistry:
                                                     .add_dependency("loadTest", self.load_test_simulation))
 
         # Kind
+        self.topology_parser = TopologyParser()
         self.kind_parser: KindParser = (KindParser()
                                         .add_dependency("sink", self.sink_parser)
                                         .add_dependency("datasource", self.datasource_parser)
                                         .add_dependency("simulation", self.simulation_parser)
-                                        .add_dependency("postProcessor", self.post_processor_parser))
+                                        .add_dependency("postProcessor", self.post_processor_parser)
+                                        .add_dependency("topology", self.topology_parser))
