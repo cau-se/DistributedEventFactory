@@ -6,8 +6,8 @@ spec:
       target: 7
       tolerance: 1
     distinctTraces:
-      target: 10
-      tolerance: 2
+      target: 70
+      tolerance: 7
   generation:
     initialDatasourceCount: 6
     initialBranching: 2

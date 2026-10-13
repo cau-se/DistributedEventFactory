@@ -132,7 +132,13 @@ class EventFactory:
         def simulate_fn(graph, sample_size):
             topology_datasources = generator.build_datasource_objects(graph, self.parser.datasource_parser)
             topology_datasources["<end>"] = EndDataSource()
-            return self._simulate_for_topology(topology_datasources, topology_spec.trace_length.target, sample_size)
+            end_activity_names = generator.build_end_activity_names(graph)
+            return self._simulate_for_topology(
+                topology_datasources,
+                topology_spec.trace_length.target,
+                sample_size,
+                end_activity_names
+            )
 
         optimization_result = optimizer.optimize(topology_spec, simulate_fn)
         optimized_datasources = generator.build_datasource_objects(
@@ -160,7 +166,13 @@ class EventFactory:
         )
         print(f"[topology] Full optimization log written to {log_path}")
 
-    def _simulate_for_topology(self, datasources: dict, trace_length_target: int, sample_size: int):
+    def _simulate_for_topology(
+        self,
+        datasources: dict,
+        trace_length_target: int,
+        sample_size: int,
+        end_activity_names: set
+    ):
         process_simulator = ProcessSimulator(
             data_sources=datasources,
             case_id_provider=IncreasingCaseIdProvider(),
@@ -177,7 +189,7 @@ class EventFactory:
                 continue
 
             events.append(event)
-            if "-><end>-" in event.activity:
+            if event.activity in end_activity_names:
                 completed_cases.add(event.caseid)
 
         return events
