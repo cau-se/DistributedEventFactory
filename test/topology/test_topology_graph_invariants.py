@@ -9,11 +9,13 @@ class TopologyGraphInvariantTest(unittest.TestCase):
         graph = TopologyGraph.create_initial(self._spec())
         self.assertIn("<start>", graph.nodes)
         self.assertIn("<end>", graph.nodes)
+        self.assertIn("Node-1", graph.nodes)
+        self.assertIn("Node-3", graph.nodes)
 
     def test_backward_edge_rejected(self):
         graph = TopologyGraph.create_initial(self._spec())
         with self.assertRaises(ValueError):
-            graph.add_edge("AutoDS2", "AutoDS1")
+            graph.add_edge("Node-2", "Node-1")
 
     @staticmethod
     def _spec() -> TopologySpec:

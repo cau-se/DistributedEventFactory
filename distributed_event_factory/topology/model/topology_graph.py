@@ -23,7 +23,7 @@ class TopologyGraph:
         nodes: Dict[str, TopologyNode] = {"<start>": TopologyNode("<start>", 0)}
         datasource_names: List[str] = []
         for idx in range(datasource_count):
-            name = f"AutoDS{idx + 1}"
+            name = f"Node-{idx + 1}"
             nodes[name] = TopologyNode(name=name, level=idx + 1)
             datasource_names.append(name)
         end_level = datasource_count + 1
