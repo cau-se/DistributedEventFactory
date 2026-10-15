@@ -16,10 +16,12 @@ class TopologyGraph:
         nodes: Dict[str, TopologyNode],
         edges: Dict[str, Set[str]],
         transition_counts: Dict[Tuple[str, str], int] = None,
+        payload_deltas: Dict[Tuple[str, str, int], int] = None,
     ):
         self.nodes = nodes
         self.edges = edges
         self.transition_counts = transition_counts or {}
+        self.payload_deltas = payload_deltas or {}
         self.validate_invariants()
 
     @staticmethod
@@ -57,6 +59,7 @@ class TopologyGraph:
             nodes={name: TopologyNode(node.name, node.level) for name, node in self.nodes.items()},
             edges={src: set(dsts) for src, dsts in self.edges.items()},
             transition_counts=dict(self.transition_counts),
+            payload_deltas=dict(self.payload_deltas),
         )
 
     def node_names(self) -> List[str]:
@@ -81,6 +84,16 @@ class TopologyGraph:
         if dst not in self.edges.get(src, set()):
             raise ValueError(f"Transition does not exist: {src}->{dst}")
         self.transition_counts[(src, dst)] = count
+
+    def payload_delta(self, src: str, dst: str, transition_index: int) -> int:
+        return self.payload_deltas.get((src, dst, transition_index), 0)
+
+    def set_payload_delta(self, src: str, dst: str, transition_index: int, value: int) -> None:
+        if not isinstance(value, int) or isinstance(value, bool) or not 0 <= value <= 100:
+            raise ValueError("Payload delta must be an integer between 0 and 100")
+        if transition_index < 1 or transition_index > self.transition_count(src, dst):
+            raise ValueError(f"Invalid transition index for {src}->{dst}: {transition_index}")
+        self.payload_deltas[(src, dst, transition_index)] = value
 
     def predecessors(self, node: str) -> Set[str]:
         incoming = set()
@@ -112,6 +125,10 @@ class TopologyGraph:
         self.transition_counts = {
             edge: count for edge, count in self.transition_counts.items()
             if node_name not in edge
+        }
+        self.payload_deltas = {
+            transition: value for transition, value in self.payload_deltas.items()
+            if node_name not in transition[:2]
         }
 
         if validate:

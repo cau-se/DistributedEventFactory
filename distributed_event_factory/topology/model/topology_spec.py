@@ -1,4 +1,4 @@
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 
 
 @dataclass(frozen=True)
@@ -20,3 +20,7 @@ class TopologySpec:
     initial_branching: int
     max_iterations: int
     sample_size: int
+    payload_success_threshold: int = 80
+    successful_case_ratio: TopologyConstraint = field(
+        default_factory=lambda: TopologyConstraint(target=80, tolerance=2)
+    )

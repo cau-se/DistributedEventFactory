@@ -64,7 +64,7 @@ class TopologyDatasourceGenerator:
                         "duration": 1,
                         "payloadUpdate": {
                             "type": "fixed",
-                            "value": 0
+                            "value": graph.payload_delta(node_name, successor, transition_index)
                         }
                     })
 

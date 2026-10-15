@@ -14,6 +14,8 @@ class TopologyParser(Parser):
         constraints = config["constraints"]
         generation = config["generation"]
         optimize = config["optimize"]
+        payload = config.get("payload", {})
+        successful_case_ratio = payload.get("successfulCaseRatio", {})
 
         return TopologySpec(
             trace_length=TopologyConstraint(
@@ -26,5 +28,10 @@ class TopologyParser(Parser):
             ),
             initial_branching=generation["initialBranching"],
             max_iterations=optimize["maxIterations"],
-            sample_size=optimize["sampleSize"]
+            sample_size=optimize["sampleSize"],
+            payload_success_threshold=payload.get("successThreshold", 80),
+            successful_case_ratio=TopologyConstraint(
+                target=successful_case_ratio.get("target", 80),
+                tolerance=successful_case_ratio.get("tolerance", 2),
+            ),
         )

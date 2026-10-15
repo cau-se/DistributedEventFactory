@@ -104,7 +104,7 @@ class TopologyOptimizer:
                 })
                 break
 
-            if best_candidate_score.total < best_score.total:
+            if best_candidate_score.total <= best_score.total:
                 best_graph = best_candidate_graph
                 best_score = best_candidate_score
                 best_metrics = best_candidate_metrics

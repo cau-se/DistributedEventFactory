@@ -20,6 +20,7 @@ from distributed_event_factory.topology.actions.topology_actions import Topology
 from distributed_event_factory.topology.evaluator.topology_evaluator import TopologyEvaluator
 from distributed_event_factory.topology.generator.topology_datasource_generator import TopologyDatasourceGenerator
 from distributed_event_factory.topology.optimizer.topology_optimizer import TopologyOptimizer
+from distributed_event_factory.topology.optimizer.payload_optimizer import PayloadOptimizer
 
 
 class EventFactory:
@@ -115,11 +116,13 @@ class EventFactory:
             self._run_topology_pipeline()
 
         for simulation in self.simulations:
+            initial_payload = 0 if self.topologies else 50
             self.simulations[simulation].run_simulation(
                 self.datasources,
                 self.sinks,
                 hook=hook,
-                post_processors=self.post_processors
+                post_processors=self.post_processors,
+                initial_payload=initial_payload,
             )
 
     def _run_topology_pipeline(self):
@@ -137,20 +140,55 @@ class EventFactory:
                 topology_datasources,
                 topology_spec.trace_length.target,
                 sample_size,
-                end_activity_names
+                end_activity_names,
+                initial_payload=0,
             )
 
         optimization_result = optimizer.optimize(topology_spec, simulate_fn)
+        payload_result = PayloadOptimizer().optimize(optimization_result.best_graph, topology_spec)
+        final_graph = payload_result.graph
+        final_events = simulate_fn(final_graph, topology_spec.sample_size)
+        end_activity_names = generator.build_end_activity_names(final_graph)
+        completed_payloads = {
+            event.caseid: event.payload
+            for event in final_events
+            if event.activity in end_activity_names
+        }
+        successful_cases = sum(
+            payload > topology_spec.payload_success_threshold
+            for payload in completed_payloads.values()
+        )
+        observed_success_ratio = successful_cases / len(completed_payloads) if completed_payloads else 0.0
         optimized_datasources = generator.build_datasource_objects(
-            optimization_result.best_graph,
+            final_graph,
             self.parser.datasource_parser
         )
         optimized_datasources["<end>"] = EndDataSource()
         self.datasources = optimized_datasources
 
-        topology_summary = self._format_topology_summary(optimization_result.best_graph)
-        optimization_summary = self._format_optimization_summary(optimization_result)
+        topology_summary = self._format_topology_summary(
+            final_graph,
+            generator.build_activity_names(final_graph),
+            topology_spec.payload_success_threshold,
+            topology_spec.successful_case_ratio.target,
+            topology_spec.successful_case_ratio.tolerance,
+            observed_success_ratio,
+            payload_result.initial_delta,
+            payload_result.iterations,
+            len(completed_payloads),
+            payload_result.target_reached,
+        )
+        optimization_summary = (
+            f"{self._format_optimization_summary(optimization_result)}\n"
+            f"payloadIterations={payload_result.iterations}\n"
+            f"payloadInitialDelta={payload_result.initial_delta}\n"
+            f"payloadTargetReached={payload_result.target_reached}\n"
+            f"payloadExpectedSuccessfulCases={payload_result.expected_success_ratio * 100:.2f}%\n"
+            f"payloadObservedSuccessfulCases={observed_success_ratio * 100:.2f}% "
+            f"({successful_cases}/{len(completed_payloads)})"
+        )
         optimization_log = self._format_optimization_log(optimization_result.optimization_log)
+        payload_optimization_log = self._format_optimization_log(payload_result.optimization_log)
 
         print("[topology] Final topology:")
         print(topology_summary)
@@ -158,11 +196,14 @@ class EventFactory:
         print(optimization_summary)
         print("[topology] Complete optimization log:")
         print(optimization_log)
+        print("[topology] Complete payload optimization log:")
+        print(payload_optimization_log)
 
         log_path = self._write_topology_log_file(
             topology_summary=topology_summary,
             optimization_summary=optimization_summary,
             optimization_log=optimization_log,
+            payload_optimization_log=payload_optimization_log,
         )
         print(f"[topology] Full optimization log written to {log_path}")
 
@@ -171,12 +212,14 @@ class EventFactory:
         datasources: dict,
         trace_length_target: int,
         sample_size: int,
-        end_activity_names: set
+        end_activity_names: set,
+        initial_payload: float = 50,
     ):
         process_simulator = ProcessSimulator(
             data_sources=datasources,
             case_id_provider=IncreasingCaseIdProvider(),
-            max_concurrent_cases=ConstantCountProvider(1)
+            max_concurrent_cases=ConstantCountProvider(1),
+            initial_payload=initial_payload,
         )
 
         events = []
@@ -194,7 +237,19 @@ class EventFactory:
 
         return events
 
-    def _format_topology_summary(self, graph):
+    def _format_topology_summary(
+        self,
+        graph,
+        activity_names,
+        payload_threshold,
+        payload_target_ratio,
+        payload_ratio_tolerance,
+        payload_expected_ratio,
+        initial_payload_delta,
+        payload_iterations,
+        payload_sample_size,
+        payload_target_reached,
+    ):
         lines = []
         lines.append("nodes:")
         ordered_nodes = sorted(graph.nodes.values(), key=lambda node: (node.level, node.name))
@@ -204,7 +259,36 @@ class EventFactory:
         lines.append("edges:")
         sorted_edges = sorted(graph.edge_list(), key=lambda edge: (graph.nodes[edge[0]].level, edge[0], edge[1]))
         for src, dst in sorted_edges:
-            lines.append(f"  - {src} -> {dst}")
+            transition_count = graph.transition_count(src, dst)
+            lines.append(f"  - {src} -> {dst} (transitions={transition_count})")
+
+        lines.append("")
+        lines.append("ASCII topology:")
+        lines.append(
+            f"Payload optimization: threshold>{payload_threshold}, "
+            f"successfulCases={payload_expected_ratio * 100:.2f}% of {payload_sample_size} cases "
+            f"(target={payload_target_ratio}%±{payload_ratio_tolerance}%), "
+            f"initialDelta={initial_payload_delta}, iterations={payload_iterations}, "
+            f"targetReached={payload_target_reached}"
+        )
+        for successor in sorted(graph.successors("<start>")):
+            lines.append(f"<start> --> {successor}")
+
+        for node in ordered_nodes:
+            if node.name in {"<start>", "<end>"}:
+                continue
+
+            lines.append("")
+            lines.append(node.name)
+            successors = sorted(
+                graph.successors(node.name),
+                key=lambda name: (graph.nodes[name].level, name)
+            )
+            for successor in successors:
+                for transition_index in range(1, graph.transition_count(node.name, successor) + 1):
+                    activity = activity_names[(node.name, successor, transition_index)]
+                    payload_delta = graph.payload_delta(node.name, successor, transition_index)
+                    lines.append(f"  +-- {activity} (+{payload_delta}) --> {successor}")
         return "\n".join(lines)
 
     def _format_optimization_summary(self, optimization_result):
@@ -230,7 +314,13 @@ class EventFactory:
             lines.append(f"{index:03d}: {content}")
         return "\n".join(lines)
 
-    def _write_topology_log_file(self, topology_summary: str, optimization_summary: str, optimization_log: str):
+    def _write_topology_log_file(
+        self,
+        topology_summary: str,
+        optimization_summary: str,
+        optimization_log: str,
+        payload_optimization_log: str,
+    ):
         log_dir = "logs"
         os.makedirs(log_dir, exist_ok=True)
         timestamp = datetime.now().strftime("%Y%m%d-%H%M%S")
@@ -242,5 +332,7 @@ class EventFactory:
             log_file.write(optimization_summary)
             log_file.write("\n\n[topology] Complete optimization log\n")
             log_file.write(optimization_log)
+            log_file.write("\n\n[topology] Complete payload optimization log\n")
+            log_file.write(payload_optimization_log)
             log_file.write("\n")
         return log_path

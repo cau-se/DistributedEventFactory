@@ -13,13 +13,14 @@ class CountBasedSimulation(Simulation):
         self.sinks = dict()
         self.max_concurrent_cases = max_concurrent_cases
 
-    def run_simulation(self, datasources, sinks, hook=lambda: None, post_processors=None):
+    def run_simulation(self, datasources, sinks, hook=lambda: None, post_processors=None, initial_payload=50):
         self.setup_datasource_sink_mapping(sinks)
         self.setup_post_processors(post_processors or {})
         process_simulator = ProcessSimulator(
             case_id_provider=self.case_id_provider,
             data_sources=datasources,
-            max_concurrent_cases=self.max_concurrent_cases
+            max_concurrent_cases=self.max_concurrent_cases,
+            initial_payload=initial_payload,
         )
 
         for i in range(self.simulation_steps):

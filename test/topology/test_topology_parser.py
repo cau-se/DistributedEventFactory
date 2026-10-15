@@ -18,6 +18,10 @@ class TopologyParserTest(unittest.TestCase):
             "optimize": {
                 "maxIterations": 20,
                 "sampleSize": 500
+            },
+            "payload": {
+                "successThreshold": 80,
+                "successfulCaseRatio": {"target": 80, "tolerance": 2}
             }
         })
 
@@ -28,3 +32,6 @@ class TopologyParserTest(unittest.TestCase):
         self.assertEqual(2, parsed.initial_branching)
         self.assertEqual(20, parsed.max_iterations)
         self.assertEqual(500, parsed.sample_size)
+        self.assertEqual(80, parsed.payload_success_threshold)
+        self.assertEqual(80, parsed.successful_case_ratio.target)
+        self.assertEqual(2, parsed.successful_case_ratio.tolerance)
