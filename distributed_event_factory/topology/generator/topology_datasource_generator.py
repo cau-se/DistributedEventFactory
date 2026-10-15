@@ -51,10 +51,11 @@ class TopologyDatasourceGenerator:
                 continue
 
             transition_count = sum(graph.transition_count(node_name, successor) for successor in successors)
-            probability = 1.0 / transition_count
             event_data = []
+            distribution = []
             for successor in successors:
                 for transition_index in range(1, graph.transition_count(node_name, successor) + 1):
+                    distribution.append(graph.transition_probability(node_name, successor, transition_index))
                     event_data.append({
                         "activity": activity_names.get(
                             (node_name, successor, transition_index),
@@ -72,7 +73,7 @@ class TopologyDatasourceGenerator:
                 "name": node_name,
                 "group": "topology",
                 "selection": "genericProbability",
-                "distribution": [probability for _ in range(transition_count)],
+                "distribution": distribution,
                 "eventData": event_data
             }
 

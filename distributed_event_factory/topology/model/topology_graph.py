@@ -17,11 +17,13 @@ class TopologyGraph:
         edges: Dict[str, Set[str]],
         transition_counts: Dict[Tuple[str, str], int] = None,
         payload_deltas: Dict[Tuple[str, str, int], int] = None,
+        transition_probabilities: Dict[Tuple[str, str, int], float] = None,
     ):
         self.nodes = nodes
         self.edges = edges
         self.transition_counts = transition_counts or {}
         self.payload_deltas = payload_deltas or {}
+        self.transition_probabilities = transition_probabilities or {}
         self.validate_invariants()
 
     @staticmethod
@@ -60,6 +62,7 @@ class TopologyGraph:
             edges={src: set(dsts) for src, dsts in self.edges.items()},
             transition_counts=dict(self.transition_counts),
             payload_deltas=dict(self.payload_deltas),
+            transition_probabilities=dict(self.transition_probabilities),
         )
 
     def node_names(self) -> List[str]:
@@ -84,6 +87,23 @@ class TopologyGraph:
         if dst not in self.edges.get(src, set()):
             raise ValueError(f"Transition does not exist: {src}->{dst}")
         self.transition_counts[(src, dst)] = count
+        self.transition_probabilities = {
+            key: value for key, value in self.transition_probabilities.items()
+            if key[:2] != (src, dst) or key[2] <= count
+        }
+
+    def transition_probability(self, src: str, dst: str, transition_index: int) -> float:
+        total_count = sum(self.transition_count(src, successor) for successor in self.successors(src))
+        if total_count == 0:
+            return 0.0
+        return self.transition_probabilities.get((src, dst, transition_index), 1.0 / total_count)
+
+    def set_transition_probability(self, src: str, dst: str, transition_index: int, probability: float) -> None:
+        if not 0.0 <= probability <= 1.0:
+            raise ValueError("Transition probability must be between 0 and 1")
+        if transition_index < 1 or transition_index > self.transition_count(src, dst):
+            raise ValueError(f"Invalid transition index for {src}->{dst}: {transition_index}")
+        self.transition_probabilities[(src, dst, transition_index)] = probability
 
     def payload_delta(self, src: str, dst: str, transition_index: int) -> int:
         return self.payload_deltas.get((src, dst, transition_index), 0)
@@ -130,6 +150,10 @@ class TopologyGraph:
             transition: value for transition, value in self.payload_deltas.items()
             if node_name not in transition[:2]
         }
+        self.transition_probabilities = {
+            transition: value for transition, value in self.transition_probabilities.items()
+            if node_name not in transition[:2]
+        }
 
         if validate:
             self.validate_invariants()
@@ -154,6 +178,23 @@ class TopologyGraph:
 
         for src in self.nodes:
             self.edges.setdefault(src, set())
+
+        for (src, dst, transition_index), probability in self.transition_probabilities.items():
+            if dst not in self.edges.get(src, set()):
+                raise ValueError(f"Probability assigned to missing transition: {src}->{dst}")
+            if not 1 <= transition_index <= self.transition_count(src, dst):
+                raise ValueError(f"Invalid transition index for {src}->{dst}: {transition_index}")
+            if not 0.0 <= probability <= 1.0:
+                raise ValueError("Transition probability must be between 0 and 1")
+
+        for src in self.nodes:
+            probabilities = [
+                self.transition_probability(src, dst, index)
+                for dst in self.successors(src)
+                for index in range(1, self.transition_count(src, dst) + 1)
+            ]
+            if probabilities and abs(sum(probabilities) - 1.0) > 1e-9:
+                raise ValueError(f"Transition probabilities from {src} must sum to 1")
 
         for src, destinations in self.edges.items():
             if src not in self.nodes:

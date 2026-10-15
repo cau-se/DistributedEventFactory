@@ -24,3 +24,6 @@ class TopologySpec:
     successful_case_ratio: TopologyConstraint = field(
         default_factory=lambda: TopologyConstraint(target=80, tolerance=2)
     )
+    trace_entropy: TopologyConstraint = field(
+        default_factory=lambda: TopologyConstraint(target=1.0, tolerance=0.02)
+    )

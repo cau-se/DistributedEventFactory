@@ -3,14 +3,21 @@ name: simple-topology
 spec:
   constraints:
     traceLength:
-      target: 7
+      target: 8
       tolerance: 1
     distinctTraces:
-      target: 70
-      tolerance: 7
+      target: 75
+      tolerance: 5
   generation:
-    initialDatasourceCount: 6
-    initialBranching: 2
+    initialBranching: 1
   optimize:
     maxIterations: 10
-    sampleSize: 500
+    sampleSize: 1200
+  payload:
+    successThreshold: 80
+    successfulCaseRatio:
+      target: 80
+      tolerance: 2
+  traceEntropy:
+    target: 0.05
+    tolerance: 0.02

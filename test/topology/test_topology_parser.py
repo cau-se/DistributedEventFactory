@@ -22,6 +22,10 @@ class TopologyParserTest(unittest.TestCase):
             "payload": {
                 "successThreshold": 80,
                 "successfulCaseRatio": {"target": 80, "tolerance": 2}
+            },
+            "traceEntropy": {
+                "target": 0.7,
+                "tolerance": 0.02
             }
         })
 
@@ -35,3 +39,18 @@ class TopologyParserTest(unittest.TestCase):
         self.assertEqual(80, parsed.payload_success_threshold)
         self.assertEqual(80, parsed.successful_case_ratio.target)
         self.assertEqual(2, parsed.successful_case_ratio.tolerance)
+        self.assertEqual(0.7, parsed.trace_entropy.target)
+        self.assertEqual(0.02, parsed.trace_entropy.tolerance)
+
+    def test_trace_entropy_defaults_to_uniform(self):
+        parsed = TopologyParser().parse({
+            "constraints": {
+                "traceLength": {"target": 3, "tolerance": 0},
+                "distinctTraces": {"target": 8, "tolerance": 0},
+            },
+            "generation": {"initialBranching": 2},
+            "optimize": {"maxIterations": 5, "sampleSize": 100},
+        })
+
+        self.assertEqual(1.0, parsed.trace_entropy.target)
+        self.assertEqual(0.02, parsed.trace_entropy.tolerance)
