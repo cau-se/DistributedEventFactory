@@ -1,4 +1,5 @@
 from dataclasses import dataclass
+from math import ceil
 from typing import List, Tuple
 
 from distributed_event_factory.topology.actions.topology_actions import TopologyActionGenerator
@@ -17,6 +18,8 @@ class TopologyOptimizationResult:
 
 
 class TopologyOptimizer:
+    max_transition_change = 5
+
     def __init__(self, evaluator: TopologyEvaluator, action_generator: TopologyActionGenerator):
         self.evaluator = evaluator
         self.action_generator = action_generator
@@ -52,8 +55,9 @@ class TopologyOptimizer:
             best_candidate_metrics = None
             best_candidate_action = None
             evaluated_candidates = 0
+            transition_step = self._transition_step_size(best_metrics, spec, best_graph)
 
-            for action in self.action_generator.generate_candidates(best_graph):
+            for action in self.action_generator.generate_candidates(best_graph, transition_step):
                 try:
                     candidate_graph = self.action_generator.apply(best_graph, action)
                 except ValueError:
@@ -90,6 +94,7 @@ class TopologyOptimizer:
             optimization_log.append({
                 "type": "iteration",
                 "iteration": iterations,
+                "transitionStep": transition_step,
                 "evaluatedCandidates": evaluated_candidates,
                 "bestCandidate": self._format_action(best_candidate_action),
                 "bestCandidateScore": None if best_candidate_score is None else best_candidate_score.total,
@@ -170,3 +175,27 @@ class TopologyOptimizer:
             return "none"
         payload = ", ".join(f"{key}={value}" for key, value in action.payload.items())
         return f"{action.name}({payload})"
+
+    @classmethod
+    def _transition_step_size(cls, metrics: TopologyMetrics, spec: TopologySpec, graph: TopologyGraph) -> int:
+        lower = spec.distinct_traces.lower()
+        upper = spec.distinct_traces.upper()
+        if metrics.distinct_traces_count < lower:
+            distance = lower - metrics.distinct_traces_count
+        elif metrics.distinct_traces_count > upper:
+            distance = metrics.distinct_traces_count - upper
+        else:
+            return 1
+
+        eligible_edges = [
+            (src, dst)
+            for src, dst in graph.edge_list()
+            if src != "<start>"
+        ]
+        average_transition_count = (
+            sum(graph.transition_count(src, dst) for src, dst in eligible_edges) / len(eligible_edges)
+            if eligible_edges else 1
+        )
+        relative_gap = distance / max(1, spec.distinct_traces.target)
+        estimated_change = relative_gap * average_transition_count
+        return min(cls.max_transition_change, max(1, ceil(estimated_change)))
