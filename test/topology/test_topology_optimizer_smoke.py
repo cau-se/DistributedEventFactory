@@ -18,7 +18,6 @@ class TopologyOptimizerSmokeTest(unittest.TestCase):
         spec = TopologySpec(
             trace_length=TopologyConstraint(target=3, tolerance=1),
             distinct_traces=TopologyConstraint(target=4, tolerance=2),
-            initial_datasource_count=3,
             initial_branching=2,
             max_iterations=2,
             sample_size=20

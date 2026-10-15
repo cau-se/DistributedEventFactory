@@ -24,7 +24,6 @@ class TopologyParser(Parser):
                 target=constraints["distinctTraces"]["target"],
                 tolerance=constraints["distinctTraces"]["tolerance"]
             ),
-            initial_datasource_count=generation["initialDatasourceCount"],
             initial_branching=generation["initialBranching"],
             max_iterations=optimize["maxIterations"],
             sample_size=optimize["sampleSize"]

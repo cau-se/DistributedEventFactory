@@ -61,6 +61,21 @@ class TopologyOptimizer:
 
                 candidate_score, candidate_metrics = self._evaluate_graph(candidate_graph, spec, simulate_fn)
                 evaluated_candidates += 1
+                formatted_action = self._format_action(action)
+                print(
+                    f"[topology] Iteration {iterations}: evaluated candidate "
+                    f"{formatted_action}: score={candidate_score.total:.3f}, "
+                    f"avgTraceLen={candidate_metrics.avg_trace_length:.2f}, "
+                    f"distinct={candidate_metrics.distinct_traces_count}"
+                )
+                optimization_log.append({
+                    "type": "candidate",
+                    "iteration": iterations,
+                    "candidate": formatted_action,
+                    "score": candidate_score.total,
+                    "avgTraceLen": candidate_metrics.avg_trace_length,
+                    "distinct": candidate_metrics.distinct_traces_count,
+                })
 
                 if best_candidate_score is None or candidate_score.total < best_candidate_score.total:
                     best_candidate_graph = candidate_graph

@@ -13,7 +13,6 @@ class TopologyParserTest(unittest.TestCase):
                 "distinctTraces": {"target": 50, "tolerance": 10}
             },
             "generation": {
-                "initialDatasourceCount": 6,
                 "initialBranching": 2
             },
             "optimize": {
@@ -26,7 +25,6 @@ class TopologyParserTest(unittest.TestCase):
         self.assertEqual(1, parsed.trace_length.tolerance)
         self.assertEqual(50, parsed.distinct_traces.target)
         self.assertEqual(10, parsed.distinct_traces.tolerance)
-        self.assertEqual(6, parsed.initial_datasource_count)
         self.assertEqual(2, parsed.initial_branching)
         self.assertEqual(20, parsed.max_iterations)
         self.assertEqual(500, parsed.sample_size)

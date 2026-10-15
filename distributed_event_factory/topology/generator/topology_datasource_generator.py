@@ -21,17 +21,18 @@ class TopologyDatasourceGenerator:
                 graph.successors(node_name),
                 key=lambda name: (graph.nodes[name].level, name)
             ):
-                counts_by_level[level] = counts_by_level.get(level, 0) + 1
-                activity_names[(node_name, successor)] = (
-                    f"{self._layer_label(level)}{counts_by_level[level]}"
-                )
+                for transition_index in range(1, graph.transition_count(node_name, successor) + 1):
+                    counts_by_level[level] = counts_by_level.get(level, 0) + 1
+                    activity_names[(node_name, successor, transition_index)] = (
+                        f"{self._layer_label(level)}{counts_by_level[level]}"
+                    )
 
         return activity_names
 
     def build_end_activity_names(self, graph: TopologyGraph) -> set:
         return {
             activity_name
-            for (source, target), activity_name in self.build_activity_names(graph).items()
+            for (_, target, _), activity_name in self.build_activity_names(graph).items()
             if target == "<end>"
         }
 
@@ -49,27 +50,29 @@ class TopologyDatasourceGenerator:
             if len(successors) == 0:
                 continue
 
-            probability = 1.0 / len(successors)
+            transition_count = sum(graph.transition_count(node_name, successor) for successor in successors)
+            probability = 1.0 / transition_count
             event_data = []
-            for idx, successor in enumerate(successors):
-                event_data.append({
-                    "activity": activity_names.get(
-                        (node_name, successor),
-                        f"{node_name}->{successor}-{idx + 1}"
-                    ),
-                    "transition": successor,
-                    "duration": 1,
-                    "payloadUpdate": {
-                        "type": "fixed",
-                        "value": 0
-                    }
-                })
+            for successor in successors:
+                for transition_index in range(1, graph.transition_count(node_name, successor) + 1):
+                    event_data.append({
+                        "activity": activity_names.get(
+                            (node_name, successor, transition_index),
+                            f"{node_name}->{successor}-{transition_index}"
+                        ),
+                        "transition": successor,
+                        "duration": 1,
+                        "payloadUpdate": {
+                            "type": "fixed",
+                            "value": 0
+                        }
+                    })
 
             configs[node_name] = {
                 "name": node_name,
                 "group": "topology",
                 "selection": "genericProbability",
-                "distribution": [probability for _ in successors],
+                "distribution": [probability for _ in range(transition_count)],
                 "eventData": event_data
             }
 

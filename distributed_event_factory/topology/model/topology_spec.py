@@ -17,7 +17,6 @@ class TopologyConstraint:
 class TopologySpec:
     trace_length: TopologyConstraint
     distinct_traces: TopologyConstraint
-    initial_datasource_count: int
     initial_branching: int
     max_iterations: int
     sample_size: int

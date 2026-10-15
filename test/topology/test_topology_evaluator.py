@@ -35,7 +35,6 @@ class TopologyEvaluatorTest(unittest.TestCase):
         return TopologySpec(
             trace_length=TopologyConstraint(target=2, tolerance=0),
             distinct_traces=TopologyConstraint(target=2, tolerance=0),
-            initial_datasource_count=2,
             initial_branching=1,
             max_iterations=5,
             sample_size=100

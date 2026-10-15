@@ -11,45 +11,52 @@ class TopologyNode:
 
 
 class TopologyGraph:
-    def __init__(self, nodes: Dict[str, TopologyNode], edges: Dict[str, Set[str]]):
+    def __init__(
+        self,
+        nodes: Dict[str, TopologyNode],
+        edges: Dict[str, Set[str]],
+        transition_counts: Dict[Tuple[str, str], int] = None,
+    ):
         self.nodes = nodes
         self.edges = edges
+        self.transition_counts = transition_counts or {}
         self.validate_invariants()
 
     @staticmethod
     def create_initial(spec: TopologySpec) -> "TopologyGraph":
-        datasource_count = max(1, spec.initial_datasource_count)
-        branching = max(1, spec.initial_branching)
         nodes: Dict[str, TopologyNode] = {"<start>": TopologyNode("<start>", 0)}
-        datasource_names: List[str] = []
-        for idx in range(datasource_count):
-            name = f"Node-{idx + 1}"
-            nodes[name] = TopologyNode(name=name, level=idx + 1)
-            datasource_names.append(name)
-        end_level = datasource_count + 1
+        layer_count = max(1, spec.trace_length.target)
+        layers: List[List[str]] = []
+        for level in range(1, layer_count + 1):
+            name = f"Node-{level}"
+            nodes[name] = TopologyNode(name=name, level=level)
+            layers.append([name])
+
+        end_level = layer_count + 1
         nodes["<end>"] = TopologyNode("<end>", end_level)
 
         edges: Dict[str, Set[str]] = {name: set() for name in nodes}
-        previous = "<start>"
-        for name in datasource_names:
-            edges[previous].add(name)
-            previous = name
-        edges[previous].add("<end>")
+        transition_counts: Dict[Tuple[str, str], int] = {}
+        if not layers:
+            edges["<start>"].add("<end>")
+        else:
+            edges["<start>"].update(layers[0])
+            transition_counts[("<start>", layers[0][0])] = 1
+            for current_layer, next_layer in zip(layers, layers[1:]):
+                src, dst = current_layer[0], next_layer[0]
+                edges[src].add(dst)
+                transition_counts[(src, dst)] = max(1, spec.initial_branching)
+            for src in layers[-1]:
+                edges[src].add("<end>")
+                transition_counts[(src, "<end>")] = max(1, spec.initial_branching)
 
-        for src_idx, src in enumerate(datasource_names):
-            for offset in range(1, branching):
-                dst_idx = src_idx + offset + 1
-                if dst_idx < len(datasource_names):
-                    edges[src].add(datasource_names[dst_idx])
-                else:
-                    edges[src].add("<end>")
-
-        return TopologyGraph(nodes=nodes, edges=edges)
+        return TopologyGraph(nodes=nodes, edges=edges, transition_counts=transition_counts)
 
     def copy(self) -> "TopologyGraph":
         return TopologyGraph(
             nodes={name: TopologyNode(node.name, node.level) for name, node in self.nodes.items()},
-            edges={src: set(dsts) for src, dsts in self.edges.items()}
+            edges={src: set(dsts) for src, dsts in self.edges.items()},
+            transition_counts=dict(self.transition_counts),
         )
 
     def node_names(self) -> List[str]:
@@ -64,6 +71,16 @@ class TopologyGraph:
 
     def successors(self, node: str) -> Set[str]:
         return set(self.edges.get(node, set()))
+
+    def transition_count(self, src: str, dst: str) -> int:
+        return self.transition_counts.get((src, dst), 1)
+
+    def set_transition_count(self, src: str, dst: str, count: int) -> None:
+        if count < 1:
+            raise ValueError("Transition count must be positive")
+        if dst not in self.edges.get(src, set()):
+            raise ValueError(f"Transition does not exist: {src}->{dst}")
+        self.transition_counts[(src, dst)] = count
 
     def predecessors(self, node: str) -> Set[str]:
         incoming = set()
@@ -92,6 +109,10 @@ class TopologyGraph:
         self.edges.pop(node_name, None)
         for src in self.edges:
             self.edges[src].discard(node_name)
+        self.transition_counts = {
+            edge: count for edge, count in self.transition_counts.items()
+            if node_name not in edge
+        }
 
         if validate:
             self.validate_invariants()
@@ -100,11 +121,13 @@ class TopologyGraph:
         if src not in self.nodes or dst not in self.nodes:
             raise ValueError("Source and destination must exist")
         self.edges.setdefault(src, set()).add(dst)
+        self.transition_counts.setdefault((src, dst), 1)
         if validate:
             self.validate_invariants()
 
     def remove_edge(self, src: str, dst: str, validate: bool = True) -> None:
         self.edges.setdefault(src, set()).discard(dst)
+        self.transition_counts.pop((src, dst), None)
         if validate:
             self.validate_invariants()
 
