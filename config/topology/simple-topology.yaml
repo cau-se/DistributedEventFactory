@@ -3,13 +3,13 @@ name: simple-topology
 spec:
   constraints:
     traceLength:
-      target: 8
+      target: 12
       tolerance: 1
     distinctTraces:
-      target: 75
+      target: 750
       tolerance: 5
   generation:
-    initialBranching: 1
+    initialBranching: 3
   optimize:
     maxIterations: 10
     sampleSize: 1200

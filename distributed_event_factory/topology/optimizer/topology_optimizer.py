@@ -199,3 +199,7 @@ class TopologyOptimizer:
         relative_gap = distance / max(1, spec.distinct_traces.target)
         estimated_change = relative_gap * average_transition_count
         return min(cls.max_transition_change, max(1, ceil(estimated_change)))
+
+    @classmethod
+    def transition_step_size(cls, metrics: TopologyMetrics, spec: TopologySpec, graph: TopologyGraph) -> int:
+        return cls._transition_step_size(metrics, spec, graph)

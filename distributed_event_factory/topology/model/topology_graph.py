@@ -187,13 +187,16 @@ class TopologyGraph:
             if not 0.0 <= probability <= 1.0:
                 raise ValueError("Transition probability must be between 0 and 1")
 
-        for src in self.nodes:
-            probabilities = [
-                self.transition_probability(src, dst, index)
-                for dst in self.successors(src)
-                for index in range(1, self.transition_count(src, dst) + 1)
-            ]
-            if probabilities and abs(sum(probabilities) - 1.0) > 1e-9:
+        nodes_by_source = {}
+        for (src, dst, transition_index), probability in self.transition_probabilities.items():
+            source_probabilities = nodes_by_source.setdefault(src, {})
+            source_probabilities[(dst, transition_index)] = probability
+        for src, explicit_probabilities in nodes_by_source.items():
+            total_count = sum(self.transition_count(src, dst) for dst in self.successors(src))
+            unspecified_count = total_count - len(explicit_probabilities)
+            unspecified_probability = 1.0 / total_count
+            total_probability = sum(explicit_probabilities.values()) + unspecified_count * unspecified_probability
+            if abs(total_probability - 1.0) > 1e-9:
                 raise ValueError(f"Transition probabilities from {src} must sum to 1")
 
         for src, destinations in self.edges.items():

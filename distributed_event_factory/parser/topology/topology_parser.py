@@ -19,7 +19,7 @@ class TopologyParser(Parser):
         payload_entropy = payload.get("entropy", {})
         trace_entropy = config.get("traceEntropy", config.get("trace_entropy", {}))
 
-        return TopologySpec(
+        topology_spec = TopologySpec(
             trace_length=TopologyConstraint(
                 target=constraints["traceLength"]["target"],
                 tolerance=constraints["traceLength"]["tolerance"]
@@ -45,3 +45,5 @@ class TopologyParser(Parser):
                 tolerance=trace_entropy.get("tolerance", 0.1),
             ),
         )
+        topology_spec.validate()
+        return topology_spec

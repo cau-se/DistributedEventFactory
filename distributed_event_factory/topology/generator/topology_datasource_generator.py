@@ -50,7 +50,6 @@ class TopologyDatasourceGenerator:
             if len(successors) == 0:
                 continue
 
-            transition_count = sum(graph.transition_count(node_name, successor) for successor in successors)
             event_data = []
             distribution = []
             for successor in successors:

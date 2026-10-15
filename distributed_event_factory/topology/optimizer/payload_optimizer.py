@@ -1,8 +1,14 @@
 from dataclasses import dataclass
-from math import ceil, log
+from math import ceil
+from typing import Dict, List, Tuple
 
 from distributed_event_factory.topology.model.topology_graph import TopologyGraph
 from distributed_event_factory.topology.model.topology_spec import TopologySpec
+from distributed_event_factory.topology.probability_analysis import (
+    expected_payload_contributions,
+    final_payload_distribution,
+    normalized_payload_entropy,
+)
 
 
 @dataclass(frozen=True)
@@ -12,9 +18,9 @@ class PayloadOptimizationResult:
     expected_success_ratio: float
     initial_delta: int
     target_reached: bool
-    optimization_log: list
+    optimization_log: List[dict]
     normalized_entropy: float
-    expected_contributions: dict
+    expected_contributions: Dict[Tuple[str, str, int], float]
     success_ratio_target_reached: bool
     entropy_target_reached: bool
 
@@ -81,7 +87,7 @@ class PayloadOptimizer:
                             candidates.setdefault(candidate, (state, (index,)))
 
                 entropy_gap = spec.payload_entropy.target - self._normalized_payload_entropy(state_graph)
-                contributions = self._expected_payload_contributions(state_graph)
+                contributions = expected_payload_contributions(state_graph)
                 contribution_by_index = [
                     contributions.get(key, 0.0)
                     for key in transition_keys
@@ -117,14 +123,11 @@ class PayloadOptimizer:
                 iterations -= 1
                 break
 
-            ranked_candidates = sorted(
-                candidates.keys(),
-                key=lambda state: self._rank(state, graph, transition_keys, spec, initial_delta),
-            )
             ranks = {
                 state: self._rank(state, graph, transition_keys, spec, initial_delta)
-                for state in ranked_candidates
+                for state in candidates
             }
+            ranked_candidates = sorted(candidates, key=lambda state: ranks[state])
             for state in ranked_candidates:
                 rank = ranks[state]
                 if rank < best_rank:
@@ -155,14 +158,13 @@ class PayloadOptimizer:
                     f"{parent_state[changed_index]}->{iteration_best[changed_index]}"
                 )
             transition = ";".join(changes)
-            delta_change = transition
             step_size = max(
                 abs(iteration_best[index] - parent_state[index])
                 for index in changed_indices
             )
             print(
                 f"[topology][payload] Iteration {iterations}: "
-                f"best={transition} delta={delta_change}, "
+                f"best={transition}, "
                 f"step={step_size}, "
                 f"success={iteration_success_ratio:.2f}%, "
                 f"entropy={self._normalized_payload_entropy(iteration_graph):.4f}, "
@@ -173,7 +175,7 @@ class PayloadOptimizer:
                 "type": "iteration",
                 "iteration": iterations,
                 "bestTransition": transition,
-                "bestDeltaChange": delta_change,
+                "bestDeltaChange": transition,
                 "stepSize": step_size,
                 "bestExpectedSuccessRatio": iteration_success_ratio,
                 "bestNormalizedEntropy": self._normalized_payload_entropy(iteration_graph),
@@ -205,7 +207,7 @@ class PayloadOptimizer:
             spec.payload_entropy.tolerance,
         ) == 0
         target_reached = success_ratio_target_reached and entropy_target_reached
-        expected_contributions = self._expected_payload_contributions(optimized_graph)
+        expected_contributions = expected_payload_contributions(optimized_graph)
         optimization_log.append({
             "type": "final",
             "iterations": iterations,
@@ -316,50 +318,7 @@ class PayloadOptimizer:
 
     @classmethod
     def _normalized_payload_entropy(cls, graph):
-        contributions = cls._expected_payload_contributions(graph)
-        contributions_by_step = {}
-        for (src, _, _), contribution in contributions.items():
-            contributions_by_step[src] = contributions_by_step.get(src, 0.0) + contribution
-        positive_contributions = [value for value in contributions_by_step.values() if value > 0]
-        total = sum(positive_contributions)
-        if total == 0 or len(positive_contributions) <= 1:
-            return 0.0
-        probabilities = [value / total for value in positive_contributions]
-        entropy = -sum(probability * log(probability) for probability in probabilities)
-        return entropy / log(len(probabilities))
-
-    @classmethod
-    def _expected_payload_contributions(cls, graph):
-        from collections import defaultdict
-
-        states = defaultdict(float)
-        contributions = defaultdict(float)
-        for node in graph.successors("<start>"):
-            for index in range(1, graph.transition_count("<start>", node) + 1):
-                states[(node, 0)] += graph.transition_probability("<start>", node, index)
-
-        ordered_nodes = sorted(
-            (node for node in graph.nodes if node not in {"<start>", "<end>"}),
-            key=lambda node: graph.nodes[node].level,
-        )
-        for node in ordered_nodes:
-            node_states = [
-                (payload, probability)
-                for (state_node, payload), probability in states.items()
-                if state_node == node
-            ]
-            for dst in graph.successors(node):
-                for index in range(1, graph.transition_count(node, dst) + 1):
-                    transition_probability = graph.transition_probability(node, dst, index)
-                    delta = graph.payload_delta(node, dst, index)
-                    key = (node, dst, index)
-                    for payload, probability in node_states:
-                        path_probability = probability * transition_probability
-                        effective_delta = min(delta, 100 - payload)
-                        contributions[key] += path_probability * effective_delta
-                        if dst != "<end>":
-                            states[(dst, min(100, payload + delta))] += path_probability
-        return contributions
+        return normalized_payload_entropy(graph)
 
     @staticmethod
     def _entropy_penalty(entropy, target, tolerance):
@@ -380,46 +339,6 @@ class PayloadOptimizer:
     @staticmethod
     def _expected_success_ratio(graph: TopologyGraph, threshold: int) -> float:
         return sum(
-            probability for payload, probability in PayloadOptimizer._final_payload_distribution(graph).items()
+            probability for payload, probability in final_payload_distribution(graph).items()
             if payload > threshold
         )
-
-    @staticmethod
-    def _final_payload_distribution(graph: TopologyGraph):
-        states = {}
-        start_successors = graph.successors("<start>")
-        if not start_successors:
-            return {}
-        for node in start_successors:
-            for transition_index in range(1, graph.transition_count("<start>", node) + 1):
-                probability = graph.transition_probability("<start>", node, transition_index)
-                states[(node, 0)] = states.get((node, 0), 0.0) + probability
-
-        final_distribution = {}
-        ordered_nodes = sorted(
-            (node for node in graph.nodes if node not in {"<start>", "<end>"}),
-            key=lambda node: graph.nodes[node].level,
-        )
-        for node in ordered_nodes:
-            node_states = [
-                (payload, probability)
-                for (state_node, payload), probability in states.items()
-                if state_node == node
-            ]
-            successors = graph.successors(node)
-            for dst in successors:
-                for transition_index in range(1, graph.transition_count(node, dst) + 1):
-                    transition_probability = graph.transition_probability(node, dst, transition_index)
-                    delta = graph.payload_delta(node, dst, transition_index)
-                    for payload, probability in node_states:
-                        final_payload = min(100, payload + delta)
-                        path_probability = probability * transition_probability
-                        if dst == "<end>":
-                            final_distribution[final_payload] = (
-                                final_distribution.get(final_payload, 0.0) + path_probability
-                            )
-                        else:
-                            state = (dst, final_payload)
-                            states[state] = states.get(state, 0.0) + path_probability
-
-        return final_distribution

@@ -35,10 +35,10 @@ class TopologyOptimizerSmokeTest(unittest.TestCase):
         far_above_target = TopologyMetrics(8, 8, 8, 1.0, 1000)
 
         self.assertGreater(
-            optimizer._transition_step_size(far_below_target, spec, graph),
-            optimizer._transition_step_size(near_target, spec, graph),
+            optimizer.transition_step_size(far_below_target, spec, graph),
+            optimizer.transition_step_size(near_target, spec, graph),
         )
-        self.assertEqual(5, optimizer._transition_step_size(far_above_target, spec, graph))
+        self.assertEqual(5, optimizer.transition_step_size(far_above_target, spec, graph))
 
     def test_optimizer_keeps_or_improves_best_score(self):
         spec = TopologySpec(

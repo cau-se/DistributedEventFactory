@@ -1,8 +1,12 @@
 from dataclasses import dataclass
-from math import log
+from typing import List
 
 from distributed_event_factory.topology.model.topology_graph import TopologyGraph
 from distributed_event_factory.topology.model.topology_spec import TopologySpec
+from distributed_event_factory.topology.probability_analysis import (
+    most_likely_trace_probability,
+    normalized_trace_entropy,
+)
 
 
 @dataclass(frozen=True)
@@ -12,10 +16,12 @@ class EntropyOptimizationResult:
     most_likely_trace_probability: float
     concentration: float
     target_reached: bool
-    optimization_log: list
+    optimization_log: List[dict]
 
 
 class TraceEntropyOptimizer:
+    max_iterations = 30
+
     def optimize(self, graph: TopologyGraph, spec: TopologySpec) -> EntropyOptimizationResult:
         optimized_graph = graph.copy()
         groups = [
@@ -28,7 +34,7 @@ class TraceEntropyOptimizer:
 
         low, high = 0.0, 1.0
         concentration = 1.0
-        for iteration in range(1, 31):
+        for iteration in range(1, self.max_iterations + 1):
             if target >= 1.0:
                 concentration = 1.0
             elif target <= 0.0:
@@ -36,7 +42,7 @@ class TraceEntropyOptimizer:
             else:
                 concentration = (low + high) / 2.0
             self._set_probabilities(optimized_graph, groups, concentration)
-            entropy = self._normalized_entropy(optimized_graph)
+            entropy = normalized_trace_entropy(optimized_graph)
             log_entries.append({
                 "type": "candidate",
                 "iteration": iteration,
@@ -57,8 +63,8 @@ class TraceEntropyOptimizer:
             elif target <= 0.0 or entropy > target:
                 high = concentration
 
-        normalized_entropy = self._normalized_entropy(optimized_graph)
-        most_likely_probability = self._most_likely_trace_probability(optimized_graph)
+        normalized_entropy = normalized_trace_entropy(optimized_graph)
+        most_likely_probability = most_likely_trace_probability(optimized_graph)
         target_reached = abs(normalized_entropy - target) <= tolerance
         log_entries.append({
             "type": "final",
@@ -99,61 +105,3 @@ class TraceEntropyOptimizer:
                     if (dst, index) == preferred_transition:
                         probability += 1.0 - concentration
                     graph.set_transition_probability(src, dst, index, probability)
-
-    @staticmethod
-    def _normalized_entropy(graph):
-        ordered_nodes = sorted(graph.nodes.values(), key=lambda node: (node.level, node.name))
-        reach_probability = {"<start>": 1.0}
-        path_counts = {"<end>": 1}
-
-        for node in reversed(ordered_nodes):
-            if node.name == "<end>":
-                continue
-            path_counts[node.name] = sum(
-                graph.transition_count(node.name, dst) * path_counts.get(dst, 0)
-                for dst in graph.successors(node.name)
-            )
-
-        entropy = 0.0
-        for node in ordered_nodes:
-            if node.name == "<end>":
-                continue
-            transitions = [
-                graph.transition_probability(node.name, dst, index)
-                for dst in graph.successors(node.name)
-                for index in range(1, graph.transition_count(node.name, dst) + 1)
-            ]
-            entropy -= reach_probability.get(node.name, 0.0) * sum(
-                probability * log(probability)
-                for probability in transitions
-                if probability > 0
-            )
-            for dst in graph.successors(node.name):
-                edge_probability = sum(
-                    graph.transition_probability(node.name, dst, index)
-                    for index in range(1, graph.transition_count(node.name, dst) + 1)
-                )
-                reach_probability[dst] = (
-                    reach_probability.get(dst, 0.0)
-                    + reach_probability.get(node.name, 0.0) * edge_probability
-                )
-
-        variant_count = path_counts.get("<start>", 0)
-        max_entropy = log(variant_count) if variant_count > 1 else 0.0
-        return entropy / max_entropy if max_entropy > 0 else 0.0
-
-    @staticmethod
-    def _most_likely_trace_probability(graph):
-        probabilities = {"<start>": 1.0}
-        nodes = sorted(graph.nodes.values(), key=lambda node: (node.level, node.name))
-        for node in nodes:
-            if node.name not in probabilities:
-                continue
-            for dst in graph.successors(node.name):
-                for index in range(1, graph.transition_count(node.name, dst) + 1):
-                    path_probability = (
-                        probabilities[node.name]
-                        * graph.transition_probability(node.name, dst, index)
-                    )
-                    probabilities[dst] = max(probabilities.get(dst, 0.0), path_probability)
-        return probabilities.get("<end>", 0.0)
