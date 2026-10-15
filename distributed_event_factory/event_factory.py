@@ -21,6 +21,7 @@ from distributed_event_factory.topology.evaluator.topology_evaluator import Topo
 from distributed_event_factory.topology.generator.topology_datasource_generator import TopologyDatasourceGenerator
 from distributed_event_factory.topology.optimizer.topology_optimizer import TopologyOptimizer
 from distributed_event_factory.topology.optimizer.payload_optimizer import PayloadOptimizer
+from distributed_event_factory.topology.optimizer.entropy_optimizer import TraceEntropyOptimizer
 
 
 class EventFactory:
@@ -145,7 +146,8 @@ class EventFactory:
             )
 
         optimization_result = optimizer.optimize(topology_spec, simulate_fn)
-        payload_result = PayloadOptimizer().optimize(optimization_result.best_graph, topology_spec)
+        entropy_result = TraceEntropyOptimizer().optimize(optimization_result.best_graph, topology_spec)
+        payload_result = PayloadOptimizer().optimize(entropy_result.graph, topology_spec)
         final_graph = payload_result.graph
         final_events = simulate_fn(final_graph, topology_spec.sample_size)
         end_activity_names = generator.build_end_activity_names(final_graph)
@@ -177,17 +179,40 @@ class EventFactory:
             payload_result.iterations,
             len(completed_payloads),
             payload_result.target_reached,
+            entropy_result.normalized_entropy,
+            topology_spec.trace_entropy.target,
+            topology_spec.trace_entropy.tolerance,
+            entropy_result.most_likely_trace_probability,
+            entropy_result.concentration,
+            entropy_result.target_reached,
+            topology_spec.payload_entropy.target,
+            topology_spec.payload_entropy.tolerance,
+            payload_result.normalized_entropy,
+            payload_result.expected_contributions,
+            payload_result.success_ratio_target_reached,
+            payload_result.entropy_target_reached,
         )
         optimization_summary = (
             f"{self._format_optimization_summary(optimization_result)}\n"
             f"payloadIterations={payload_result.iterations}\n"
             f"payloadInitialDelta={payload_result.initial_delta}\n"
             f"payloadTargetReached={payload_result.target_reached}\n"
+            f"payloadSuccessRatioTargetReached={payload_result.success_ratio_target_reached}\n"
+            f"payloadEntropy={payload_result.normalized_entropy:.4f}\n"
+            f"payloadEntropyTarget={topology_spec.payload_entropy.target:.4f}"
+            f"±{topology_spec.payload_entropy.tolerance:.4f}\n"
+            f"payloadEntropyTargetReached={payload_result.entropy_target_reached}\n"
             f"payloadExpectedSuccessfulCases={payload_result.expected_success_ratio * 100:.2f}%\n"
             f"payloadObservedSuccessfulCases={observed_success_ratio * 100:.2f}% "
-            f"({successful_cases}/{len(completed_payloads)})"
+            f"({successful_cases}/{len(completed_payloads)})\n"
+            f"traceNormalizedEntropy={entropy_result.normalized_entropy:.4f}\n"
+            f"traceEntropyTarget={topology_spec.trace_entropy.target:.4f}"
+            f"±{topology_spec.trace_entropy.tolerance:.4f}\n"
+            f"mostLikelyTrace={entropy_result.most_likely_trace_probability * 100:.2f}%\n"
+            f"traceEntropyTargetReached={entropy_result.target_reached}"
         )
         optimization_log = self._format_optimization_log(optimization_result.optimization_log)
+        entropy_optimization_log = self._format_optimization_log(entropy_result.optimization_log)
         payload_optimization_log = self._format_optimization_log(payload_result.optimization_log)
 
         print("[topology] Final topology:")
@@ -196,6 +221,8 @@ class EventFactory:
         print(optimization_summary)
         print("[topology] Complete optimization log:")
         print(optimization_log)
+        print("[topology] Complete trace entropy optimization log:")
+        print(entropy_optimization_log)
         print("[topology] Complete payload optimization log:")
         print(payload_optimization_log)
 
@@ -203,6 +230,7 @@ class EventFactory:
             topology_summary=topology_summary,
             optimization_summary=optimization_summary,
             optimization_log=optimization_log,
+            entropy_optimization_log=entropy_optimization_log,
             payload_optimization_log=payload_optimization_log,
         )
         print(f"[topology] Full optimization log written to {log_path}")
@@ -249,6 +277,18 @@ class EventFactory:
         payload_iterations,
         payload_sample_size,
         payload_target_reached,
+        trace_entropy,
+        trace_entropy_target,
+        trace_entropy_tolerance,
+        most_likely_trace_probability,
+        entropy_concentration,
+        entropy_target_reached,
+        payload_entropy_target,
+        payload_entropy_tolerance,
+        payload_entropy,
+        payload_contributions,
+        payload_success_target_reached,
+        payload_entropy_target_reached,
     ):
         lines = []
         lines.append("nodes:")
@@ -265,12 +305,34 @@ class EventFactory:
         lines.append("")
         lines.append("ASCII topology:")
         lines.append(
+            f"Trace entropy: normalized={trace_entropy:.4f} "
+            f"(target={trace_entropy_target:.4f}±{trace_entropy_tolerance:.4f}), "
+            f"mostLikelyTrace={most_likely_trace_probability * 100:.2f}%, "
+            f"concentration={entropy_concentration:.4f}, "
+            f"targetReached={entropy_target_reached}"
+        )
+        lines.append(
             f"Payload optimization: threshold>{payload_threshold}, "
             f"successfulCases={payload_expected_ratio * 100:.2f}% of {payload_sample_size} cases "
             f"(target={payload_target_ratio}%±{payload_ratio_tolerance}%), "
             f"initialDelta={initial_payload_delta}, iterations={payload_iterations}, "
             f"targetReached={payload_target_reached}"
         )
+        lines.append(
+            f"Payload entropy: normalized={payload_entropy:.4f} "
+            f"(target={payload_entropy_target:.4f}±{payload_entropy_tolerance:.4f}), "
+            f"successTargetReached={payload_success_target_reached}, "
+            f"entropyTargetReached={payload_entropy_target_reached}"
+        )
+        lines.append("Expected payload contribution by step:")
+        contributions_by_step = {}
+        for (src, _, _), contribution in payload_contributions.items():
+            contributions_by_step[src] = contributions_by_step.get(src, 0.0) + contribution
+        for step, contribution in sorted(
+            contributions_by_step.items(),
+            key=lambda item: (graph.nodes[item[0]].level, item[0]),
+        ):
+            lines.append(f"  - {step}: {contribution:.2f}")
         for successor in sorted(graph.successors("<start>")):
             lines.append(f"<start> --> {successor}")
 
@@ -288,7 +350,14 @@ class EventFactory:
                 for transition_index in range(1, graph.transition_count(node.name, successor) + 1):
                     activity = activity_names[(node.name, successor, transition_index)]
                     payload_delta = graph.payload_delta(node.name, successor, transition_index)
-                    lines.append(f"  +-- {activity} (+{payload_delta}) --> {successor}")
+                    probability = graph.transition_probability(node.name, successor, transition_index)
+                    contribution = payload_contributions.get(
+                        (node.name, successor, transition_index),
+                        0.0,
+                    )
+                    lines.append(
+                        f"  +-- {activity} (p={probability:.4f}, +{payload_delta}) --> {successor}"
+                    )
         return "\n".join(lines)
 
     def _format_optimization_summary(self, optimization_result):
@@ -319,6 +388,7 @@ class EventFactory:
         topology_summary: str,
         optimization_summary: str,
         optimization_log: str,
+        entropy_optimization_log: str,
         payload_optimization_log: str,
     ):
         log_dir = "logs"
@@ -332,6 +402,8 @@ class EventFactory:
             log_file.write(optimization_summary)
             log_file.write("\n\n[topology] Complete optimization log\n")
             log_file.write(optimization_log)
+            log_file.write("\n\n[topology] Complete trace entropy optimization log\n")
+            log_file.write(entropy_optimization_log)
             log_file.write("\n\n[topology] Complete payload optimization log\n")
             log_file.write(payload_optimization_log)
             log_file.write("\n")

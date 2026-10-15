@@ -18,6 +18,9 @@ spec:
     successfulCaseRatio:
       target: 80
       tolerance: 2
+    entropy:
+      target: 0.3
+      tolerance: 0.1
   traceEntropy:
-    target: 0.05
-    tolerance: 0.02
+    target: 0.5
+    tolerance: 0.1

@@ -16,6 +16,7 @@ class TopologyParser(Parser):
         optimize = config["optimize"]
         payload = config.get("payload", {})
         successful_case_ratio = payload.get("successfulCaseRatio", {})
+        payload_entropy = payload.get("entropy", {})
         trace_entropy = config.get("traceEntropy", config.get("trace_entropy", {}))
 
         return TopologySpec(
@@ -35,8 +36,12 @@ class TopologyParser(Parser):
                 target=successful_case_ratio.get("target", 80),
                 tolerance=successful_case_ratio.get("tolerance", 2),
             ),
+            payload_entropy=TopologyConstraint(
+                target=payload_entropy.get("target", 0.7),
+                tolerance=payload_entropy.get("tolerance", 0.1),
+            ),
             trace_entropy=TopologyConstraint(
                 target=trace_entropy.get("target", 1.0),
-                tolerance=trace_entropy.get("tolerance", 0.02),
+                tolerance=trace_entropy.get("tolerance", 0.1),
             ),
         )

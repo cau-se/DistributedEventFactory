@@ -25,5 +25,8 @@ class TopologySpec:
         default_factory=lambda: TopologyConstraint(target=80, tolerance=2)
     )
     trace_entropy: TopologyConstraint = field(
-        default_factory=lambda: TopologyConstraint(target=1.0, tolerance=0.02)
+        default_factory=lambda: TopologyConstraint(target=1.0, tolerance=0.1)
+    )
+    payload_entropy: TopologyConstraint = field(
+        default_factory=lambda: TopologyConstraint(target=0.7, tolerance=0.1)
     )
