@@ -11,7 +11,7 @@ class DropRatePostProcessor(PostProcessor):
             raise ValueError("dropRate must be between 0 and 1")
         self.drop_rate = drop_rate
 
-    def process(self, event: Event):
+    def process(self, event: "Event"):
         if random.random() < self.drop_rate:
             print("dropped")
             return None

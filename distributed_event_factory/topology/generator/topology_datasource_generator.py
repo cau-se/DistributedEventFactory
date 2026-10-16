@@ -36,6 +36,12 @@ class TopologyDatasourceGenerator:
             if target == "<end>"
         }
 
+    def build_transition_activities(self, graph: TopologyGraph) -> Dict[str, list]:
+        activities = {}
+        for (source, _target, _index), activity in self.build_activity_names(graph).items():
+            activities.setdefault(source, []).append(activity)
+        return activities
+
     def build_datasource_configs(self, graph: TopologyGraph) -> Dict[str, dict]:
         configs: Dict[str, dict] = {}
         activity_names = self.build_activity_names(graph)
@@ -61,7 +67,7 @@ class TopologyDatasourceGenerator:
                             f"{node_name}->{successor}-{transition_index}"
                         ),
                         "transition": successor,
-                        "duration": 1,
+                        "duration": graph.duration(node_name, successor, transition_index),
                         "payloadUpdate": {
                             "type": "fixed",
                             "value": graph.payload_delta(node_name, successor, transition_index)

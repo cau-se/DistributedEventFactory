@@ -151,6 +151,11 @@ class EventFactory:
         )
         result = pipeline.run(topology_spec, simulate_fn)
         self.datasources = result.datasources
+        transition_activities = generator.build_transition_activities(result.graph)
+        for post_processor in self.post_processors.values():
+            set_alternatives = getattr(post_processor, "set_transition_alternatives", None)
+            if set_alternatives is not None:
+                set_alternatives(transition_activities)
         TopologyReporter(generator).report(result, topology_spec)
 
     def _simulate_for_topology(

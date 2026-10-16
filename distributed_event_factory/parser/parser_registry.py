@@ -25,6 +25,9 @@ from distributed_event_factory.parser.datasource.event.payload.uniform_payload_u
     UniformPayloadUpdateParser
 from distributed_event_factory.parser.datasource.event.transition.transition_parser import TransitionParser
 from distributed_event_factory.parser.postprocessor.drop_rate_post_processor_parser import DropRatePostProcessorParser
+from distributed_event_factory.parser.postprocessor.transition_mistake_post_processor_parser import (
+    TransitionMistakePostProcessorParser,
+)
 from distributed_event_factory.parser.postprocessor.post_processor_parser import PostProcessorParser
 from distributed_event_factory.parser.simulation.case.case_id_parser import CaseIdParser
 from distributed_event_factory.parser.datasource.data_source_parser import DataSourceParser
@@ -79,8 +82,10 @@ class ParserRegistry:
 
         # Post Processor
         self.drop_rate_post_processor_parser = DropRatePostProcessorParser()
+        self.transition_mistake_post_processor_parser = TransitionMistakePostProcessorParser()
         self.post_processor_parser = (PostProcessorParser()
-                                      .add_dependency("dropRate", self.drop_rate_post_processor_parser))
+                                      .add_dependency("dropRate", self.drop_rate_post_processor_parser)
+                                      .add_dependency("transitionMistake", self.transition_mistake_post_processor_parser))
         ##########
         # Activity
         self.activity_parser = ActivityParser()

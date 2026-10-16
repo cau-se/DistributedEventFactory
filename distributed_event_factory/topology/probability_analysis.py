@@ -74,6 +74,43 @@ def expected_payload_contributions(graph: TopologyGraph) -> dict:
     return contributions
 
 
+def expected_duration_contributions(graph: TopologyGraph) -> dict:
+    reach_probability = {}
+    for dst in graph.successors("<start>"):
+        probability = sum(
+            graph.transition_probability("<start>", dst, index)
+            for index in range(1, graph.transition_count("<start>", dst) + 1)
+        )
+        reach_probability[dst] = reach_probability.get(dst, 0.0) + probability
+    contributions = {}
+    nodes = sorted(
+        (node for node in graph.nodes if node not in {"<start>", "<end>"}),
+        key=lambda node: graph.nodes[node].level,
+    )
+    for node in nodes:
+        reach = reach_probability.get(node, 0.0)
+        for dst in graph.successors(node):
+            edge_probability = 0.0
+            for index in range(1, graph.transition_count(node, dst) + 1):
+                probability = graph.transition_probability(node, dst, index)
+                contributions[(node, dst, index)] = reach * probability * graph.duration(node, dst, index)
+                edge_probability += probability
+            if dst != "<end>":
+                reach_probability[dst] = reach_probability.get(dst, 0.0) + reach * edge_probability
+    return contributions
+
+
+def expected_trace_duration(graph: TopologyGraph) -> float:
+    return sum(expected_duration_contributions(graph).values())
+
+
+def normalized_duration_entropy(graph: TopologyGraph) -> float:
+    contributions_by_step = {}
+    for (src, _, _), contribution in expected_duration_contributions(graph).items():
+        contributions_by_step[src] = contributions_by_step.get(src, 0.0) + contribution
+    return normalized_entropy([value for value in contributions_by_step.values() if value > 0])
+
+
 def normalized_payload_entropy(graph: TopologyGraph) -> float:
     contributions_by_step = {}
     for (src, _, _), contribution in expected_payload_contributions(graph).items():

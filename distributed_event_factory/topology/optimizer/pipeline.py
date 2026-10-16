@@ -11,6 +11,10 @@ from distributed_event_factory.topology.optimizer.entropy_optimizer import (
     EntropyOptimizationResult,
     TraceEntropyOptimizer,
 )
+from distributed_event_factory.topology.optimizer.duration_optimizer import (
+    DurationOptimizationResult,
+    DurationOptimizer,
+)
 from distributed_event_factory.topology.optimizer.payload_optimizer import (
     PayloadOptimizationResult,
     PayloadOptimizer,
@@ -28,6 +32,7 @@ class TopologyPipelineResult:
     completed_payloads: Dict[str, float]
     transition: TopologyOptimizationResult
     trace_entropy: EntropyOptimizationResult
+    duration: DurationOptimizationResult
     payload: PayloadOptimizationResult
 
 
@@ -46,7 +51,8 @@ class TopologyPipeline:
         spec.validate()
         transition_result = self.topology_optimizer.optimize(spec, simulate_fn)
         trace_entropy_result = TraceEntropyOptimizer().optimize(transition_result.best_graph, spec)
-        payload_result = PayloadOptimizer().optimize(trace_entropy_result.graph, spec)
+        duration_result = DurationOptimizer().optimize(trace_entropy_result.graph, spec)
+        payload_result = PayloadOptimizer().optimize(duration_result.graph, spec)
         graph = payload_result.graph
 
         events = simulate_fn(graph, spec.sample_size)
@@ -65,5 +71,6 @@ class TopologyPipeline:
             completed_payloads=completed_payloads,
             transition=transition_result,
             trace_entropy=trace_entropy_result,
+            duration=duration_result,
             payload=payload_result,
         )

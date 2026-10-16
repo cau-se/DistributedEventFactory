@@ -24,3 +24,11 @@ spec:
   traceEntropy:
     target: 0.5
     tolerance: 0.1
+  duration:
+    averageTraceDuration:
+      target: 120
+      tolerance: 5
+    entropy:
+      target: 1.0
+      tolerance: 0.05
+    maxPerTransition: 60

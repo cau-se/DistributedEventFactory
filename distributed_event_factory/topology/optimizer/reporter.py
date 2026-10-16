@@ -35,6 +35,7 @@ class TopologyReporter:
         logs: Dict[str, str] = {
             "transition": self._format_optimization_log(result.transition.optimization_log),
             "trace entropy": self._format_optimization_log(result.trace_entropy.optimization_log),
+            "duration": self._format_optimization_log(result.duration.optimization_log),
             "payload": self._format_optimization_log(result.payload.optimization_log),
         }
 
@@ -69,6 +70,28 @@ class TopologyReporter:
             f"mostLikelyTrace={result.trace_entropy.most_likely_trace_probability * 100:.2f}%, "
             f"concentration={result.trace_entropy.concentration:.4f}, "
             f"targetReached={result.trace_entropy.target_reached}"
+        )
+        lines.append(
+            f"Duration optimization: averageTrace={result.duration.average_trace_duration:.2f} min "
+            f"(target={spec.average_trace_duration.target:.2f}±{spec.average_trace_duration.tolerance:.2f}), "
+            f"targetReached={result.duration.duration_target_reached}"
+        )
+        lines.append(
+            f"Duration entropy: normalized={result.duration.normalized_entropy:.4f} "
+            f"(target={spec.duration_entropy.target:.4f}±{spec.duration_entropy.tolerance:.4f}), "
+            f"targetReached={result.duration.entropy_target_reached}"
+        )
+        duration_by_step = {}
+        for (src, _, _), contribution in result.duration.expected_contributions.items():
+            duration_by_step[src] = duration_by_step.get(src, 0.0) + contribution
+        lines.append("Expected duration contribution by step (minutes):")
+        for step, duration in sorted(
+            duration_by_step.items(),
+            key=lambda item: (graph.nodes[item[0]].level, item[0]),
+        ):
+            lines.append(f"  - {step}: {duration:.2f}")
+        lines.append(
+            f"Duration optimization maxPerTransition={spec.max_duration_per_transition} min"
         )
         lines.append(
             f"Payload optimization: threshold>{spec.payload_success_threshold}, "
@@ -108,7 +131,10 @@ class TopologyReporter:
                     activity = activity_names[(node.name, successor, index)]
                     probability = graph.transition_probability(node.name, successor, index)
                     delta = graph.payload_delta(node.name, successor, index)
-                    lines.append(f"  +-- {activity} (p={probability:.4f}, +{delta}) --> {successor}")
+                    duration = graph.duration(node.name, successor, index)
+                    lines.append(
+                        f"  +-- {activity} (p={probability:.4f}, duration={duration}min, +{delta}) --> {successor}"
+                    )
         return "\n".join(lines)
 
     @staticmethod
@@ -128,8 +154,16 @@ class TopologyReporter:
             f"traceLenInIntervalRatio={metrics.traces_in_length_interval_ratio:.3f}\n"
             f"traceNormalizedEntropy={result.trace_entropy.normalized_entropy:.4f}\n"
             f"traceEntropyTargetReached={result.trace_entropy.target_reached}\n"
+            f"averageTraceDuration={result.duration.average_trace_duration:.2f} min\n"
+            f"durationTargetReached={result.duration.duration_target_reached}\n"
+            f"durationEntropy={result.duration.normalized_entropy:.4f}\n"
+            f"durationEntropyTargetReached={result.duration.entropy_target_reached}\n"
             f"mostLikelyTrace={result.trace_entropy.most_likely_trace_probability * 100:.2f}%\n"
             f"payloadIterations={result.payload.iterations}\n"
+            f"averageTraceDuration={result.duration.average_trace_duration:.2f} min\n"
+            f"durationTargetReached={result.duration.duration_target_reached}\n"
+            f"durationEntropy={result.duration.normalized_entropy:.4f}\n"
+            f"durationEntropyTargetReached={result.duration.entropy_target_reached}\n"
             f"payloadInitialDelta={result.payload.initial_delta}\n"
             f"payloadTargetReached={result.payload.target_reached}\n"
             f"payloadSuccessRatioTargetReached={result.payload.success_ratio_target_reached}\n"

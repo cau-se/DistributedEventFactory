@@ -18,6 +18,9 @@ class TopologyParser(Parser):
         successful_case_ratio = payload.get("successfulCaseRatio", {})
         payload_entropy = payload.get("entropy", {})
         trace_entropy = config.get("traceEntropy", config.get("trace_entropy", {}))
+        duration = config.get("duration", {})
+        average_trace_duration = duration.get("averageTraceDuration", {})
+        duration_entropy = duration.get("entropy", {})
 
         topology_spec = TopologySpec(
             trace_length=TopologyConstraint(
@@ -44,6 +47,15 @@ class TopologyParser(Parser):
                 target=trace_entropy.get("target", 1.0),
                 tolerance=trace_entropy.get("tolerance", 0.1),
             ),
+            average_trace_duration=TopologyConstraint(
+                target=average_trace_duration.get("target", constraints["traceLength"]["target"]),
+                tolerance=average_trace_duration.get("tolerance", 0.5),
+            ),
+            duration_entropy=TopologyConstraint(
+                target=duration_entropy.get("target", 0.7),
+                tolerance=duration_entropy.get("tolerance", 0.1),
+            ),
+            max_duration_per_transition=duration.get("maxPerTransition", 60),
         )
         topology_spec.validate()
         return topology_spec

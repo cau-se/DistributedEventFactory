@@ -27,6 +27,11 @@ class TopologyParserTest(unittest.TestCase):
             "traceEntropy": {
                 "target": 0.7,
                 "tolerance": 0.1
+            },
+            "duration": {
+                "averageTraceDuration": {"target": 120, "tolerance": 5},
+                "entropy": {"target": 0.65, "tolerance": 0.1},
+                "maxPerTransition": 45,
             }
         })
 
@@ -44,6 +49,11 @@ class TopologyParserTest(unittest.TestCase):
         self.assertEqual(0.1, parsed.payload_entropy.tolerance)
         self.assertEqual(0.7, parsed.trace_entropy.target)
         self.assertEqual(0.1, parsed.trace_entropy.tolerance)
+        self.assertEqual(120, parsed.average_trace_duration.target)
+        self.assertEqual(5, parsed.average_trace_duration.tolerance)
+        self.assertEqual(0.65, parsed.duration_entropy.target)
+        self.assertEqual(0.1, parsed.duration_entropy.tolerance)
+        self.assertEqual(45, parsed.max_duration_per_transition)
 
     def test_trace_entropy_defaults_to_uniform(self):
         parsed = TopologyParser().parse({
@@ -59,3 +69,5 @@ class TopologyParserTest(unittest.TestCase):
         self.assertEqual(0.1, parsed.trace_entropy.tolerance)
         self.assertEqual(0.7, parsed.payload_entropy.target)
         self.assertEqual(0.1, parsed.payload_entropy.tolerance)
+        self.assertEqual(3, parsed.average_trace_duration.target)
+        self.assertEqual(60, parsed.max_duration_per_transition)

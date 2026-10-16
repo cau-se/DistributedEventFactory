@@ -18,12 +18,14 @@ class TopologyGraph:
         transition_counts: Dict[Tuple[str, str], int] = None,
         payload_deltas: Dict[Tuple[str, str, int], int] = None,
         transition_probabilities: Dict[Tuple[str, str, int], float] = None,
+        durations: Dict[Tuple[str, str, int], int] = None,
     ):
         self.nodes = nodes
         self.edges = edges
         self.transition_counts = transition_counts or {}
         self.payload_deltas = payload_deltas or {}
         self.transition_probabilities = transition_probabilities or {}
+        self.durations = durations or {}
         self.validate_invariants()
 
     @staticmethod
@@ -63,6 +65,7 @@ class TopologyGraph:
             transition_counts=dict(self.transition_counts),
             payload_deltas=dict(self.payload_deltas),
             transition_probabilities=dict(self.transition_probabilities),
+            durations=dict(self.durations),
         )
 
     def node_names(self) -> List[str]:
@@ -115,6 +118,16 @@ class TopologyGraph:
             raise ValueError(f"Invalid transition index for {src}->{dst}: {transition_index}")
         self.payload_deltas[(src, dst, transition_index)] = value
 
+    def duration(self, src: str, dst: str, transition_index: int) -> int:
+        return self.durations.get((src, dst, transition_index), 1)
+
+    def set_duration(self, src: str, dst: str, transition_index: int, value: int) -> None:
+        if not isinstance(value, int) or isinstance(value, bool) or value < 1:
+            raise ValueError("Duration must be a positive integer number of minutes")
+        if transition_index < 1 or transition_index > self.transition_count(src, dst):
+            raise ValueError(f"Invalid transition index for {src}->{dst}: {transition_index}")
+        self.durations[(src, dst, transition_index)] = value
+
     def predecessors(self, node: str) -> Set[str]:
         incoming = set()
         for src, destinations in self.edges.items():
@@ -152,6 +165,10 @@ class TopologyGraph:
         }
         self.transition_probabilities = {
             transition: value for transition, value in self.transition_probabilities.items()
+            if node_name not in transition[:2]
+        }
+        self.durations = {
+            transition: value for transition, value in self.durations.items()
             if node_name not in transition[:2]
         }
 
