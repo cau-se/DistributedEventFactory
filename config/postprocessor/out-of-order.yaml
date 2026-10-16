@@ -1,0 +1,6 @@
+kind: postProcessor
+name: out-of-order
+spec:
+  type: outOfOrder
+  probability: 0.5
+  windowSize: 10

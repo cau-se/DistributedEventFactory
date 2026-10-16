@@ -1,7 +1,5 @@
 import random
 
-from process_mining_core.datastructure.core.event import Event
-
 from distributed_event_factory.provider.postprocessor.post_processor import PostProcessor
 
 
@@ -13,6 +11,6 @@ class DropRatePostProcessor(PostProcessor):
 
     def process(self, event: "Event"):
         if random.random() < self.drop_rate:
-            print("dropped")
+            print(f"PostProcessor [dropRate]: dropped event {event}")
             return None
         return event

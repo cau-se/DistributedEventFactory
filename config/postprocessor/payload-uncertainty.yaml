@@ -1,0 +1,6 @@
+kind: postProcessor
+name: payload-uncertainty
+spec:
+  type: payloadUncertainty
+  probability: 0.1
+  sigma: 5.0

@@ -1,8 +1,6 @@
 import random
 from typing import Dict, List
 
-from process_mining_core.datastructure.core.event import Event
-
 from distributed_event_factory.provider.postprocessor.post_processor import PostProcessor
 
 
@@ -31,5 +29,11 @@ class TransitionMistakePostProcessor(PostProcessor):
             if activity != event.activity
         ]
         if alternatives:
+            original_activity = event.activity
             event.activity = random.choice(alternatives)
+            print(
+                "PostProcessor [transitionMistake]: "
+                f"changed activity {original_activity!r} -> {event.activity!r} "
+                f"for node {event.node!r}"
+            )
         return event

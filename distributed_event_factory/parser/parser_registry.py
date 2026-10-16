@@ -28,6 +28,11 @@ from distributed_event_factory.parser.postprocessor.drop_rate_post_processor_par
 from distributed_event_factory.parser.postprocessor.transition_mistake_post_processor_parser import (
     TransitionMistakePostProcessorParser,
 )
+from distributed_event_factory.parser.postprocessor.payload_uncertainty_post_processor_parser import PayloadUncertaintyPostProcessorParser
+from distributed_event_factory.parser.postprocessor.time_uncertainty_post_processor_parser import TimeUncertaintyPostProcessorParser
+from distributed_event_factory.parser.postprocessor.missing_data_post_processor_parser import MissingDataPostProcessorParser
+from distributed_event_factory.parser.postprocessor.out_of_order_post_processor_parser import OutOfOrderPostProcessorParser
+from distributed_event_factory.parser.postprocessor.insertion_post_processor_parser import InsertionPostProcessorParser
 from distributed_event_factory.parser.postprocessor.post_processor_parser import PostProcessorParser
 from distributed_event_factory.parser.simulation.case.case_id_parser import CaseIdParser
 from distributed_event_factory.parser.datasource.data_source_parser import DataSourceParser
@@ -83,9 +88,19 @@ class ParserRegistry:
         # Post Processor
         self.drop_rate_post_processor_parser = DropRatePostProcessorParser()
         self.transition_mistake_post_processor_parser = TransitionMistakePostProcessorParser()
+        self.payload_uncertainty_post_processor_parser = PayloadUncertaintyPostProcessorParser()
+        self.time_uncertainty_post_processor_parser = TimeUncertaintyPostProcessorParser()
+        self.missing_data_post_processor_parser = MissingDataPostProcessorParser()
+        self.out_of_order_post_processor_parser = OutOfOrderPostProcessorParser()
+        self.insertion_post_processor_parser = InsertionPostProcessorParser()
         self.post_processor_parser = (PostProcessorParser()
                                       .add_dependency("dropRate", self.drop_rate_post_processor_parser)
-                                      .add_dependency("transitionMistake", self.transition_mistake_post_processor_parser))
+                                      .add_dependency("transitionMistake", self.transition_mistake_post_processor_parser)
+                                      .add_dependency("payloadUncertainty", self.payload_uncertainty_post_processor_parser)
+                                      .add_dependency("timeUncertainty", self.time_uncertainty_post_processor_parser)
+                                      .add_dependency("missingData", self.missing_data_post_processor_parser)
+                                      .add_dependency("outOfOrder", self.out_of_order_post_processor_parser)
+                                      .add_dependency("insertion", self.insertion_post_processor_parser))
         ##########
         # Activity
         self.activity_parser = ActivityParser()

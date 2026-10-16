@@ -27,3 +27,4 @@ class CountBasedSimulation(Simulation):
             event = process_simulator.simulate()
             self.send_event(event)
             hook()
+        self.flush_post_processors_to_sinks()

@@ -3,16 +3,16 @@ name: simple-topology
 spec:
   constraints:
     traceLength:
-      target: 12
+      target: 8
       tolerance: 1
     distinctTraces:
-      target: 750
+      target: 200
       tolerance: 5
   generation:
     initialBranching: 3
   optimize:
     maxIterations: 10
-    sampleSize: 1200
+    sampleSize: 400
   payload:
     successThreshold: 80
     successfulCaseRatio:
