@@ -1,0 +1,28 @@
+kind: PostProcessorBundle
+name: default-noise
+spec:
+  processors:
+    - name: payload-noise
+      type: payloadUncertainty
+      probability: 0.1
+      sigma: 5.0
+
+    - name: time-noise
+      type: timeUncertainty
+      probability: 0.1
+      sigmaSeconds: 60.0
+
+    - name: missing-data
+      type: missingData
+      payloadProbability: 0.02
+      timestampProbability: 0.02
+      activityProbability: 0.01
+
+    - name: insertion
+      type: insertion
+      probability: 0.05
+
+    - name: out-of-order
+      type: outOfOrder
+      probability: 0.1
+      windowSize: 3

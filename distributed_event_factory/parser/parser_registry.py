@@ -34,6 +34,7 @@ from distributed_event_factory.parser.postprocessor.missing_data_post_processor_
 from distributed_event_factory.parser.postprocessor.out_of_order_post_processor_parser import OutOfOrderPostProcessorParser
 from distributed_event_factory.parser.postprocessor.insertion_post_processor_parser import InsertionPostProcessorParser
 from distributed_event_factory.parser.postprocessor.post_processor_parser import PostProcessorParser
+from distributed_event_factory.parser.postprocessor.post_processor_bundle_parser import PostProcessorBundleParser
 from distributed_event_factory.parser.simulation.case.case_id_parser import CaseIdParser
 from distributed_event_factory.parser.datasource.data_source_parser import DataSourceParser
 from distributed_event_factory.parser.datasource.event.distribution_parser import DistributionParser
@@ -49,12 +50,14 @@ from distributed_event_factory.parser.simulation.variant.countbased_simulation_p
 from distributed_event_factory.parser.simulation.variant.loadtest_simulation_parser import LoadTestSimulationParser
 from distributed_event_factory.parser.simulation.variant.stream_simulation_parser import StreamSimulationParser
 from distributed_event_factory.parser.sink.http_sink_parser import HttpSinkParser
+from distributed_event_factory.parser.sink.event_http_sink_parser import EventHttpSinkParser
 from distributed_event_factory.parser.sink.kafka.case_partition_parser import CasePartitionParser
 from distributed_event_factory.parser.sink.kafka.constant_partition_parser import ConstantPartitionParser
 from distributed_event_factory.parser.sink.kafka.kafka_sink_parser import KafkaSinkParser
 from distributed_event_factory.parser.sink.kafka.partition_parser import PartitionParser
 from distributed_event_factory.parser.sink.print_console_sink_parser import PrintConsoleSinkParser
 from distributed_event_factory.parser.sink.sink_parser import SinkParser
+from distributed_event_factory.parser.sink.sink_bundle_parser import SinkBundleParser
 from distributed_event_factory.parser.sink.ui_sink_parser import UiSinkParser
 from distributed_event_factory.parser.topology.topology_parser import TopologyParser
 from distributed_event_factory.provider.data.constant_count_provider import ConstantCountProvider
@@ -79,11 +82,15 @@ class ParserRegistry:
         self.console_sink_parser = (PrintConsoleSinkParser())
         self.ui_sink_parser = (UiSinkParser())
         self.http_sink_parser = (HttpSinkParser())
+        self.event_http_sink_parser = EventHttpSinkParser()
         self.sink_parser = (SinkParser()
                             .add_dependency("console", self.console_sink_parser)
                             .add_dependency("ui", self.ui_sink_parser)
                             .add_dependency("http", self.http_sink_parser)
+                            .add_dependency("eventHttp", self.event_http_sink_parser)
                             .add_dependency("kafka", self.kafka_sink_parser))
+        self.sink_bundle_parser = (SinkBundleParser()
+                                  .add_dependency("sink", self.sink_parser))
 
         # Post Processor
         self.drop_rate_post_processor_parser = DropRatePostProcessorParser()
@@ -101,6 +108,8 @@ class ParserRegistry:
                                       .add_dependency("missingData", self.missing_data_post_processor_parser)
                                       .add_dependency("outOfOrder", self.out_of_order_post_processor_parser)
                                       .add_dependency("insertion", self.insertion_post_processor_parser))
+        self.post_processor_bundle_parser = (PostProcessorBundleParser()
+                                             .add_dependency("postProcessor", self.post_processor_parser))
         ##########
         # Activity
         self.activity_parser = ActivityParser()
@@ -205,7 +214,9 @@ class ParserRegistry:
         self.topology_parser = TopologyParser()
         self.kind_parser: KindParser = (KindParser()
                                         .add_dependency("sink", self.sink_parser)
+                                        .add_dependency("SinkBundle", self.sink_bundle_parser)
                                         .add_dependency("datasource", self.datasource_parser)
                                         .add_dependency("simulation", self.simulation_parser)
                                         .add_dependency("postProcessor", self.post_processor_parser)
+                                        .add_dependency("PostProcessorBundle", self.post_processor_bundle_parser)
                                         .add_dependency("topology", self.topology_parser))

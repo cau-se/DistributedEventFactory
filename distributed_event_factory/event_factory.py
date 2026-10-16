@@ -105,8 +105,22 @@ class EventFactory:
                 self.add_datasource(name, parsed_object)
             elif kind == "sink":
                 self.add_sink(name, parsed_object)
+            elif kind == "SinkBundle":
+                duplicates = self.sinks.keys() & parsed_object.keys()
+                if duplicates:
+                    duplicate_names = ", ".join(sorted(duplicates))
+                    raise ValueError(f"Duplicate sink name: {duplicate_names}")
+                for sink_name, sink in parsed_object.items():
+                    self.add_sink(sink_name, sink)
             elif kind == "postProcessor":
                 self.add_post_processor(name, parsed_object)
+            elif kind == "PostProcessorBundle":
+                duplicates = self.post_processors.keys() & parsed_object.keys()
+                if duplicates:
+                    duplicate_names = ", ".join(sorted(duplicates))
+                    raise ValueError(f"Duplicate post processor name: {duplicate_names}")
+                for processor_name, post_processor in parsed_object.items():
+                    self.add_post_processor(processor_name, post_processor)
             elif kind == "topology":
                 self.add_topology(name, parsed_object)
         return self

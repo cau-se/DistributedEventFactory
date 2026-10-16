@@ -1,0 +1,8 @@
+kind: sink
+name: event-http-sink
+spec:
+  type: eventHttp
+  url: "http://localhost:8080/events"
+  dataSourceRefs:
+    - "Node-1"
+    - "Node-2"
