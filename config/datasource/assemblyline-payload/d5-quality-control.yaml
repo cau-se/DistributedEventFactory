@@ -1,0 +1,31 @@
+kind: datasource
+name: "QualityControl"
+spec:
+  name: "QualityControl"
+  group: "factory"
+  selection: payloadAware
+  distribution: [0.3, 0.1, 0.6]
+  eventData:
+    - activity: "Item Needs Corrections"
+      transition: "Assembling"
+      duration: 2
+      payloadUpdate:
+        type: uniform
+        lowerBound: 4
+        upperBound: 8
+    - activity: "Quality Insufficient"
+      transition: "<end>"
+      duration: 2
+      payloadUpdate:
+        type: fixed
+        value: 15
+    - activity: "Quality check passed"
+      transition: "Packaging"
+      duration:
+        type: uniform
+        lowerBound: 5
+        upperBound: 10
+      payloadUpdate:
+        type: gaussian
+        mu: -8
+        sigma: 2

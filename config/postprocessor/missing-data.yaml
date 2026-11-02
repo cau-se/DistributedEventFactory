@@ -1,0 +1,7 @@
+kind: postProcessor
+name: missing-data
+spec:
+  type: missingData
+  payloadProbability: 0.05
+  timestampProbability: 0.05
+  activityProbability: 0.01

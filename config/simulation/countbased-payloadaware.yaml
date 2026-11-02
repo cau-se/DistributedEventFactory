@@ -1,0 +1,7 @@
+kind: simulation
+name: countBasedSimulationPayloadAware
+spec:
+  type: countBased
+  steps: 100
+  caseId: increasing
+  maxConcurrentCases: 5

@@ -15,7 +15,8 @@ class ProcessSimulator:
             self,
             data_sources: Dict[str, DataSource],
             case_id_provider: CaseIdProvider,
-            max_concurrent_cases: CountProvider
+            max_concurrent_cases: CountProvider,
+            initial_payload: float = 50
     ):
 
         self.max_concurrent_cases = max_concurrent_cases
@@ -23,6 +24,7 @@ class ProcessSimulator:
         self.datasources: Dict[str, DataSource] = data_sources
         self.case_id_provider = case_id_provider
         self.last_timestamp = datetime.now()
+        self.initial_payload = initial_payload
 
     def simulate(self) -> Event:
         emit_event = None
@@ -37,34 +39,37 @@ class ProcessSimulator:
                 token = self.start_new_case()
 
             if token.data_source_id == START_SENSOR_ID:
-                token.data_source_id = DataSourceId(self._get_sensor_with_id(START_SENSOR_ID).get_event_data().get_transition())
+                token.data_source_id = DataSourceId(self._get_sensor_with_id(START_SENSOR_ID).get_event_data(token.payload).get_transition())
 
             current_data_source = self._get_sensor_with_id(token.data_source_id)
-            event = current_data_source.get_event_data()
+            event = current_data_source.get_event_data(token.payload)
             next_datasource = event.get_transition()
             activity = event.get_activity()
             token.add_to_last_timestamp(event.get_duration())
+            token.update_payload(event.get_payload_delta())
             token.set_data_source_id(self.datasources[next_datasource].get_id())
             self.last_timestamp = token.last_timestamp
-            token.event = self._build_event(token.case, activity, self.last_timestamp, current_data_source)
+            token.event = self._build_event(token.case, activity, self.last_timestamp, current_data_source, token.payload)
             self.tokens.put(token)
 
         return emit_event
 
     def start_new_case(self):
         case_id = self.case_id_provider.get()
-        token = Token(case_id, START_SENSOR_ID, self.last_timestamp, None)
+        token = Token(case_id, START_SENSOR_ID, self.last_timestamp, None, self.initial_payload)
         return token
 
-    def _build_event(self, case, activity, timestamp, datasource):
+    def _build_event(self, case, activity, timestamp, datasource, payload):
         if hasattr(datasource, "sensor_id"):
-            return Event(
+            event = Event(
                 timestamp=timestamp.strftime("%Y-%m-%d %H:%M:%S"),
                 activity=activity,
                 case_id=case,
                 node=datasource.sensor_id.get_name(),
                 group_id=datasource.group_id
             )
+            event.payload = payload
+            return event
 
     def _get_sensor_with_id(self, data_source_id) -> DataSource:
         for sensor in self.datasources:
@@ -79,18 +84,23 @@ class Token:
             case: string,
             data_source_id: DataSourceId,
             last_timestamp: datetime,
-            event: Event
+            event: Event,
+            payload: float
     ):
         self.case = case
         self.data_source_id = data_source_id
         self.last_timestamp = last_timestamp
         self.event = event
+        self.payload = payload
 
     def set_data_source_id(self, data_source_id):
         self.data_source_id = data_source_id
 
     def add_to_last_timestamp(self, duration):
         self.last_timestamp += timedelta(minutes=duration)
+
+    def update_payload(self, delta):
+        self.payload = min(100.0, max(0.0, self.payload + delta))
 
     def __lt__(self, other):
         return self.last_timestamp < other.last_timestamp

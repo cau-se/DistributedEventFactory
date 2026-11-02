@@ -1,0 +1,34 @@
+kind: datasource
+name: "MaterialPreparation"
+spec:
+  name: "MaterialPreparation"
+  group: "factory"
+  selection: payloadAware
+  distribution: [0.7, 0.25, 0.05]
+  eventData:
+    - activity: "MaterialPreparation - Finished"
+      duration:
+        type: uniform
+        lowerBound: 1
+        upperBound: 2
+      transition: "AssemblyLineSetup"
+      payloadUpdate:
+        type: fixed
+        value: -8
+    - activity: "Waiting for Material"
+      transition: "MaterialPreparation"
+      duration: 1
+      payloadUpdate:
+        type: uniform
+        lowerBound: 1
+        upperBound: 4
+    - activity: "Internal Error"
+      transition: "MaterialPreparation"
+      duration:
+        type: gaussian
+        mu: 500
+        sigma: 100
+      payloadUpdate:
+        type: gaussian
+        mu: 12
+        sigma: 3

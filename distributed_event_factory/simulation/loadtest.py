@@ -36,15 +36,17 @@ class LoadTestSimulation(Simulation):
            sink.start()
 
     def run_simulation(self, data_sources: Dict[str, DataSource], datasource_sink_mapping: Dict[str, LoadTestHttpSink],
-                       hook=lambda: None):
+                       hook=lambda: None, post_processors=None, initial_payload=50):
         self.setup_datasource_sink_mapping(datasource_sink_mapping)
+        self.setup_post_processors(post_processors or {})
         for sink in datasource_sink_mapping:
             self.sink.append(datasource_sink_mapping[sink])
 
         process_simulator = ProcessSimulator(
             case_id_provider=self.case_id_provider,
             data_sources=data_sources,
-            max_concurrent_cases=self.max_concurrent_cases
+            max_concurrent_cases=self.max_concurrent_cases,
+            initial_payload=initial_payload,
         )
         iteration = 0
         while True:

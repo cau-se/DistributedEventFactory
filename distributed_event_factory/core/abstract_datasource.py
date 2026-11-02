@@ -13,7 +13,7 @@ class DataSource(ABC):
         pass
 
     @abstractmethod
-    def get_event_data(self) -> EventData:
+    def get_event_data(self, payload=None) -> EventData:
         pass
 
     @abstractmethod

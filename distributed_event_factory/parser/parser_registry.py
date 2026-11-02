@@ -13,9 +13,28 @@ from distributed_event_factory.parser.datasource.event.selection.generic_probabi
     GenericProbabilityEventSelectionParser
 from distributed_event_factory.parser.datasource.event.selection.ordered_event_selection_parser import \
     OrderedEventSelectionParser
+from distributed_event_factory.parser.datasource.event.selection.payload_aware_event_selection_parser import \
+    PayloadAwareEventSelectionParser
 from distributed_event_factory.parser.datasource.event.selection.uniform_event_selection import \
     UniformEventSelectionParser
+from distributed_event_factory.parser.datasource.event.payload.fixed_payload_update_parser import FixedPayloadUpdateParser
+from distributed_event_factory.parser.datasource.event.payload.gaussian_payload_update_parser import \
+    GaussianPayloadUpdateParser
+from distributed_event_factory.parser.datasource.event.payload.payload_update_parser import PayloadUpdateParser
+from distributed_event_factory.parser.datasource.event.payload.uniform_payload_update_parser import \
+    UniformPayloadUpdateParser
 from distributed_event_factory.parser.datasource.event.transition.transition_parser import TransitionParser
+from distributed_event_factory.parser.postprocessor.drop_rate_post_processor_parser import DropRatePostProcessorParser
+from distributed_event_factory.parser.postprocessor.transition_mistake_post_processor_parser import (
+    TransitionMistakePostProcessorParser,
+)
+from distributed_event_factory.parser.postprocessor.payload_uncertainty_post_processor_parser import PayloadUncertaintyPostProcessorParser
+from distributed_event_factory.parser.postprocessor.time_uncertainty_post_processor_parser import TimeUncertaintyPostProcessorParser
+from distributed_event_factory.parser.postprocessor.missing_data_post_processor_parser import MissingDataPostProcessorParser
+from distributed_event_factory.parser.postprocessor.out_of_order_post_processor_parser import OutOfOrderPostProcessorParser
+from distributed_event_factory.parser.postprocessor.insertion_post_processor_parser import InsertionPostProcessorParser
+from distributed_event_factory.parser.postprocessor.post_processor_parser import PostProcessorParser
+from distributed_event_factory.parser.postprocessor.post_processor_bundle_parser import PostProcessorBundleParser
 from distributed_event_factory.parser.simulation.case.case_id_parser import CaseIdParser
 from distributed_event_factory.parser.datasource.data_source_parser import DataSourceParser
 from distributed_event_factory.parser.datasource.event.distribution_parser import DistributionParser
@@ -31,13 +50,16 @@ from distributed_event_factory.parser.simulation.variant.countbased_simulation_p
 from distributed_event_factory.parser.simulation.variant.loadtest_simulation_parser import LoadTestSimulationParser
 from distributed_event_factory.parser.simulation.variant.stream_simulation_parser import StreamSimulationParser
 from distributed_event_factory.parser.sink.http_sink_parser import HttpSinkParser
+from distributed_event_factory.parser.sink.event_http_sink_parser import EventHttpSinkParser
 from distributed_event_factory.parser.sink.kafka.case_partition_parser import CasePartitionParser
 from distributed_event_factory.parser.sink.kafka.constant_partition_parser import ConstantPartitionParser
 from distributed_event_factory.parser.sink.kafka.kafka_sink_parser import KafkaSinkParser
 from distributed_event_factory.parser.sink.kafka.partition_parser import PartitionParser
 from distributed_event_factory.parser.sink.print_console_sink_parser import PrintConsoleSinkParser
 from distributed_event_factory.parser.sink.sink_parser import SinkParser
+from distributed_event_factory.parser.sink.sink_bundle_parser import SinkBundleParser
 from distributed_event_factory.parser.sink.ui_sink_parser import UiSinkParser
+from distributed_event_factory.parser.topology.topology_parser import TopologyParser
 from distributed_event_factory.provider.data.constant_count_provider import ConstantCountProvider
 from distributed_event_factory.provider.data.increasing_case import IncreasingCaseIdProvider
 
@@ -60,11 +82,34 @@ class ParserRegistry:
         self.console_sink_parser = (PrintConsoleSinkParser())
         self.ui_sink_parser = (UiSinkParser())
         self.http_sink_parser = (HttpSinkParser())
+        self.event_http_sink_parser = EventHttpSinkParser()
         self.sink_parser = (SinkParser()
                             .add_dependency("console", self.console_sink_parser)
                             .add_dependency("ui", self.ui_sink_parser)
                             .add_dependency("http", self.http_sink_parser)
+                            .add_dependency("eventHttp", self.event_http_sink_parser)
                             .add_dependency("kafka", self.kafka_sink_parser))
+        self.sink_bundle_parser = (SinkBundleParser()
+                                  .add_dependency("sink", self.sink_parser))
+
+        # Post Processor
+        self.drop_rate_post_processor_parser = DropRatePostProcessorParser()
+        self.transition_mistake_post_processor_parser = TransitionMistakePostProcessorParser()
+        self.payload_uncertainty_post_processor_parser = PayloadUncertaintyPostProcessorParser()
+        self.time_uncertainty_post_processor_parser = TimeUncertaintyPostProcessorParser()
+        self.missing_data_post_processor_parser = MissingDataPostProcessorParser()
+        self.out_of_order_post_processor_parser = OutOfOrderPostProcessorParser()
+        self.insertion_post_processor_parser = InsertionPostProcessorParser()
+        self.post_processor_parser = (PostProcessorParser()
+                                      .add_dependency("dropRate", self.drop_rate_post_processor_parser)
+                                      .add_dependency("transitionMistake", self.transition_mistake_post_processor_parser)
+                                      .add_dependency("payloadUncertainty", self.payload_uncertainty_post_processor_parser)
+                                      .add_dependency("timeUncertainty", self.time_uncertainty_post_processor_parser)
+                                      .add_dependency("missingData", self.missing_data_post_processor_parser)
+                                      .add_dependency("outOfOrder", self.out_of_order_post_processor_parser)
+                                      .add_dependency("insertion", self.insertion_post_processor_parser))
+        self.post_processor_bundle_parser = (PostProcessorBundleParser()
+                                             .add_dependency("postProcessor", self.post_processor_parser))
         ##########
         # Activity
         self.activity_parser = ActivityParser()
@@ -81,17 +126,30 @@ class ParserRegistry:
         # Transition
         self.transition_parser = TransitionParser()
 
+        # Payload update
+        self.fixed_payload_update_parser = FixedPayloadUpdateParser()
+        self.uniform_payload_update_parser = UniformPayloadUpdateParser()
+        self.gaussian_payload_update_parser = GaussianPayloadUpdateParser()
+        self.payload_update_parser = (PayloadUpdateParser()
+                                      .add_dependency("fixed", self.fixed_payload_update_parser)
+                                      .add_dependency("uniform", self.uniform_payload_update_parser)
+                                      .add_dependency("gaussian", self.gaussian_payload_update_parser))
+
         # Event Data List
         self.event_data_list_parser = (EventDataListParser()
                                        .add_dependency("duration", self.duration_parser)
                                        .add_dependency("activity", self.activity_parser)
-                                       .add_dependency("transition", self.transition_parser))
+                                       .add_dependency("transition", self.transition_parser)
+                                       .add_dependency("payloadUpdate", self.payload_update_parser))
 
         # Distribution
         self.distribution_parser = (DistributionParser())
 
         self.uniform_event_selection_parser = (UniformEventSelectionParser())
         self.ordered_event_selection_parser = (OrderedEventSelectionParser())
+        self.payload_aware_selection_parser = (PayloadAwareEventSelectionParser()
+                                               .add_dependency("distribution", self.distribution_parser)
+                                               .add_dependency("eventData", self.event_data_list_parser))
 
         self.drifting_selection_parser = (DriftingProbabilityEventSelectionParser()
                                           .add_dependency("distribution", self.distribution_parser)
@@ -106,7 +164,8 @@ class ParserRegistry:
                                        .add_dependency("ordered", self.ordered_event_selection_parser)
                                        .add_dependency("uniform", self.uniform_event_selection_parser)
                                        .add_dependency("genericProbability", self.probability_selection_parser)
-                                       .add_dependency("driftingProbability", self.drifting_selection_parser))
+                                       .add_dependency("driftingProbability", self.drifting_selection_parser)
+                                       .add_dependency("payloadAware", self.payload_aware_selection_parser))
 
         # DataSource
         self.datasource_parser = (DataSourceParser()
@@ -152,7 +211,12 @@ class ParserRegistry:
                                                     .add_dependency("loadTest", self.load_test_simulation))
 
         # Kind
+        self.topology_parser = TopologyParser()
         self.kind_parser: KindParser = (KindParser()
                                         .add_dependency("sink", self.sink_parser)
+                                        .add_dependency("SinkBundle", self.sink_bundle_parser)
                                         .add_dependency("datasource", self.datasource_parser)
-                                        .add_dependency("simulation", self.simulation_parser))
+                                        .add_dependency("simulation", self.simulation_parser)
+                                        .add_dependency("postProcessor", self.post_processor_parser)
+                                        .add_dependency("PostProcessorBundle", self.post_processor_bundle_parser)
+                                        .add_dependency("topology", self.topology_parser))

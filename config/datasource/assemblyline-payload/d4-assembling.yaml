@@ -1,0 +1,37 @@
+kind: datasource
+name: "Assembling"
+spec:
+  name: "Assembling"
+  group: "factory"
+  selection: payloadAware
+  distribution: [0.8, 0.1, 0.08, 0.02]
+  eventData:
+    - activity: "Assembling completed"
+      duration: 10
+      transition: "QualityControl"
+      payloadUpdate:
+        type: fixed
+        value: -10
+    - activity: "Overheating"
+      transition: "<end>"
+      duration: 2
+      payloadUpdate:
+        type: gaussian
+        mu: 14
+        sigma: 5
+    - activity: "Item broke"
+      transition: "<end>"
+      duration: 1
+      payloadUpdate:
+        type: fixed
+        value: 18
+    - activity: "Internal Error"
+      transition: "Assembling"
+      duration:
+        type: gaussian
+        mu: 500
+        sigma: 100
+      payloadUpdate:
+        type: uniform
+        lowerBound: 8
+        upperBound: 15

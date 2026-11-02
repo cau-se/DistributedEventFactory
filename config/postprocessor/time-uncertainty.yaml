@@ -1,0 +1,6 @@
+kind: postProcessor
+name: time-uncertainty
+spec:
+  type: timeUncertainty
+  probability: 0.1
+  sigmaSeconds: 60.0

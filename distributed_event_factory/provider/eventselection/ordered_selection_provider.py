@@ -10,10 +10,9 @@ class OrderedEventSelectionProvider(EventSelectionProvider):
         self.potential_events = potential_events
         self.state = 0
 
-    def get_event_data(self):
+    def get_event_data(self, payload=None):
         event = self.potential_events[self.state % len(self.potential_events)]
         self.state += 1
         return event
-
 
 

@@ -1,0 +1,34 @@
+kind: datasource
+name: "GoodsDelivery"
+spec:
+  name: "GoodsDelivery"
+  group: "factory"
+  selection: payloadAware
+  distribution: [0.1, 0.2, 0.7]
+  eventData:
+    - activity: "Reject"
+      transition: "<end>"
+      duration: 1
+      payloadUpdate:
+        type: fixed
+        value: 10
+    - activity: "Store"
+      transition: "GoodsDelivery"
+      duration:
+        type: gaussian
+        mu: 720
+        sigma: 120
+      payloadUpdate:
+        type: uniform
+        lowerBound: -20
+        upperBound: 20
+    - activity: "Pass To Production"
+      transition: "MaterialPreparation"
+      duration:
+        type: uniform
+        lowerBound: 3
+        upperBound: 7
+      payloadUpdate:
+        type: gaussian
+        mu: -4
+        sigma: 2

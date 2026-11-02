@@ -46,3 +46,16 @@ class LoadTestHttpSink(Sink):
 
     def send(self, event: Event) -> None:
         self.timeframe.add_event(event)
+
+
+class EventHttpSink(Sink):
+    def __init__(self, url, data_source_ref):
+        super().__init__(data_source_ref)
+        self.url = url
+
+    def send(self, event: Event) -> None:
+        response = requests.post(
+            url=self.url,
+            json=event.__dict__,
+        )
+        response.raise_for_status()

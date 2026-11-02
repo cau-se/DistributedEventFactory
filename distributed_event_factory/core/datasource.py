@@ -24,8 +24,8 @@ class GenericDataSource(DataSource):
     def get_event_provider(self):
         return self.event_provider
 
-    def get_event_data(self):
-        return self.event_provider.get_event_data()
+    def get_event_data(self, payload=None):
+        return self.event_provider.get_event_data(payload)
 
     def emit_event(self, case, activity_name, timestamp) -> Event:
         event = Event(

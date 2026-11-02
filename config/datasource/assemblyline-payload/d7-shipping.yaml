@@ -1,0 +1,21 @@
+kind: datasource
+name: "Shipping"
+spec:
+  name: "Shipping"
+  group: "factory"
+  selection: payloadAware
+  distribution: [0.8, 0.2]
+  eventData:
+    - activity: "Package waits for sending"
+      transition: "Shipping"
+      duration: 180
+      payloadUpdate:
+        type: uniform
+        lowerBound: 1
+        upperBound: 3
+    - activity: "Package sent"
+      transition: "<end>"
+      duration: 1
+      payloadUpdate:
+        type: fixed
+        value: -12

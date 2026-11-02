@@ -1,0 +1,29 @@
+kind: SinkBundle
+name: default-sinks
+spec:
+  sinks:
+    - name: console
+      type: console
+      id: "Console"
+      dataSourceRefs:
+        - "Node-1"
+        - "Node-2"
+
+    - name: kafka
+      type: kafka
+      bootstrapServer: "192.168.49.2:32090"
+      clientId: "def-client"
+      topic: "events"
+      partition:
+        type: "constant"
+        partition: 0
+      dataSourceRefs:
+        - "Node-1"
+        - "Node-2"
+
+    - name: ui
+      type: ui
+      id: "UI"
+      dataSourceRefs:
+        - "Node-1"
+        - "Node-2"

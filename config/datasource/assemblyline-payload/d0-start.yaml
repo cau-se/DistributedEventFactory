@@ -1,0 +1,14 @@
+kind: datasource
+name: "<start>"
+spec:
+  name: "<start>"
+  group: "factory"
+  selection: payloadAware
+  distribution: [1.0]
+  eventData:
+    - activity: ""
+      transition: "GoodsDelivery"
+      duration: 0
+      payloadUpdate:
+        type: fixed
+        value: 0

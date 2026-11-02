@@ -1,0 +1,34 @@
+kind: topology
+name: simple-topology
+spec:
+  constraints:
+    traceLength:
+      target: 8
+      tolerance: 1
+    distinctTraces:
+      target: 200
+      tolerance: 5
+  generation:
+    initialBranching: 3
+  optimize:
+    maxIterations: 10
+    sampleSize: 400
+  payload:
+    successThreshold: 80
+    successfulCaseRatio:
+      target: 80
+      tolerance: 2
+    entropy:
+      target: 0.3
+      tolerance: 0.1
+  traceEntropy:
+    target: 0.5
+    tolerance: 0.1
+  duration:
+    averageTraceDuration:
+      target: 120
+      tolerance: 5
+    entropy:
+      target: 1.0
+      tolerance: 0.05
+    maxPerTransition: 60
